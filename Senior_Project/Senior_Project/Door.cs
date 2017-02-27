@@ -13,24 +13,26 @@ namespace Senior_Project
 {
     public class Door
     {
-        public Texture2D texture;
-
-        public Vector2 doorPos;
+        public Texture2D m_Texture;
+        public Vector2 m_DoorPosition;
+        public Rectangle m_BoundingBox;
+        public bool m_IsDoorOpen = true;
 
         public Door()
         {
-            texture = null;
-            doorPos = new Vector2(448, 0);
+            m_Texture = null;
+            m_DoorPosition = new Vector2(448, 0);
+            m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 64, 64);
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent(ContentManager a_Content)
         {
-            texture = content.Load<Texture2D>("door2");
+            m_Texture = a_Content.Load<Texture2D>("door2");
         }
 
-        public void Draw(SpriteBatch sprtBatch)
+        public void Draw(SpriteBatch a_SpriteBatch)
         {
-            sprtBatch.Draw(texture, doorPos, Color.White);
+            a_SpriteBatch.Draw(m_Texture, m_DoorPosition, Color.White);
         }
     }
 }

@@ -16,26 +16,33 @@ namespace Senior_Project
     /// </summary>
     public class TopDownGame : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Rooms r1 = new Rooms();
-        RoomFloor floor1 = new RoomFloor();
-        Door door1 = new Door();
-        Player batDoug = new Player();
+        GraphicsDeviceManager m_Graphics;
+        SpriteBatch m_SpriteBatch;
+        public List<Rooms> m_RoomList = new List<Rooms>();
+        public Rooms m_Room = new Rooms();
+        public Rooms m_Room2 = new Rooms(0, -832);
+        RoomFloor m_Floor = new RoomFloor();
+        public Door m_Door = new Door();
+        Player m_MainPlayer;
+        Camera m_Camera;
         const int m_roomWidth = 960;
-        const int roomHight = 832;
+        const int m_RoomHeight = 832;
+        
 
         public TopDownGame()
         {
             //960 x 832
             //room size
-            graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = m_roomWidth;
-            graphics.PreferredBackBufferHeight = roomHight;
+            m_Graphics = new GraphicsDeviceManager(this);
+            m_Graphics.IsFullScreen = false;
+            m_Graphics.PreferredBackBufferWidth = m_roomWidth;
+            m_Graphics.PreferredBackBufferHeight = m_RoomHeight;
+            m_MainPlayer = new Player(this);
             this.Window.Title = "batdoug";
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
+            m_RoomList.Add(m_Room);
+            m_RoomList.Add(m_Room2);
         }
 
         /// <summary>
@@ -47,7 +54,7 @@ namespace Senior_Project
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            m_Camera = new Camera(GraphicsDevice.Viewport);
             base.Initialize();
         }
 
@@ -58,13 +65,12 @@ namespace Senior_Project
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            r1.LoadContent(Content);
-            floor1.LoadContent(Content);
-            door1.LoadContent(Content);
-            batDoug.LoadContent(Content);
-
-
+            m_SpriteBatch = new SpriteBatch(GraphicsDevice);
+            m_Room.LoadContent(Content);
+            m_Room2.LoadContent(Content);
+            m_Floor.LoadContent(Content);
+            m_Door.LoadContent(Content);
+            m_MainPlayer.LoadContent(Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -81,37 +87,51 @@ namespace Senior_Project
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
+        /// <param name="a_GameTime">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime a_GameTime)
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
             // TODO: Add your update logic here
-            batDoug.Update(gameTime);
-            base.Update(gameTime);
+            m_MainPlayer.Update(a_GameTime, this);
+            if (m_Door.m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            {
+                m_Camera.Update(a_GameTime, 0, -832);
+                //m_MainPlayer.m_PlayerPosition.X = 0;
+                m_MainPlayer.m_PlayerPosition.Y = -300;
+                m_MainPlayer.m_CurrentRoom++;
+            }
+
+            //if (m_MainPlayer.m_BoundingBox.Intersects(m_Door.m_BoundingBox))
+            //{
+            //    waam_Camera.Update(a_GameTime);
+            //}
+            //m_Camera.Update(a_GameTime);
+            base.Update(a_GameTime);
         }
 
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
+        /// <param name="a_GameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime a_GameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, m_Camera.m_Transform);
 
-            r1.Draw(spriteBatch);
-            floor1.Draw(spriteBatch);
-            door1.Draw(spriteBatch);
-            batDoug.Draw(spriteBatch);
+            m_Room.Draw(m_SpriteBatch);
+            m_Room2.Draw(m_SpriteBatch);
+            m_Floor.Draw(m_SpriteBatch);
+            m_Door.Draw(m_SpriteBatch);
+            m_MainPlayer.Draw(m_SpriteBatch);
 
-            spriteBatch.End();
+            m_SpriteBatch.End();
 
             // TODO: Add your drawing code here
 
-            base.Draw(gameTime);
+            base.Draw(a_GameTime);
         }
     }
 }

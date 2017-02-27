@@ -13,146 +13,168 @@ namespace Senior_Project
 {
     public class Player
     {
-        public Texture2D texture;
-        public Vector2 position;
-        public int speed;
-        public float rotation;
-        public Vector2 origin;
+        public Texture2D m_Texture;
+        public Vector2 m_PlayerPosition;
+        public int m_PlayerSpeed;
+        public float m_PlayerRotation;
+        public Vector2 m_PlayerOrigin;
         //public float bulletDelay;
-        public Rectangle boundingBox;
-        const int innerWallBound = 125;
+        public Rectangle m_BoundingBox;
+        TopDownGame m_CurrentGame;
+        public int m_CurrentRoom = 0;
+        const int m_RoomWidth = 960;
+        const int m_RoomHeight = 832;
 
-        public Player()
+        public Player(TopDownGame a_CurrentGame)
         {
-            texture = null;
-            speed = 5;
-            position = new Vector2(300, 300);
+            m_CurrentGame = a_CurrentGame;
+            m_Texture = null;
+            m_PlayerSpeed = 5;
+            m_PlayerPosition = new Vector2(300, 300);
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent(ContentManager a_Content)
         {
-            texture = content.Load<Texture2D>("batDoug5");
+            m_Texture = a_Content.Load<Texture2D>("batDoug5");
         }
 
-        public void Draw(SpriteBatch sprtBatch)
+        public void Draw(SpriteBatch a_SpriteBatch)
         {
-            origin.X = texture.Width / 2;
-            origin.Y = texture.Height / 2;
-            sprtBatch.Draw(texture, position, null, Color.White, rotation, origin, 1.0f, SpriteEffects.None, 0f);
-            //sprtBatch.Draw(texture, position, Color.White);
+            m_PlayerOrigin.X = m_Texture.Width / 2;
+            m_PlayerOrigin.Y = m_Texture.Height / 2;
+            a_SpriteBatch.Draw(m_Texture, m_PlayerPosition, null, Color.White, m_PlayerRotation, m_PlayerOrigin, 1.0f, SpriteEffects.None, 0f);
+            //a_SpriteBatch.Draw(m_Texture, m_PlayerPosition, Color.White);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime a_GameTime, TopDownGame a_Game)
         {
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.W))
             {
-                rotation = ((float)Math.PI / 2.0f) * 4;
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
                 //angle = (float)Math.PI / 2.0f;  // 90 degrees
                 //scale = 1.0f;
                 //if (keyState.IsKeyDown(Keys.Up))
                 //{
-                //    rotation = ((float)Math.PI / 2.0f) * 3;
+                //    m_PlayerRotation = ((float)Math.PI / 2.0f) * 3;
                 //}
                 //else if (keyState.IsKeyDown(Keys.Right))
                 //{
-                //    rotation = ((float)Math.PI / 2.0f) * 4;
+                //    m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
                 //}
                 //else if (keyState.IsKeyDown(Keys.Left))
                 //{
-                //    rotation = ((float)Math.PI / 2.0f) * 2;
+                //    m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
                 //}
                 //else if (keyState.IsKeyDown(Keys.Down))
                 //{
-                //    rotation = ((float)Math.PI / 2.0f);
+                //    m_PlayerRotation = ((float)Math.PI / 2.0f);
                 //}
                 //else
                 //{
-                //    rotation = ((float)Math.PI / 2.0f) * 3;
+                //    m_PlayerRotation = ((float)Math.PI / 2.0f) * 3;
                 //}
 
 
-                position.Y = position.Y - speed;
+                m_PlayerPosition.Y = m_PlayerPosition.Y - m_PlayerSpeed;
             }
             if (keyState.IsKeyDown(Keys.A))
             {
 
-                rotation = ((float)Math.PI / 2.0f) * 3;
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 3;
 
-                //rotation = ((float)Math.PI / 2.0f) * 2;
-                position.X = position.X - speed;
+                //m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
+                m_PlayerPosition.X = m_PlayerPosition.X - m_PlayerSpeed;
             }
             if (keyState.IsKeyDown(Keys.S))
             {
 
-                rotation = ((float)Math.PI / 2.0f) * 2;
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
 
 
-                position.Y = position.Y + speed;
+                m_PlayerPosition.Y = m_PlayerPosition.Y + m_PlayerSpeed;
             }
             if (keyState.IsKeyDown(Keys.D))
             {
-                rotation = ((float)Math.PI / 2.0f);
-                //rotation = ((float)Math.PI / 2.0f) * 4;
-                position.X = position.X + speed;
+                m_PlayerRotation = ((float)Math.PI / 2.0f);
+                //m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
+                m_PlayerPosition.X = m_PlayerPosition.X + m_PlayerSpeed;
             }
 
             if (keyState.IsKeyDown(Keys.Up))
             {
-                rotation = ((float)Math.PI / 2.0f) * 4;
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
             }
             else if (keyState.IsKeyDown(Keys.Right))
             {
-                rotation = ((float)Math.PI / 2.0f);
+                m_PlayerRotation = ((float)Math.PI / 2.0f);
             }
             else if (keyState.IsKeyDown(Keys.Left))
             {
-                rotation = ((float)Math.PI / 2.0f) * 3;
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 3;
             }
             else if (keyState.IsKeyDown(Keys.Down))
             {
-                rotation = ((float)Math.PI / 2.0f) * 2;
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
             }
 
 
             /*
-            if(position.X <= 0)
+            if(m_PlayerPosition.X <= 0)
             {
-                position.X = 0;
+                m_PlayerPosition.X = 0;
             }
-            if(position.X >= 800 - texture.Width)
+            if(m_PlayerPosition.X >= 800 - m_Texture.Width)
             {
-                position.X = 800 - texture.Width;
+                m_PlayerPosition.X = 800 - m_Texture.Width;
             }
-            if(position.Y <= 0)
+            if(m_PlayerPosition.Y <= 0)
             {
-                position.Y = 0;
+                m_PlayerPosition.Y = 0;
             }
-            if(position.Y >= 650 - texture.Height)
+            if(m_PlayerPosition.Y >= 650 - m_Texture.Height)
             {
-                position.Y = 650 - texture.Height;
+                m_PlayerPosition.Y = 650 - m_Texture.Height;
             }
             */
             //960 x 832
             //room size
 
-            if (position.X <= (64) + texture.Width / 2)
+            if (m_PlayerPosition.X <= (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) + m_Texture.Width / 2)
             {
-                position.X = (64) + texture.Width / 2;
+                m_PlayerPosition.X = (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) + m_Texture.Width / 2;
             }
-            if (position.X >= (960 - (64)) - texture.Width / 2)
+            if (m_PlayerPosition.X >= (960 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) - m_Texture.Width / 2)
             {
-                position.X = (960 - (64)) - texture.Width / 2;
+                m_PlayerPosition.X = (960 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) - m_Texture.Width / 2;
             }
-            if (position.Y <= (64) + texture.Height / 2)
+            if (m_PlayerPosition.Y <= (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) + m_Texture.Height / 2)
             {
-                position.Y = (64) + texture.Height / 2;
+                //boundaries for top door if its open
+                if(a_Game.m_Door.m_IsDoorOpen == true && m_PlayerPosition.X >= 448 && m_PlayerPosition.X <= 512)
+                {
+                   // m_CurrentRoom++;
+                    //if(m_PlayerPosition.X >= 448)
+                    //{
+                    //    m_PlayerPosition.X = 448 + m_Texture.Width / 2;
+                    //}
+                    //if(m_PlayerPosition.Y <= 0)
+                    //{
+                    //    m_PlayerPosition.Y = m_Texture.Height / 2;
+                    //}
+                }
+                else
+                {
+                    m_PlayerPosition.Y = (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y ) + m_Texture.Height / 2;
+                }
+                //m_PlayerPosition.Y = (64) + m_Texture.Height / 2;
             }
-            if (position.Y >= (832 - (64)) - texture.Height / 2)
+            if (m_PlayerPosition.Y >= (832 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) - m_Texture.Height / 2)
             {
-                position.Y = (832 - (64)) - texture.Height / 2;
+                m_PlayerPosition.Y = (832 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) - m_Texture.Height / 2;
             }
 
+            m_BoundingBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
         }
     }
 }

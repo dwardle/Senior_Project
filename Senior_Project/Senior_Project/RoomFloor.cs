@@ -13,24 +13,24 @@ namespace Senior_Project
 {
     public class RoomFloor
     {
-        public Texture2D texture;
+        public Texture2D m_Texture;
 
-        public Vector2 roomPos;
+        public Vector2 m_FloorPosition;
 
         public RoomFloor()
         {
-            texture = null;
-            roomPos = new Vector2(128 / 2, 128 / 2);
+            m_Texture = null;
+            m_FloorPosition = new Vector2(128 / 2, 128 / 2);
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent(ContentManager a_Content)
         {
-            texture = content.Load<Texture2D>("roomFloor");
+            m_Texture = a_Content.Load<Texture2D>("roomFloor");
         }
 
-        public void Draw(SpriteBatch sprtBatch)
+        public void Draw(SpriteBatch a_SpriteBatch)
         {
-            sprtBatch.Draw(texture, roomPos, Color.White);
+            a_SpriteBatch.Draw(m_Texture, m_FloorPosition, Color.White);
         }
     }
 }
