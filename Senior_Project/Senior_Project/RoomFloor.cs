@@ -20,7 +20,7 @@ namespace Senior_Project
         public RoomFloor()
         {
             m_Texture = null;
-            m_FloorPosition = new Vector2(128 / 2, 128 / 2);
+            m_FloorPosition = new Vector2(64, 64);
         }
 
         public void LoadContent(ContentManager a_Content)

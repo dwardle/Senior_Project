@@ -104,6 +104,8 @@ namespace Senior_Project
             if (keyState.IsKeyDown(Keys.Up))
             {
                 m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
+                //line below is for testing the switch from closed door to open door
+                m_CurrentGame.m_Door.m_IsDoorOpen = true;
             }
             else if (keyState.IsKeyDown(Keys.Right))
             {
@@ -151,21 +153,17 @@ namespace Senior_Project
             if (m_PlayerPosition.Y <= (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) + m_Texture.Height / 2)
             {
                 //boundaries for top door if its open
-                if(a_Game.m_Door.m_IsDoorOpen == true && m_PlayerPosition.X >= 448 && m_PlayerPosition.X <= 512)
+                if (a_Game.m_Door.m_IsDoorOpen == true && m_PlayerPosition.X >= 448 && m_PlayerPosition.X <= 512)
                 {
-                   // m_CurrentRoom++;
-                    //if(m_PlayerPosition.X >= 448)
-                    //{
-                    //    m_PlayerPosition.X = 448 + m_Texture.Width / 2;
-                    //}
-                    //if(m_PlayerPosition.Y <= 0)
-                    //{
-                    //    m_PlayerPosition.Y = m_Texture.Height / 2;
-                    //}
+                    //m_CurrentRoom++;
+                    if (m_PlayerPosition.X >= 448 && m_PlayerPosition.Y < 64)
+                    {
+                        m_PlayerPosition.X = 448 + m_Texture.Width / 2;
+                    }
                 }
                 else
                 {
-                    m_PlayerPosition.Y = (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y ) + m_Texture.Height / 2;
+                    m_PlayerPosition.Y = (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) + m_Texture.Height / 2;
                 }
                 //m_PlayerPosition.Y = (64) + m_Texture.Height / 2;
             }
@@ -175,6 +173,119 @@ namespace Senior_Project
             }
 
             m_BoundingBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
+        }
+
+        //new update for when using a Level object. not implimented yet
+        public void Update(GameTime a_GameTime, Level a_CurrentLevel)
+        {
+            KeyboardState keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.W))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
+                m_PlayerPosition.Y = m_PlayerPosition.Y - m_PlayerSpeed;
+            }
+            if (keyState.IsKeyDown(Keys.A))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 3;
+                m_PlayerPosition.X = m_PlayerPosition.X - m_PlayerSpeed;
+            }
+            if (keyState.IsKeyDown(Keys.S))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
+                m_PlayerPosition.Y = m_PlayerPosition.Y + m_PlayerSpeed;
+            }
+            if (keyState.IsKeyDown(Keys.D))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f);
+                m_PlayerPosition.X = m_PlayerPosition.X + m_PlayerSpeed;
+            }
+
+            if (keyState.IsKeyDown(Keys.Up))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
+                //line below is for testing the switch from closed door to open door
+                m_CurrentGame.m_Door.m_IsDoorOpen = true;
+            }
+            else if (keyState.IsKeyDown(Keys.Right))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f);
+            }
+            else if (keyState.IsKeyDown(Keys.Left))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 3;
+            }
+            else if (keyState.IsKeyDown(Keys.Down))
+            {
+                m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
+            }
+
+            List<Rooms> CurrentRoomList = new List<Rooms>();
+            CurrentRoomList = a_CurrentLevel.GetRoomList();
+            Rooms CurrentRoom = new Rooms();
+            CurrentRoom = CurrentRoomList[m_CurrentRoom];
+            int cRoom_X = (int)CurrentRoom.m_RoomPosition.X;
+            int cRoom_Y = (int)CurrentRoom.m_RoomPosition.Y;
+
+            if (m_PlayerPosition.X <= (64 + cRoom_X) + m_Texture.Width / 2)
+            {
+                m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Width / 2;
+            }
+            if (m_PlayerPosition.X >= (896 + cRoom_X) + m_Texture.Width / 2)
+            {
+                m_PlayerPosition.X = (896 + cRoom_X) + m_Texture.Width / 2;
+            }
+            if (m_PlayerPosition.Y <= (64 + cRoom_Y) + m_Texture.Height / 2)
+            {
+                if (CurrentRoom.m_RoomDoors[0].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.X <= cRoom_X + 512)
+                {
+                    if (m_PlayerPosition.Y >= 64)
+                    {
+                        m_PlayerPosition.X = (cRoom_X + 448) + (m_Texture.Width / 2);
+                    }
+                }
+                else
+                {
+                    m_PlayerPosition.X = (64 + cRoom_Y) + m_Texture.Height / 2;
+                }
+            }
+            if (m_PlayerPosition.Y >= (768 + cRoom_Y) + m_Texture.Height / 2)
+            {
+                m_PlayerPosition.X = (768 + cRoom_Y) + m_Texture.Height / 2;
+            }
+
+            //Boundaries 
+            //if (m_PlayerPosition.X <= (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) + m_Texture.Width / 2)
+            //{
+            //    m_PlayerPosition.X = (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) + m_Texture.Width / 2;
+            //}
+            //if (m_PlayerPosition.X >= (960 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) - m_Texture.Width / 2)
+            //{
+            //    m_PlayerPosition.X = (960 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) - m_Texture.Width / 2;
+            //}
+
+            //if (m_PlayerPosition.Y <= (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) + m_Texture.Height / 2)
+            //{
+            //    //boundaries for top door if its open
+            //    if (a_Game.m_Door.m_IsDoorOpen == true && m_PlayerPosition.X >= 448 && m_PlayerPosition.X <= 512)
+            //    {
+            //        //m_CurrentRoom++;
+            //        if (m_PlayerPosition.X >= 448 && m_PlayerPosition.Y < 64)
+            //        {
+            //            m_PlayerPosition.X = 448 + m_Texture.Width / 2;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        m_PlayerPosition.Y = (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) + m_Texture.Height / 2;
+            //    }
+            //    //m_PlayerPosition.Y = (64) + m_Texture.Height / 2;
+            //}
+            //if (m_PlayerPosition.Y >= (832 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) - m_Texture.Height / 2)
+            //{
+            //    m_PlayerPosition.Y = (832 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) - m_Texture.Height / 2;
+            //}
+
+            //m_BoundingBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
         }
     }
 }

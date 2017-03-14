@@ -21,13 +21,14 @@ namespace Senior_Project
         public List<Rooms> m_RoomList = new List<Rooms>();
         public Rooms m_Room = new Rooms();
         public Rooms m_Room2 = new Rooms(0, -832);
-        RoomFloor m_Floor = new RoomFloor();
+        //RoomFloor m_Floor = new RoomFloor();
         public Door m_Door = new Door();
         Player m_MainPlayer;
         Camera m_Camera;
+        Level m_Level_1 = new Level(1);
         const int m_roomWidth = 960;
         const int m_RoomHeight = 832;
-        
+        public int LevelCount = 1;
 
         public TopDownGame()
         {
@@ -43,6 +44,9 @@ namespace Senior_Project
             this.IsMouseVisible = true;
             m_RoomList.Add(m_Room);
             m_RoomList.Add(m_Room2);
+            m_Room2.GenerateDoors(4, 0);
+            m_Room2.GenerateDoors(2, 2);
+            m_Room2.GenerateDoors(2, 3);
         }
 
         /// <summary>
@@ -68,7 +72,7 @@ namespace Senior_Project
             m_SpriteBatch = new SpriteBatch(GraphicsDevice);
             m_Room.LoadContent(Content);
             m_Room2.LoadContent(Content);
-            m_Floor.LoadContent(Content);
+            //m_Floor.LoadContent(Content);
             m_Door.LoadContent(Content);
             m_MainPlayer.LoadContent(Content);
             // TODO: use this.Content to load your game content here
@@ -96,17 +100,29 @@ namespace Senior_Project
 
             // TODO: Add your update logic here
             m_MainPlayer.Update(a_GameTime, this);
+            //Door Bounding
             if (m_Door.m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
             {
-                m_Camera.Update(a_GameTime, 0, -832);
+                m_MainPlayer.m_CurrentRoom++;
+                m_Camera.Update(a_GameTime, (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.X, 
+                    (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.Y);
                 //m_MainPlayer.m_PlayerPosition.X = 0;
                 m_MainPlayer.m_PlayerPosition.Y = -300;
-                m_MainPlayer.m_CurrentRoom++;
+                //m_MainPlayer.m_CurrentRoom++;
             }
+
+            ////trying to get done what the above function does but with room and door lists instead of hard coded numbers
+            //List<Rooms> currenLevel = m_Level_1.GetRoomList();
+            //List<Door> currentDoors = currenLevel[m_MainPlayer.m_CurrentRoom].GetDoorList();
+            //if(currentDoors[0].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            //{
+            //    m_MainPlayer.m_CurrentRoom++;
+            //    m_Camera.Update(a_GameTime, (int)currenLevel)
+            //}
 
             //if (m_MainPlayer.m_BoundingBox.Intersects(m_Door.m_BoundingBox))
             //{
-            //    waam_Camera.Update(a_GameTime);
+            //    m_Camera.Update(a_GameTime);
             //}
             //m_Camera.Update(a_GameTime);
             base.Update(a_GameTime);
@@ -119,11 +135,15 @@ namespace Senior_Project
         protected override void Draw(GameTime a_GameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            if(m_Door.m_IsDoorOpen == true)
+            {
+                m_Door.LoadContent(Content);
+            }
             m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, m_Camera.m_Transform);
 
             m_Room.Draw(m_SpriteBatch);
             m_Room2.Draw(m_SpriteBatch);
-            m_Floor.Draw(m_SpriteBatch);
+            //m_Floor.Draw(m_SpriteBatch);
             m_Door.Draw(m_SpriteBatch);
             m_MainPlayer.Draw(m_SpriteBatch);
 

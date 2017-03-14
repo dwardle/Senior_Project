@@ -26,7 +26,6 @@ namespace Senior_Project
 
         public void Update(GameTime a_GameTime, int a_NewX, int a_NewY)
         {
-
             m_Center = new Vector2(a_NewX, a_NewY);
             m_Transform = Matrix.CreateScale(new Vector3(1, 1, 0)) * Matrix.CreateTranslation(new Vector3(-m_Center.X, -m_Center.Y, 0));
         }
