@@ -24,6 +24,7 @@ namespace Senior_Project
         public int m_CurrentRoom = 0;
         const int m_RoomWidth = 960;
         const int m_RoomHeight = 832;
+        public int RoomIndex = 0;
 
         public Player(TopDownGame a_CurrentGame)
         {
@@ -219,39 +220,131 @@ namespace Senior_Project
                 m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
             }
 
+            //448 is (the width of room wall - 64) / 2 or (960 - 64)/2
+            //768 is (the length of room wall - 64) or (832 - 64)
+            //896 is (the width of room wall - 64) or (960 - 64)
+            //384 is (the length of room wall - 64) / 2 or (832 - 64) / 2
+
             List<Rooms> CurrentRoomList = new List<Rooms>();
             CurrentRoomList = a_CurrentLevel.GetRoomList();
             Rooms CurrentRoom = new Rooms();
             CurrentRoom = CurrentRoomList[m_CurrentRoom];
-            int cRoom_X = (int)CurrentRoom.m_RoomPosition.X;
-            int cRoom_Y = (int)CurrentRoom.m_RoomPosition.Y;
+            int cRoom_X = (int)CurrentRoomList[RoomIndex].m_RoomPosition.X;
+            int cRoom_Y = (int)CurrentRoomList[RoomIndex].m_RoomPosition.Y;
 
+            //Left Wall
             if (m_PlayerPosition.X <= (64 + cRoom_X) + m_Texture.Width / 2)
             {
-                m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Width / 2;
-            }
-            if (m_PlayerPosition.X >= (896 + cRoom_X) + m_Texture.Width / 2)
-            {
-                m_PlayerPosition.X = (896 + cRoom_X) + m_Texture.Width / 2;
-            }
-            if (m_PlayerPosition.Y <= (64 + cRoom_Y) + m_Texture.Height / 2)
-            {
-                if (CurrentRoom.m_RoomDoors[0].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.X <= cRoom_X + 512)
+                if(CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Left))
                 {
-                    if (m_PlayerPosition.Y >= 64)
+                    int LeftDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Left);
+                    if(CurrentRoomList[RoomIndex].m_RoomDoors[LeftDoor].m_IsDoorOpen && m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.Y <= cRoom_Y + 448)
                     {
-                        m_PlayerPosition.X = (cRoom_X + 448) + (m_Texture.Width / 2);
+                        if(m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.X < cRoom_X + 64)
+                        {
+                            m_PlayerPosition.Y = (cRoom_Y + 348) + m_Texture.Height / 2;
+                        }
+                    }
+                    else
+                    {
+                        m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Width / 2;
                     }
                 }
                 else
                 {
-                    m_PlayerPosition.X = (64 + cRoom_Y) + m_Texture.Height / 2;
+                    m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Width / 2;
                 }
             }
+
+            //Right Wall
+            if (m_PlayerPosition.X >= (896 + cRoom_X) + m_Texture.Width / 2)
+            {
+                if (CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Right))
+                {
+                    int RightDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Right);
+                    if (CurrentRoomList[RoomIndex].m_RoomDoors[RightDoor].m_IsDoorOpen && m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.Y <= cRoom_Y + 448)
+                    {
+                        if (m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.X < cRoom_X + 448)
+                        {
+                            m_PlayerPosition.Y = (cRoom_Y + 384) + m_Texture.Height / 2;
+                        }
+                    }
+                    else
+                    {
+                        m_PlayerPosition.X = (896 + cRoom_X) + m_Texture.Width / 2;
+                    }
+                }
+                m_PlayerPosition.X = (896 + cRoom_X) + m_Texture.Width / 2;
+            }
+
+            //Top Wall
+            if (m_PlayerPosition.Y <= (64 + cRoom_Y) + m_Texture.Height / 2)
+            {
+                if (CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
+                {
+                    int UpDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
+                    if (CurrentRoomList[RoomIndex].m_RoomDoors[UpDoor].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.Y <= cRoom_X + 512)
+                    {
+                        if (m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.Y < cRoom_Y + 64)
+                        {
+                            m_PlayerPosition.X = (cRoom_X + 448) + m_Texture.Width / 2;
+                        }
+                    }
+                    else
+                    {
+                        m_PlayerPosition.Y = (64 + cRoom_Y) + m_Texture.Height / 2;
+                    }
+                }
+                else
+                {
+                    m_PlayerPosition.Y = (64 + cRoom_Y) + m_Texture.Height / 2;
+                }
+            }
+
+            //original before changes
+            //if (m_PlayerPosition.Y <= (64 + cRoom_Y) + m_Texture.Height / 2)
+            //{
+            //    if (CurrentRoom.m_RoomDoors[0].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.X <= cRoom_X + 512)
+            //    {
+            //        if (m_PlayerPosition.Y >= 64)
+            //        {
+            //            m_PlayerPosition.X = (cRoom_X + 448) + (m_Texture.Width / 2);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        m_PlayerPosition.X = (64 + cRoom_Y) + m_Texture.Height / 2;
+            //    }
+            //}
+
+            //Down Wall
             if (m_PlayerPosition.Y >= (768 + cRoom_Y) + m_Texture.Height / 2)
             {
-                m_PlayerPosition.X = (768 + cRoom_Y) + m_Texture.Height / 2;
+                if (CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Down))
+                {
+                    int DownDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Down);
+                    if (CurrentRoomList[RoomIndex].m_RoomDoors[DownDoor].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.Y <= cRoom_X + 512)
+                    {
+                        if (m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.Y > cRoom_Y + 768)
+                        {
+                            m_PlayerPosition.X = (cRoom_X + 448) + m_Texture.Width / 2;
+                        }
+                    }
+                    else
+                    {
+                        m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Height / 2;
+                    }
+                }
+                else
+                {
+                    m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Width / 2;
+                }
             }
+
+            //if (m_PlayerPosition.Y >= (768 + cRoom_Y) + m_Texture.Height / 2)
+            //{
+            //    m_PlayerPosition.X = (768 + cRoom_Y) + m_Texture.Height / 2;
+            //}
 
             //Boundaries 
             //if (m_PlayerPosition.X <= (64 + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.X) + m_Texture.Width / 2)
@@ -285,7 +378,7 @@ namespace Senior_Project
             //    m_PlayerPosition.Y = (832 - (64) + m_CurrentGame.m_RoomList[m_CurrentRoom].m_RoomPosition.Y) - m_Texture.Height / 2;
             //}
 
-            //m_BoundingBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
+            m_BoundingBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
         }
     }
 }

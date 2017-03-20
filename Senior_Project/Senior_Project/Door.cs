@@ -18,7 +18,7 @@ namespace Senior_Project
         public Texture2D m_Texture;
         public Vector2 m_DoorPosition;
         public Rectangle m_BoundingBox;
-        public bool m_IsDoorOpen = false;
+        public bool m_IsDoorOpen = true;
         public int m_Placement;
         public int m_nextRoom = 0;
 

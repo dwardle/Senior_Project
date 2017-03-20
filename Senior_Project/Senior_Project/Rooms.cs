@@ -19,6 +19,7 @@ namespace Senior_Project
         public Vector2 m_RoomPosition;
         public List<Door> m_RoomDoors = new List<Door>();
         public RoomFloor m_Floor = new RoomFloor();
+        public bool m_IsDeadEnd = false;
         Random doorGen = new Random();
         DoorPlacement doorComp = new DoorPlacement();
 
@@ -81,28 +82,28 @@ namespace Senior_Project
             //384 is (the length of room wall - 64) / 2 or (832 - 64) / 2
             //int numDoors = doorGen.Next(1, 4);
 
-            if (a_LastDoorLocation == (int)m_DoorPlacement.Up)
-            {
-                //place first door
-                CreateDoor((int)m_DoorPlacement.Down);
-            }
-            else if(a_LastDoorLocation == (int)m_DoorPlacement.Down)
-            {
-                CreateDoor((int)m_DoorPlacement.Up);
-                //Door nDoor = new Door((int)this.m_RoomPosition.X + 448, (int)this.m_RoomPosition.Y);
-                //nDoor.SetDoorPlacement((int)m_DoorPlacement.Up);
-                //this.m_RoomDoors.Add(nDoor);
-            }
-            else if (a_LastDoorLocation == (int)m_DoorPlacement.Left)
-            {
-                CreateDoor((int)m_DoorPlacement.Right);
-            }
-            else if (a_LastDoorLocation == (int)m_DoorPlacement.Right)
-            {
-                CreateDoor((int)m_DoorPlacement.Left);
-            }
+            //if (a_LastDoorLocation == (int)m_DoorPlacement.Up)
+            //{
+            //    //place first door
+            //    CreateDoor((int)m_DoorPlacement.Down);
+            //}
+            //else if(a_LastDoorLocation == (int)m_DoorPlacement.Down)
+            //{
+            //    CreateDoor((int)m_DoorPlacement.Up);
+            //    //Door nDoor = new Door((int)this.m_RoomPosition.X + 448, (int)this.m_RoomPosition.Y);
+            //    //nDoor.SetDoorPlacement((int)m_DoorPlacement.Up);
+            //    //this.m_RoomDoors.Add(nDoor);
+            //}
+            //else if (a_LastDoorLocation == (int)m_DoorPlacement.Left)
+            //{
+            //    CreateDoor((int)m_DoorPlacement.Right);
+            //}
+            //else if (a_LastDoorLocation == (int)m_DoorPlacement.Right)
+            //{
+            //    CreateDoor((int)m_DoorPlacement.Left);
+            //}
 
-            int numDoors = doorGen.Next(1, 4);
+            int numDoors = doorGen.Next(0, 4);
             while (numDoors >= a_RoomsRemaining)
             {
                 numDoors--;
@@ -144,9 +145,47 @@ namespace Senior_Project
             this.m_RoomDoors.Add(nDoor);
         }
 
+        public void CreateDoor(int a_Placement, int a_NextRoomIndex)
+        {
+            Door nDoor = new Door();
+            nDoor.SetDoorPosition((int)m_RoomPosition.X, (int)m_RoomPosition.Y, a_Placement);
+            nDoor.m_nextRoom = a_NextRoomIndex;
+            this.m_RoomDoors.Add(nDoor);
+        }
+
         public List<Door> GetDoorList()
         {
             return this.m_RoomDoors;
+        }
+
+        public int FindDoor(int a_Placement)
+        {
+            for(int i = 0; i < m_RoomDoors.Count; i++)
+            {
+                if(m_RoomDoors[i].m_Placement == a_Placement)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public void MoveRoom(int a_RoomX, int a_RoomY)
+        {
+            this.m_RoomPosition.X = a_RoomX;
+            this.m_RoomPosition.Y = a_RoomY;
+            this.m_Floor.m_FloorPosition.X += a_RoomX;
+            this.m_Floor.m_FloorPosition.Y += a_RoomY;
+        }
+
+        public bool IsDeadEnd()
+        {
+            return m_IsDeadEnd;
+        }
+
+        public void SetDeadEnd(bool a_IsDeadEnd)
+        {
+            this.m_IsDeadEnd = a_IsDeadEnd;
         }
     } 
 }

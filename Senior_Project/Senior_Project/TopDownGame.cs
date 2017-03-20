@@ -30,6 +30,7 @@ namespace Senior_Project
         const int m_RoomHeight = 832;
         public int LevelCount = 1;
 
+
         public TopDownGame()
         {
             //960 x 832
@@ -44,7 +45,7 @@ namespace Senior_Project
             this.IsMouseVisible = true;
             m_RoomList.Add(m_Room);
             m_RoomList.Add(m_Room2);
-            m_Room2.GenerateDoors(4, 0);
+            m_Room2.GenerateDoors(0, 0);
             m_Room2.GenerateDoors(2, 2);
             m_Room2.GenerateDoors(2, 3);
         }
@@ -70,10 +71,11 @@ namespace Senior_Project
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             m_SpriteBatch = new SpriteBatch(GraphicsDevice);
-            m_Room.LoadContent(Content);
-            m_Room2.LoadContent(Content);
+            m_Level_1.LoadContent(Content);
+            //m_Room.LoadContent(Content);
+            //m_Room2.LoadContent(Content);
             //m_Floor.LoadContent(Content);
-            m_Door.LoadContent(Content);
+            //m_Door.LoadContent(Content);
             m_MainPlayer.LoadContent(Content);
             // TODO: use this.Content to load your game content here
         }
@@ -99,17 +101,32 @@ namespace Senior_Project
                 this.Exit();
 
             // TODO: Add your update logic here
-            m_MainPlayer.Update(a_GameTime, this);
-            //Door Bounding
-            if (m_Door.m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            m_MainPlayer.Update(a_GameTime, m_Level_1);
+            List<Rooms> CurrenRoomList = new List<Rooms>();
+            CurrenRoomList = m_Level_1.GetRoomList();
+            if(CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
             {
-                m_MainPlayer.m_CurrentRoom++;
-                m_Camera.Update(a_GameTime, (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.X, 
-                    (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.Y);
-                //m_MainPlayer.m_PlayerPosition.X = 0;
-                m_MainPlayer.m_PlayerPosition.Y = -300;
-                //m_MainPlayer.m_CurrentRoom++;
+                int TopDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
+                if(CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                {
+                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 704;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
+                }
             }
+
+            //Door Bounding
+            //if (m_Door.m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            //{
+            //    m_MainPlayer.m_CurrentRoom++;
+            //    m_Camera.Update(a_GameTime, (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.X, 
+            //        (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.Y);
+            //    //m_MainPlayer.m_PlayerPosition.X = 0;
+            //    m_MainPlayer.m_PlayerPosition.Y = -300;
+            //    //m_MainPlayer.m_CurrentRoom++;
+            //}
 
             ////trying to get done what the above function does but with room and door lists instead of hard coded numbers
             //List<Rooms> currenLevel = m_Level_1.GetRoomList();
@@ -141,10 +158,11 @@ namespace Senior_Project
             }
             m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, m_Camera.m_Transform);
 
-            m_Room.Draw(m_SpriteBatch);
-            m_Room2.Draw(m_SpriteBatch);
+            //m_Room.Draw(m_SpriteBatch);
+            //m_Room2.Draw(m_SpriteBatch);
             //m_Floor.Draw(m_SpriteBatch);
-            m_Door.Draw(m_SpriteBatch);
+            //m_Door.Draw(m_SpriteBatch);
+            m_Level_1.Draw(m_SpriteBatch);
             m_MainPlayer.Draw(m_SpriteBatch);
 
             m_SpriteBatch.End();
