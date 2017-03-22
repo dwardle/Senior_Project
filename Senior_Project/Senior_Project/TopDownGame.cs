@@ -104,6 +104,7 @@ namespace Senior_Project
             m_MainPlayer.Update(a_GameTime, m_Level_1);
             List<Rooms> CurrenRoomList = new List<Rooms>();
             CurrenRoomList = m_Level_1.GetRoomList();
+            //Go threw the top door
             if(CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
             {
                 int TopDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
@@ -117,6 +118,47 @@ namespace Senior_Project
                 }
             }
 
+            //go threw bottom door
+            if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Down))
+            {
+                int DownDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Down);
+                if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                {
+                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 128;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
+                }
+            }
+
+            //go threw left door
+            if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Left))
+            {
+                int LeftDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Left);
+                if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                {
+                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 832;
+                }
+            }
+
+            //go threw right door
+            if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Right))
+            {
+                int RightDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Right);
+                if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                {
+                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 128;
+                }
+            }
             //Door Bounding
             //if (m_Door.m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
             //{

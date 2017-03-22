@@ -26,7 +26,7 @@ namespace Senior_Project
         {
             m_Texture = null;
             m_DoorPosition = new Vector2(448, 0);
-            m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 64, 64);
+            m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 32, 32);
             m_Placement = (int)m_DoorPlacement.Up;
         }
 
@@ -50,23 +50,27 @@ namespace Senior_Project
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX + 448, a_DoorY);
+                m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 64, 64);
             }
             else if (a_Placement == (int)m_DoorPlacement.Down)
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX + 448, a_DoorY + 768);
+                m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y + 64, 64, 32);
             }
             else if (a_Placement == (int)m_DoorPlacement.Left)
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX, a_DoorY + 384);
+                m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 64, 64);
             }
             else if (a_Placement == (int)m_DoorPlacement.Right)
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX + 896, a_DoorY + 384);
+                m_BoundingBox = new Rectangle((int)m_DoorPosition.X + 64, (int)m_DoorPosition.Y, 32, 64);
             }
-            m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 64, 64);
+            //m_BoundingBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 32, 32);
         }
 
         public void LoadContent(ContentManager a_Content)
