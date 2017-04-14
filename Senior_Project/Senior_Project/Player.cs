@@ -21,7 +21,8 @@ namespace Senior_Project
         public Vector2 m_PlayerOrigin;
         //public float bulletDelay;
         public Rectangle m_BoundingBox;
-        TopDownGame m_CurrentGame;
+        //TopDownGame m_CurrentGame;
+        Level m_CurrentLevel;
         public int m_CurrentRoom = 0;
         const int m_RoomWidth = 960;
         const int m_RoomHeight = 832;
@@ -29,9 +30,9 @@ namespace Senior_Project
         public float m_ShotDelay = 20;
         public List<Bullet> m_BulletList = new List<Bullet>();
 
-        public Player(TopDownGame a_CurrentGame)
+        public Player(Level a_CurrentLevel)
         {
-            m_CurrentGame = a_CurrentGame;
+            m_CurrentLevel = a_CurrentLevel;
             m_Texture = null;
             m_PlayerSpeed = 5;
             m_PlayerPosition = new Vector2(300, 300);
@@ -220,7 +221,7 @@ namespace Senior_Project
                 Shoot(Keys.Up);
                 
                 //line below is for testing the switch from closed door to open door
-                m_CurrentGame.m_Door.m_IsDoorOpen = true;
+                //m_CurrentGame.m_Door.m_IsDoorOpen = true;
             }
             else if (keyState.IsKeyDown(Keys.Right))
             {
@@ -237,7 +238,8 @@ namespace Senior_Project
                 m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
                 Shoot(Keys.Down);
             }
-            UpdateBullet();
+            List<Rooms> currentLevelRooms = m_CurrentLevel.GetRoomList();
+            UpdateBullet(currentLevelRooms[RoomIndex]);
 
 
             //448 is (the width of room wall - 64) / 2 or (960 - 64)/2
@@ -413,7 +415,7 @@ namespace Senior_Project
             }
         }
 
-        public void UpdateBullet()
+        public void UpdateBullet(Rooms a_CurrentRoom)
         {
             foreach(Bullet b in m_BulletList)
             {
@@ -421,7 +423,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.Y;
                     b.m_Position.Y = b.m_Position.Y - 10;
-                    if(b.m_Position.Y <= shotStart - 300 || b.m_Position.Y <= 64)
+                    if(b.m_Position.Y <= shotStart - 300 || b.m_Position.Y <= a_CurrentRoom.m_RoomPosition.Y + 64)
                     {
                         b.m_IsVisible = false;
                     }
@@ -431,7 +433,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.Y;
                     b.m_Position.Y = b.m_Position.Y + 10;
-                    if (b.m_Position.Y >= shotStart + 300 || b.m_Position.Y >= 768)
+                    if (b.m_Position.Y >= shotStart + 300 || b.m_Position.Y >= a_CurrentRoom.m_RoomPosition.Y + 768)
                     {
                         b.m_IsVisible = false;
                     }
@@ -441,7 +443,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X - 10;
-                    if (b.m_Position.X <= shotStart - 300 || b.m_Position.X <= 64)
+                    if (b.m_Position.X <= shotStart - 300 || b.m_Position.X <= a_CurrentRoom.m_RoomPosition.X + 64)
                     {
                         b.m_IsVisible = false;
                     }
@@ -451,7 +453,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X + 10;
-                    if (b.m_Position.X >= shotStart + 300 || b.m_Position.X >= 896)
+                    if (b.m_Position.X >= shotStart + 300 || b.m_Position.X >= a_CurrentRoom.m_RoomPosition.X + 896)
                     {
                         b.m_IsVisible = false;
                     }

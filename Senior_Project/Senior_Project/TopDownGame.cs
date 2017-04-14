@@ -39,7 +39,7 @@ namespace Senior_Project
             m_Graphics.IsFullScreen = false;
             m_Graphics.PreferredBackBufferWidth = m_roomWidth;
             m_Graphics.PreferredBackBufferHeight = m_RoomHeight;
-            m_MainPlayer = new Player(this);
+            m_MainPlayer = new Player(m_Level_1);
             this.Window.Title = "batdoug";
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
