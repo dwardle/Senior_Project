@@ -75,6 +75,8 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Door.cs" />
+    <Compile Include="Enemy.cs" />
+    <Compile Include="EnemyNoGun.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

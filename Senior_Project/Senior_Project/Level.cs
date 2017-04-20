@@ -283,6 +283,7 @@ namespace Senior_Project
                 NewRoom.SetDeadEnd(true);
                 NewRoom.MoveRoom(CR_X, CR_Y - 832);
                 NewRoom.CreateDoor((int)m_DoorPlacement.Down, a_CurrentRoomIndex);
+                NewRoom.GenerateEnemies();
                 m_LevelRooms.Add(NewRoom);
                 NewRoomIndex = m_LevelRooms.Count - 1;
                 int DoorIndex = m_LevelRooms[a_CurrentRoomIndex].FindDoor(a_DoorPlacement);
@@ -299,6 +300,7 @@ namespace Senior_Project
                 NewRoom.SetDeadEnd(true);
                 NewRoom.MoveRoom(CR_X, CR_Y + 832);
                 NewRoom.CreateDoor((int)m_DoorPlacement.Up, a_CurrentRoomIndex);
+                NewRoom.GenerateEnemies();
                 m_LevelRooms.Add(NewRoom);
                 NewRoomIndex = m_LevelRooms.Count - 1;
                 int DoorIndex = m_LevelRooms[a_CurrentRoomIndex].FindDoor(a_DoorPlacement);
@@ -315,6 +317,7 @@ namespace Senior_Project
                 NewRoom.SetDeadEnd(true);
                 NewRoom.MoveRoom(CR_X - 960, CR_Y);
                 NewRoom.CreateDoor((int)m_DoorPlacement.Right, a_CurrentRoomIndex);
+                NewRoom.GenerateEnemies();
                 m_LevelRooms.Add(NewRoom);
                 NewRoomIndex = m_LevelRooms.Count - 1;
                 int DoorIndex = m_LevelRooms[a_CurrentRoomIndex].FindDoor(a_DoorPlacement);
@@ -331,6 +334,7 @@ namespace Senior_Project
                 NewRoom.SetDeadEnd(true);
                 NewRoom.MoveRoom(CR_X + 960, CR_Y);
                 NewRoom.CreateDoor((int)m_DoorPlacement.Left, a_CurrentRoomIndex);
+                NewRoom.GenerateEnemies();
                 m_LevelRooms.Add(NewRoom);
                 NewRoomIndex = m_LevelRooms.Count - 1;
                 int DoorIndex = m_LevelRooms[a_CurrentRoomIndex].FindDoor(a_DoorPlacement);

@@ -13,10 +13,18 @@ namespace Senior_Project
 {
     public class Player
     {
+        //Player Stats
+        public float m_PlayerHealth = 3;
+        public float m_MaxHealth = 3;
+        public float m_ShotDelay = 20;
+        public float m_PlayerSpeed;
+        public float m_ShotRange = 300;
+
+
         public Texture2D m_Texture;
         public Texture2D m_BulletTexture;
         public Vector2 m_PlayerPosition;
-        public int m_PlayerSpeed;
+        
         public float m_PlayerRotation;
         public Vector2 m_PlayerOrigin;
         //public float bulletDelay;
@@ -24,10 +32,10 @@ namespace Senior_Project
         //TopDownGame m_CurrentGame;
         Level m_CurrentLevel;
         public int m_CurrentRoom = 0;
-        const int m_RoomWidth = 960;
-        const int m_RoomHeight = 832;
+        //const int m_RoomWidth = 960;
+        //const int m_RoomHeight = 832;
         public int RoomIndex = 0;
-        public float m_ShotDelay = 20;
+        
         public List<Bullet> m_BulletList = new List<Bullet>();
 
         public Player(Level a_CurrentLevel)
@@ -35,7 +43,7 @@ namespace Senior_Project
             m_CurrentLevel = a_CurrentLevel;
             m_Texture = null;
             m_PlayerSpeed = 5;
-            m_PlayerPosition = new Vector2(300, 300);
+            m_PlayerPosition = new Vector2(480, 462);
         }
 
         public void LoadContent(ContentManager a_Content)
@@ -423,7 +431,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.Y;
                     b.m_Position.Y = b.m_Position.Y - 10;
-                    if(b.m_Position.Y <= shotStart - 300 || b.m_Position.Y <= a_CurrentRoom.m_RoomPosition.Y + 64)
+                    if(b.m_Position.Y <= shotStart - m_ShotRange || b.m_Position.Y <= a_CurrentRoom.m_RoomPosition.Y + 64)
                     {
                         b.m_IsVisible = false;
                     }
@@ -433,7 +441,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.Y;
                     b.m_Position.Y = b.m_Position.Y + 10;
-                    if (b.m_Position.Y >= shotStart + 300 || b.m_Position.Y >= a_CurrentRoom.m_RoomPosition.Y + 768)
+                    if (b.m_Position.Y >= shotStart + m_ShotRange || b.m_Position.Y >= a_CurrentRoom.m_RoomPosition.Y + 768)
                     {
                         b.m_IsVisible = false;
                     }
@@ -443,7 +451,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X - 10;
-                    if (b.m_Position.X <= shotStart - 300 || b.m_Position.X <= a_CurrentRoom.m_RoomPosition.X + 64)
+                    if (b.m_Position.X <= shotStart - m_ShotRange || b.m_Position.X <= a_CurrentRoom.m_RoomPosition.X + 64)
                     {
                         b.m_IsVisible = false;
                     }
@@ -453,7 +461,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X + 10;
-                    if (b.m_Position.X >= shotStart + 300 || b.m_Position.X >= a_CurrentRoom.m_RoomPosition.X + 896)
+                    if (b.m_Position.X >= shotStart + m_ShotRange || b.m_Position.X >= a_CurrentRoom.m_RoomPosition.X + 896)
                     {
                         b.m_IsVisible = false;
                     }
@@ -468,6 +476,35 @@ namespace Senior_Project
                     i--;
                 }
             }
+        }
+        public void LowerHealth(float a_Damage)
+        {
+            m_PlayerHealth -= a_Damage;
+        }
+
+        public void IncreaseHealth(float a_Health)
+        { 
+            m_PlayerHealth += a_Health;
+        }
+
+        public void LowerPlayerSpeed(float a_SpeedDecrease)
+        {
+            m_PlayerSpeed -= a_SpeedDecrease;
+        }
+
+        public void IncreasePlayerSpeed(float a_SpeedIncrease)
+        {
+            m_PlayerSpeed += a_SpeedIncrease;
+        }
+
+        public void LowerShotDelay(float a_DecreaseDelay)
+        {
+            m_ShotDelay -= a_DecreaseDelay;
+        }
+
+        public void IncreaseShotDelay(float a_IncreaseDelay)
+        {
+            m_ShotDelay += a_IncreaseDelay;
         }
     }
 }

@@ -9,8 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+
 namespace Senior_Project
 {
+    
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -29,6 +31,9 @@ namespace Senior_Project
         const int m_roomWidth = 960;
         const int m_RoomHeight = 832;
         public int LevelCount = 1;
+
+        //random number generator for enemy movement delays
+        public Random m_MovementRand = new Random();
 
 
         public TopDownGame()
@@ -104,17 +109,46 @@ namespace Senior_Project
             m_MainPlayer.Update(a_GameTime, m_Level_1);
             List<Rooms> CurrenRoomList = new List<Rooms>();
             CurrenRoomList = m_Level_1.GetRoomList();
+            List<Enemy> CurrentEnemies = new List<Enemy>();
+            CurrentEnemies = CurrenRoomList[m_MainPlayer.RoomIndex].GetEnemyList();
+            int CurrentEnemyType = CurrenRoomList[m_MainPlayer.RoomIndex].GetEnemyType();
+            if(CurrentEnemyType == 1)
+            {
+                foreach(EnemyNoGun en in CurrentEnemies)
+                {
+                    //the two random values must come from the TopDownGame class because if I try to generate a randome value from
+                    //within the Enemy class, every enemy will get the same random values for m_MoveCount and m_MoveDelay
+                    //this is because of how the Random Class works. getting the random values from the same Random object 
+                    //ensures that all values are different
+                    en.Update(a_GameTime, m_MainPlayer, CurrentEnemies, m_MovementRand.Next(0, 300), m_MovementRand.Next(90, 100));//, CurrenRoomList[m_MainPlayer.RoomIndex]);
+                }
+            }
+            else if(CurrentEnemyType == 2)
+            {
+
+            }
+            else if (CurrentEnemyType == 2)
+            {
+
+            }
+
+            foreach (Enemy en in CurrentEnemies)
+            {
+                
+            }
             //Go threw the top door
             if(CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
             {
                 int TopDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
                 if(CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
+                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 704;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
+                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
                 }
             }
 
@@ -124,11 +158,13 @@ namespace Senior_Project
                 int DownDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Down);
                 if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
+                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 128;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
+                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
                 }
             }
 
@@ -138,25 +174,30 @@ namespace Senior_Project
                 int LeftDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Left);
                 if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
+                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 832;
+                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
                 }
             }
 
             //go threw right door
             if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Right))
             {
+
                 int RightDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Right);
                 if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
+                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 128;
+                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
                 }
             }
             //Door Bounding
@@ -184,6 +225,8 @@ namespace Senior_Project
             //    m_Camera.Update(a_GameTime);
             //}
             //m_Camera.Update(a_GameTime);
+
+            //CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
             base.Update(a_GameTime);
         }
 
