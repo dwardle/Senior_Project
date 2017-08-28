@@ -28,6 +28,7 @@ namespace Senior_Project
         public float m_BulletRotaion = 0;
         public Vector2 m_BulletOrigin;
         public Keys m_BulletDirection;
+        public Rectangle m_BoundingBox;
 
         public Bullet(Texture2D a_Texture)
         {

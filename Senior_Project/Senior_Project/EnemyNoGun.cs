@@ -28,7 +28,7 @@ namespace Senior_Project
         }
 
         public void Update(GameTime a_GameTime, Player a_MainPlayer, List<Enemy> a_RoomEnemies, int a_RandMoveCount, int a_RandMoveDelay)//, Rooms a_CurrentRoom)
-        {            
+        {
             if(this.m_IsActive)
             {
                 this.m_BoundingBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, m_Texture.Width, m_Texture.Height);
@@ -47,6 +47,10 @@ namespace Senior_Project
                     this.m_MoveDelay = a_RandMoveDelay;
                 }
 
+                if(this.m_BoundingBox.Intersects(a_MainPlayer.m_BoundingBox))
+                {
+                    a_MainPlayer.TakeDamage(this.m_Damage);
+                }
                 
             }
         }

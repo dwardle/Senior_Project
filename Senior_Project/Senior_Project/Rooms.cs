@@ -23,6 +23,7 @@ namespace Senior_Project
         Random doorGen = new Random();
         DoorPlacement doorComp = new DoorPlacement();
         public bool m_InThisRoom = false;
+        public bool m_RoomEmpty = false;
 
         public List<Enemy> m_RoomEnemies = new List<Enemy>();
         public Vector2[] m_SpawnPoints = new Vector2[4];
@@ -258,17 +259,17 @@ namespace Senior_Project
 
         public void ActivateEnemies()
         {
-            for(int i = 0; i < m_RoomEnemies.Capacity; i++)
+            foreach(Enemy en in m_RoomEnemies)
             {
-                m_RoomEnemies[i].SetIsActive(true);
+                en.SetIsActive(true);
             }
         }
 
         public void DeactivateEnemies()
         {
-            for (int i = 0; i < m_RoomEnemies.Capacity; i++)
+            foreach(Enemy en in m_RoomEnemies)
             {
-                m_RoomEnemies[i].SetIsActive(false);
+                en.SetIsActive(false);
             }
             ResetEnemies();
         }
@@ -300,6 +301,19 @@ namespace Senior_Project
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
             };
+        }
+
+        public bool RoomClear()
+        {
+            if(m_RoomEnemies.Any() == false)
+            {
+                m_RoomEmpty = true;
+                return m_RoomEmpty;
+            }
+            else
+            {
+                return m_RoomEmpty;
+            }
         }
     } 
 }

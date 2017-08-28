@@ -20,13 +20,12 @@ namespace Senior_Project
         public bool m_IsActive = false;
         public float m_Health;
         public float m_Speed;
+        public float m_Damage = 0.5f;
         public float m_Rotation = 0;
         public Vector2 m_EnemyOrigin = new Vector2();
         public Rectangle m_BoundingBox = new Rectangle();
         public int m_MoveDelay = 0;
         public int m_MoveCount = 10;
-        //public int m_TimeTillDelay = 10;
-        //public Random m_MoveRand = new Random();
 
         public Enemy()
         {
@@ -93,41 +92,11 @@ namespace Senior_Project
             return m_MoveDelay;
         }
 
-        public void MoveToPlayer(Player a_MainPlayer, List<Enemy> a_RoomEnemies)//, Rooms a_CurrentRoom)
+        public void MoveToPlayer(Player a_MainPlayer, List<Enemy> a_RoomEnemies)
         {
-            /*for(int i = 0; i < a_RoomEnemies.Capacity; i++)
-            {
-                if(a_RoomEnemies[i] == this)
-                {
-                    a_RoomEnemies.Remove(a_RoomEnemies[i]);
-                    //a_RoomEnemies.TrimExcess();
-                    break;
-                }
-            }*/
             //move right, toward player
-
-            //bool touching = false;
-            
-            
             if (a_MainPlayer.m_PlayerPosition.X > this.m_Position.X)
             {
-                
-                //for(int i = 0; i < a_RoomEnemies.Capacity; i++)
-                //{
-                //    if(this.m_BoundingBox.Intersects(a_RoomEnemies[i].m_BoundingBox) && a_RoomEnemies[i] != this)
-                //    {
-                //        touching = true;
-                //    }
-                //    else if (a_RoomEnemies[i] != this)
-                //    {
-                //        touching = false;
-                //    }
-                //}
-                //if(!touching)
-                //{
-                //    this.SetRotation('D');
-                //    m_Position.X = m_Position.X + m_Speed;
-                //}
                 this.SetRotation('D');
                 m_Position.X = m_Position.X + m_Speed;
             }
@@ -135,22 +104,6 @@ namespace Senior_Project
             //move down, toward player
             if (a_MainPlayer.m_PlayerPosition.Y > this.m_Position.Y)
             {
-                //for (int i = 0; i < a_RoomEnemies.Capacity; i++)
-                //{
-                //    if (this.m_BoundingBox.Intersects(a_RoomEnemies[i].m_BoundingBox) && a_RoomEnemies[i] != this)
-                //    {
-                //        touching = true;
-                //    }
-                //    else if(a_RoomEnemies[i] != this)
-                //    {
-                //        touching = false;
-                //    }
-                //}
-                //if(!touching)
-                //{
-                //    this.SetRotation('S');
-                //    m_Position.Y = m_Position.Y + m_Speed;
-                //}
                 this.SetRotation('S');
                 m_Position.Y = m_Position.Y + m_Speed;
             }
@@ -158,23 +111,6 @@ namespace Senior_Project
             //move left toward player,
             if (a_MainPlayer.m_PlayerPosition.X < this.m_Position.X)
             {
-                //for (int i = 0; i < a_RoomEnemies.Capacity; i++)
-                //{
-                //    if (this.m_BoundingBox.Intersects(a_RoomEnemies[i].m_BoundingBox) && a_RoomEnemies[i] != this)
-                //    {
-                //        touching = true;
-                //    }
-                //    else if (a_RoomEnemies[i] != this)
-                //    {
-                //        touching = false;
-                //    }
-
-                //}
-                //if (!touching)
-                //{
-                //    this.SetRotation('A');
-                //    m_Position.X = m_Position.X - m_Speed;
-                //}
                 this.SetRotation('A');
                 m_Position.X = m_Position.X - m_Speed;
             }
@@ -182,24 +118,17 @@ namespace Senior_Project
             //move up, toward player
             if (a_MainPlayer.m_PlayerPosition.Y < this.m_Position.Y)
             {
-                //for (int i = 0; i < a_RoomEnemies.Capacity; i++)
-                //{
-                //    if (this.m_BoundingBox.Intersects(a_RoomEnemies[i].m_BoundingBox) && a_RoomEnemies[i] != this)
-                //    {
-                //        touching = true;
-                //    }
-                //    else if (a_RoomEnemies[i] != this)
-                //    {
-                //        touching = false;
-                //    }
-                //}
-                //if (!touching)
-                //{
-                //    this.SetRotation('W');
-                //    m_Position.Y = m_Position.Y - m_Speed;
-                //}
                 this.SetRotation('W');
                 m_Position.Y = m_Position.Y - m_Speed;
+            }
+        }
+
+        public void TakeDamage(float a_Damage)
+        {
+            m_Health -= a_Damage;
+            if(m_Health <= 0)
+            {
+                this.m_IsAlive = false;
             }
         }
     }

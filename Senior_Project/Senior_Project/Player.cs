@@ -14,11 +14,14 @@ namespace Senior_Project
     public class Player
     {
         //Player Stats
-        public float m_PlayerHealth = 3;
-        public float m_MaxHealth = 3;
-        public float m_ShotDelay = 20;
+        public float m_PlayerHealth = 3f;
+        public float m_MaxHealth = 3f;
+        public float m_ShotDelay = 20f;
         public float m_PlayerSpeed;
-        public float m_ShotRange = 300;
+        public float m_ShotRange = 300f;
+        public bool m_CantTakeDamage = false;
+        public int m_DamageDelay = 30;
+        public float m_Damage = 2.5f;
 
 
         public Texture2D m_Texture;
@@ -427,6 +430,7 @@ namespace Senior_Project
         {
             foreach(Bullet b in m_BulletList)
             {
+                b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
                 if(b.m_BulletDirection == Keys.Up)
                 {
                     float shotStart = m_PlayerPosition.Y;
@@ -435,6 +439,7 @@ namespace Senior_Project
                     {
                         b.m_IsVisible = false;
                     }
+                    
                 }
 
                 if (b.m_BulletDirection == Keys.Down)
@@ -505,6 +510,29 @@ namespace Senior_Project
         public void IncreaseShotDelay(float a_IncreaseDelay)
         {
             m_ShotDelay += a_IncreaseDelay;
+        }
+
+        public void TakeDamage(float a_Damage)
+        {
+            if(this.m_CantTakeDamage == false)
+            {
+                m_PlayerHealth -= a_Damage;
+                m_CantTakeDamage = true;
+            }
+            else
+            {
+                m_DamageDelay--;
+            }
+            if(m_PlayerHealth <= 0)
+            {
+                System.Environment.Exit(0);
+            }
+
+            if(m_DamageDelay <= 0)
+            {
+                m_CantTakeDamage = false;
+                m_DamageDelay = 30;
+            }
         }
     }
 }

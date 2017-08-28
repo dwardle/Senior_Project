@@ -21,10 +21,10 @@ namespace Senior_Project
         GraphicsDeviceManager m_Graphics;
         SpriteBatch m_SpriteBatch;
         public List<Rooms> m_RoomList = new List<Rooms>();
-        public Rooms m_Room = new Rooms();
-        public Rooms m_Room2 = new Rooms(0, -832);
+        //public Rooms m_Room = new Rooms();
+        //public Rooms m_Room2 = new Rooms(0, -832);
         //RoomFloor m_Floor = new RoomFloor();
-        public Door m_Door = new Door();
+        //public Door m_Door = new Door();
         Player m_MainPlayer;
         Camera m_Camera;
         Level m_Level_1 = new Level(1);
@@ -48,11 +48,11 @@ namespace Senior_Project
             this.Window.Title = "batdoug";
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
-            m_RoomList.Add(m_Room);
-            m_RoomList.Add(m_Room2);
-            m_Room2.GenerateDoors(0, 0);
-            m_Room2.GenerateDoors(2, 2);
-            m_Room2.GenerateDoors(2, 3);
+            //m_RoomList.Add(m_Room);
+           // m_RoomList.Add(m_Room2);
+           // m_Room2.GenerateDoors(0, 0);
+           // m_Room2.GenerateDoors(2, 2);
+            //m_Room2.GenerateDoors(2, 3);
         }
 
         /// <summary>
@@ -116,11 +116,19 @@ namespace Senior_Project
             {
                 foreach(EnemyNoGun en in CurrentEnemies)
                 {
-                    //the two random values must come from the TopDownGame class because if I try to generate a randome value from
-                    //within the Enemy class, every enemy will get the same random values for m_MoveCount and m_MoveDelay
-                    //this is because of how the Random Class works. getting the random values from the same Random object 
-                    //ensures that all values are different
-                    en.Update(a_GameTime, m_MainPlayer, CurrentEnemies, m_MovementRand.Next(0, 300), m_MovementRand.Next(90, 100));//, CurrenRoomList[m_MainPlayer.RoomIndex]);
+                    if (en.m_IsAlive == false)
+                    {
+                        CurrentEnemies.Remove(en);
+                        break;
+                    }
+                    else
+                    {
+                        //the two random values must come from the TopDownGame class because if I try to generate a randome value from
+                        //within the Enemy class, every enemy will get the same random values for m_MoveCount and m_MoveDelay
+                        //this is because of how the Random Class works. getting the random values from the same Random object 
+                        //ensures that all values are different
+                        en.Update(a_GameTime, m_MainPlayer, CurrentEnemies, m_MovementRand.Next(0, 300), m_MovementRand.Next(90, 100));//, CurrenRoomList[m_MainPlayer.RoomIndex]);
+                    }
                 }
             }
             else if(CurrentEnemyType == 2)
@@ -134,7 +142,14 @@ namespace Senior_Project
 
             foreach (Enemy en in CurrentEnemies)
             {
-                
+                foreach(Bullet b in m_MainPlayer.m_BulletList)
+                {
+                    if(b.m_BoundingBox.Intersects(en.m_BoundingBox))
+                    {
+                        en.TakeDamage(m_MainPlayer.m_Damage);
+                        b.m_IsVisible = false;
+                    }
+                }
             }
             //Go threw the top door
             if(CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
@@ -142,7 +157,10 @@ namespace Senior_Project
                 int TopDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
                 if(CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    if(CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    {
+                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    }
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
@@ -158,7 +176,11 @@ namespace Senior_Project
                 int DownDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Down);
                 if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    {
+                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    }
+                    //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
@@ -174,7 +196,11 @@ namespace Senior_Project
                 int LeftDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Left);
                 if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    {
+                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    }
+                    //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
@@ -191,7 +217,11 @@ namespace Senior_Project
                 int RightDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Right);
                 if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    {
+                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                    }
+                    //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
                     m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_nextRoom;
                     m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
                         (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
@@ -200,33 +230,7 @@ namespace Senior_Project
                     CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
                 }
             }
-            //Door Bounding
-            //if (m_Door.m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
-            //{
-            //    m_MainPlayer.m_CurrentRoom++;
-            //    m_Camera.Update(a_GameTime, (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.X, 
-            //        (int)m_RoomList[m_MainPlayer.m_CurrentRoom].m_RoomPosition.Y);
-            //    //m_MainPlayer.m_PlayerPosition.X = 0;
-            //    m_MainPlayer.m_PlayerPosition.Y = -300;
-            //    //m_MainPlayer.m_CurrentRoom++;
-            //}
-
-            ////trying to get done what the above function does but with room and door lists instead of hard coded numbers
-            //List<Rooms> currenLevel = m_Level_1.GetRoomList();
-            //List<Door> currentDoors = currenLevel[m_MainPlayer.m_CurrentRoom].GetDoorList();
-            //if(currentDoors[0].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
-            //{
-            //    m_MainPlayer.m_CurrentRoom++;
-            //    m_Camera.Update(a_GameTime, (int)currenLevel)
-            //}
-
-            //if (m_MainPlayer.m_BoundingBox.Intersects(m_Door.m_BoundingBox))
-            //{
-            //    m_Camera.Update(a_GameTime);
-            //}
-            //m_Camera.Update(a_GameTime);
-
-            //CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+            
             base.Update(a_GameTime);
         }
 
@@ -237,10 +241,10 @@ namespace Senior_Project
         protected override void Draw(GameTime a_GameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            if(m_Door.m_IsDoorOpen == true)
-            {
-                m_Door.LoadContent(Content);
-            }
+            //if(m_Door.m_IsDoorOpen == true)
+            //{
+            //    m_Door.LoadContent(Content);
+            //}
             m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, m_Camera.m_Transform);
 
             //m_Room.Draw(m_SpriteBatch);
