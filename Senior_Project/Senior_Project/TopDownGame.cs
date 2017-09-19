@@ -27,7 +27,8 @@ namespace Senior_Project
         //public Door m_Door = new Door();
         Player m_MainPlayer;
         Camera m_Camera;
-        Level m_Level_1 = new Level(1);
+        //Level m_Level_1 = new Level(1);
+        Level m_Level_test = new Level(1);
         const int m_roomWidth = 960;
         const int m_RoomHeight = 832;
         public int LevelCount = 1;
@@ -41,10 +42,11 @@ namespace Senior_Project
             //960 x 832
             //room size
             m_Graphics = new GraphicsDeviceManager(this);
-            m_Graphics.IsFullScreen = false;
-            m_Graphics.PreferredBackBufferWidth = m_roomWidth;
-            m_Graphics.PreferredBackBufferHeight = m_RoomHeight;
-            m_MainPlayer = new Player(m_Level_1);
+            m_Graphics.IsFullScreen = false;/////////
+            m_Graphics.PreferredBackBufferWidth = m_roomWidth;//////
+            m_Graphics.PreferredBackBufferHeight = m_RoomHeight;/////
+            //m_MainPlayer = new Player(m_Level_1);
+            m_MainPlayer = new Player(m_Level_test);
             this.Window.Title = "batdoug";
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
@@ -76,7 +78,13 @@ namespace Senior_Project
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             m_SpriteBatch = new SpriteBatch(GraphicsDevice);
-            m_Level_1.LoadContent(Content);
+
+            ///////commented out for testing of new load content and draw
+            ///m_Level_1.LoadContent(Content);
+            ///////////////
+            m_Level_test.LoadContent(Content, 1);
+
+
             //m_Room.LoadContent(Content);
             //m_Room2.LoadContent(Content);
             //m_Floor.LoadContent(Content);
@@ -106,15 +114,20 @@ namespace Senior_Project
                 this.Exit();
 
             // TODO: Add your update logic here
-            m_MainPlayer.Update(a_GameTime, m_Level_1);
-            List<Rooms> CurrenRoomList = new List<Rooms>();
-            CurrenRoomList = m_Level_1.GetRoomList();
+            //m_MainPlayer.Update(a_GameTime, m_Level_1);  //this line now works with levelrooms array but for sake of testing I will commenet it out and use next line
+            m_MainPlayer.Update(a_GameTime, m_Level_test);
+            ///new update logic using rooms from level array///
+            Rooms CurrentRoom = m_Level_test.GetCurrentRoom();
+
+            //List<Rooms> CurrenRoomList = new List<Rooms>();
+            //CurrenRoomList = m_Level_1.GetRoomList();
+
             List<Enemy> CurrentEnemies = new List<Enemy>();
-            CurrentEnemies = CurrenRoomList[m_MainPlayer.RoomIndex].GetEnemyList();
-            int CurrentEnemyType = CurrenRoomList[m_MainPlayer.RoomIndex].GetEnemyType();
-            if(CurrentEnemyType == 1)
+            CurrentEnemies = CurrentRoom.GetEnemyList();
+            int CurrentEnemyType = CurrentRoom.GetEnemyType();
+            if (CurrentEnemyType == 1)
             {
-                foreach(EnemyNoGun en in CurrentEnemies)
+                foreach (EnemyNoGun en in CurrentEnemies)
                 {
                     if (en.m_IsAlive == false)
                     {
@@ -131,7 +144,7 @@ namespace Senior_Project
                     }
                 }
             }
-            else if(CurrentEnemyType == 2)
+            else if (CurrentEnemyType == 2)
             {
 
             }
@@ -142,97 +155,333 @@ namespace Senior_Project
 
             foreach (Enemy en in CurrentEnemies)
             {
-                foreach(Bullet b in m_MainPlayer.m_BulletList)
+                foreach (Bullet b in m_MainPlayer.m_BulletList)
                 {
-                    if(b.m_BoundingBox.Intersects(en.m_BoundingBox))
+                    if (b.m_BoundingBox.Intersects(en.m_BoundingBox))
                     {
                         en.TakeDamage(m_MainPlayer.m_Damage);
                         b.m_IsVisible = false;
                     }
                 }
             }
-            //Go threw the top door
-            if(CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
+
+            //new logic for going threw doors
+                //Go threw the top door
+            if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Up))
             {
-                int TopDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
-                if(CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                int TopDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Up);
+                if (CurrentRoom.m_RoomDoors[TopDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    if(CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    if (CurrentRoom.RoomClear() == false)
                     {
-                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                        CurrentRoom.DeactivateEnemies();
                     }
-                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_nextRoom;
-                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
-                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
-                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 704;
-                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
-                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+                    //m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 704;
+                    //m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
+                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow() - 1, CurrentRoom.GetRoomCol());
+                    CurrentRoom = m_Level_test.GetCurrentRoom();
+                    //m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[TopDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 704;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
+                    CurrentRoom.ActivateEnemies();
                 }
             }
 
             //go threw bottom door
-            if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Down))
+            if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Down))
             {
-                int DownDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Down);
-                if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                int DownDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Down);
+                if (CurrentRoom.m_RoomDoors[DownDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    if (CurrentRoom.RoomClear() == false)
                     {
-                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                        CurrentRoom.DeactivateEnemies();
                     }
-                    //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
-                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_nextRoom;
-                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
-                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
-                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 128;
-                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
-                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+                    //CurrentRoom.DeactivateEnemies();
+                    //m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 128;
+                    //m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
+                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow() + 1, CurrentRoom.GetRoomCol());
+                    CurrentRoom = m_Level_test.GetCurrentRoom();
+
+                    //m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[DownDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 128;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
+                    CurrentRoom.ActivateEnemies();
                 }
             }
 
             //go threw left door
-            if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Left))
+            if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Left))
             {
-                int LeftDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Left);
-                if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                int LeftDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Left);
+                if (CurrentRoom.m_RoomDoors[LeftDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    if (CurrentRoom.RoomClear() == false)
                     {
-                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                        CurrentRoom.DeactivateEnemies();
                     }
-                    //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
-                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_nextRoom;
-                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
-                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
-                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
-                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 832;
-                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+                    //CurrentRoom.DeactivateEnemies();
+                    //m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
+                    //m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 832;
+                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow(), CurrentRoom.GetRoomCol() - 1);
+                    CurrentRoom = m_Level_test.GetCurrentRoom();
+
+                    //m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[LeftDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 832;
+                    CurrentRoom.ActivateEnemies();
                 }
             }
 
             //go threw right door
-            if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Right))
+            if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Right))
             {
 
-                int RightDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Right);
-                if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+                int RightDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Right);
+                if (CurrentRoom.m_RoomDoors[RightDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
                 {
-                    if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+                    if (CurrentRoom.RoomClear() == false)
                     {
-                        CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+                        CurrentRoom.DeactivateEnemies();
                     }
-                    //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
-                    m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_nextRoom;
-                    m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
-                        (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
-                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
-                    m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 128;
-                    CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+                    //CurrentRoom.DeactivateEnemies();
+                    //m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
+                    //m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 128;
+                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow(), CurrentRoom.GetRoomCol() + 1);
+                    CurrentRoom = m_Level_test.GetCurrentRoom();
+                    //m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[RightDoor].m_nextRoom;
+                    m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+                    m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
+                    m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 128;
+                    CurrentRoom.ActivateEnemies();
                 }
             }
-            
+
+
+
+
+
+
+
+
+
+
+
+            ////////old logic for going threw doors///////////
+            //Go threw the top door
+            //if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Up))
+            //{
+            //    int TopDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Up);
+            //    if (CurrentRoom.m_RoomDoors[TopDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            //    {
+            //        if (CurrentRoom.RoomClear() == false)
+            //        {
+            //            CurrentRoom.DeactivateEnemies();
+            //        }
+            //        m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[TopDoor].m_nextRoom;
+            //        m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+            //        m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 704;
+            //        m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
+            //        CurrentRoom.ActivateEnemies();
+            //    }
+            //}
+
+            ////go threw bottom door
+            //if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Down))
+            //{
+            //    int DownDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Down);
+            //    if (CurrentRoom.m_RoomDoors[DownDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            //    {
+            //        if (CurrentRoom.RoomClear() == false)
+            //        {
+            //            CurrentRoom.DeactivateEnemies();
+            //        }
+            //        //CurrentRoom.DeactivateEnemies();
+            //        m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[DownDoor].m_nextRoom;
+            //        m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+            //        m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 128;
+            //        m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
+            //        CurrentRoom.ActivateEnemies();
+            //    }
+            //}
+
+            ////go threw left door
+            //if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Left))
+            //{
+            //    int LeftDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Left);
+            //    if (CurrentRoom.m_RoomDoors[LeftDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            //    {
+            //        if (CurrentRoom.RoomClear() == false)
+            //        {
+            //            CurrentRoom.DeactivateEnemies();
+            //        }
+            //        //CurrentRoom.DeactivateEnemies();
+            //        m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[LeftDoor].m_nextRoom;
+            //        m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+            //        m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
+            //        m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 832;
+            //        CurrentRoom.ActivateEnemies();
+            //    }
+            //}
+
+            ////go threw right door
+            //if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Right))
+            //{
+
+            //    int RightDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Right);
+            //    if (CurrentRoom.m_RoomDoors[RightDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+            //    {
+            //        if (CurrentRoom.RoomClear() == false)
+            //        {
+            //            CurrentRoom.DeactivateEnemies();
+            //        }
+            //        //CurrentRoom.DeactivateEnemies();
+            //        m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[RightDoor].m_nextRoom;
+            //        m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
+            //        m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
+            //        m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 128;
+            //        CurrentRoom.ActivateEnemies();
+            //    }
+            //}
+            ////////////////////End old logic for going threw doors/////////////////////////////////////////////////////////////////////////////////////////////
             base.Update(a_GameTime);
         }
+
+
+        //////////old update logic. still uses room list instead off array of rooms
+        //List<Rooms> CurrenRoomList = new List<Rooms>();
+        //    CurrenRoomList = m_Level_1.GetRoomList();
+        //    List<Enemy> CurrentEnemies = new List<Enemy>();
+        //    CurrentEnemies = CurrenRoomList[m_MainPlayer.RoomIndex].GetEnemyList();
+        //    int CurrentEnemyType = CurrenRoomList[m_MainPlayer.RoomIndex].GetEnemyType();
+        //    if(CurrentEnemyType == 1)
+        //    {
+        //        foreach(EnemyNoGun en in CurrentEnemies)
+        //        {
+        //            if (en.m_IsAlive == false)
+        //            {
+        //                CurrentEnemies.Remove(en);
+        //                break;
+        //            }
+        //            else
+        //            {
+        //                //the two random values must come from the TopDownGame class because if I try to generate a randome value from
+        //                //within the Enemy class, every enemy will get the same random values for m_MoveCount and m_MoveDelay
+        //                //this is because of how the Random Class works. getting the random values from the same Random object 
+        //                //ensures that all values are different
+        //                en.Update(a_GameTime, m_MainPlayer, CurrentEnemies, m_MovementRand.Next(0, 300), m_MovementRand.Next(90, 100));//, CurrenRoomList[m_MainPlayer.RoomIndex]);
+        //            }
+        //        }
+        //    }
+        //    else if(CurrentEnemyType == 2)
+        //    {
+
+        //    }
+        //    else if (CurrentEnemyType == 2)
+        //    {
+
+        //    }
+
+        //    foreach (Enemy en in CurrentEnemies)
+        //    {
+        //        foreach(Bullet b in m_MainPlayer.m_BulletList)
+        //        {
+        //            if(b.m_BoundingBox.Intersects(en.m_BoundingBox))
+        //            {
+        //                en.TakeDamage(m_MainPlayer.m_Damage);
+        //                b.m_IsVisible = false;
+        //            }
+        //        }
+        //    }
+        //    //Go threw the top door
+        //    if(CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
+        //    {
+        //        int TopDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
+        //        if(CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+        //        {
+        //            if(CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+        //            {
+        //                CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+        //            }
+        //            m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[TopDoor].m_nextRoom;
+        //            m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+        //                (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+        //            m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 704;
+        //            m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
+        //            CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+        //        }
+        //    }
+
+        //    //go threw bottom door
+        //    if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Down))
+        //    {
+        //        int DownDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Down);
+        //        if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+        //        {
+        //            if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+        //            {
+        //                CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+        //            }
+        //            //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+        //            m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[DownDoor].m_nextRoom;
+        //            m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+        //                (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+        //            m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 128;
+        //            m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 480;
+        //            CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+        //        }
+        //    }
+
+        //    //go threw left door
+        //    if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Left))
+        //    {
+        //        int LeftDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Left);
+        //        if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+        //        {
+        //            if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+        //            {
+        //                CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+        //            }
+        //            //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+        //            m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[LeftDoor].m_nextRoom;
+        //            m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+        //                (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+        //            m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
+        //            m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 832;
+        //            CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+        //        }
+        //    }
+
+        //    //go threw right door
+        //    if (CurrenRoomList[m_MainPlayer.RoomIndex].DoorExists((int)Level.m_DoorPlacement.Right))
+        //    {
+
+        //        int RightDoor = CurrenRoomList[m_MainPlayer.RoomIndex].FindDoor((int)Level.m_DoorPlacement.Right);
+        //        if (CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_BoundingBox.Intersects(m_MainPlayer.m_BoundingBox))
+        //        {
+        //            if (CurrenRoomList[m_MainPlayer.RoomIndex].RoomClear() == false)
+        //            {
+        //                CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+        //            }
+        //            //CurrenRoomList[m_MainPlayer.RoomIndex].DeactivateEnemies();
+        //            m_MainPlayer.RoomIndex = CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomDoors[RightDoor].m_nextRoom;
+        //            m_Camera.Update(a_GameTime, (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X,
+        //                (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y);
+        //            m_MainPlayer.m_PlayerPosition.Y = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.Y + 416;
+        //            m_MainPlayer.m_PlayerPosition.X = (int)CurrenRoomList[m_MainPlayer.RoomIndex].m_RoomPosition.X + 128;
+        //            CurrenRoomList[m_MainPlayer.RoomIndex].ActivateEnemies();
+        //        }
+        //    }
+            
+        //    base.Update(a_GameTime);
+        //}
+        ////////////////////////////////
+
+
+
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -251,7 +500,12 @@ namespace Senior_Project
             //m_Room2.Draw(m_SpriteBatch);
             //m_Floor.Draw(m_SpriteBatch);
             //m_Door.Draw(m_SpriteBatch);
-            m_Level_1.Draw(m_SpriteBatch);
+
+            ///////commented out for testing of new level draw and load content
+            //m_Level_1.Draw(m_SpriteBatch);
+            ////////////////////////
+
+            m_Level_test.Draw(m_SpriteBatch, 1);
             m_MainPlayer.Draw(m_SpriteBatch);
 
             m_SpriteBatch.End();

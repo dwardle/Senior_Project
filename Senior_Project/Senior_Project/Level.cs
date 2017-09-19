@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
+    //
     public class Level
     {
         public enum m_DoorPlacement { Up = 0, Down, Left, Right };
@@ -22,16 +23,27 @@ namespace Senior_Project
         int m_NextRoom;
         int m_CenterRoom;
         int m_RemainingRooms;
+        int m_CurrentRoomIndex_X;
+        int m_CurrentRoomIndex_Y;
         Random Rand = new Random();
+        Rooms[,] levelRooms;
+
+        //new deadends variable
+        int m_DeadEnds = 0;
 
         public Level(int a_LevelCount)
         {
             m_LevelCount = a_LevelCount;
             m_RemainingRooms = m_RoomCount;
+            levelRooms = new Rooms[m_RemainingRooms, m_RemainingRooms];
             m_NextRoom = 0;
-            CreateLevel();
+            m_CurrentRoomIndex_X = m_RoomCount / 2;
+            m_CurrentRoomIndex_Y = m_RoomCount / 2;
+            CreateLevel1();
+            //CreateLevel();
         }
 
+        ///////old load content//////
         public void LoadContent(ContentManager a_Content)
         {
             foreach(Rooms r in m_LevelRooms)
@@ -39,7 +51,21 @@ namespace Senior_Project
                 r.LoadContent(a_Content);
             }
         }
-
+        ///end old load content/////
+        ///
+        ////new load content using room array
+        public void LoadContent(ContentManager a_Content, int temp)
+        {
+            foreach(Rooms room in levelRooms)
+            {
+                if(room != null)
+                {
+                    room.LoadContent(a_Content);
+                }
+            }
+        }
+        
+        ///old draw using room list///
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             foreach (Rooms r in m_LevelRooms)
@@ -47,9 +73,220 @@ namespace Senior_Project
                 r.Draw(a_SpriteBatch);
             }
         }
+        ///end old draw///
+
+        ///new Draw using room array
+        public void Draw(SpriteBatch a_SpriteBatch, int temp)
+        {
+            foreach(Rooms room in levelRooms)
+            {
+                if(room != null)
+                {
+                    room.Draw(a_SpriteBatch);
+                }
+                
+            }
+        }
+        
+
+
+        //check if room already exists
+        public bool RoomExists(int Row, int Col)
+        {
+            if(levelRooms[Row,Col] != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+       
+        //new create level
+        //currently creates a level without overlapping rooms, still need to make sure there are 2 dead ends not counting the first room
+        public void CreateLevel1()
+        {
+            //room size 960 x 832
+            Vector2 CurrentRoomIndex;
+            int random;
+            levelRooms[m_RoomCount / 2, m_RoomCount / 2] = new Rooms(m_RoomCount);
+            CurrentRoomIndex = levelRooms[m_RoomCount / 2, m_RoomCount / 2].m_RoomIndex;
+            //int[] RoomPlacement = new int[100];
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    random = Rand.Next(4);
+            //    RoomPlacement[i] = random;
+            //}
+            
+            while(m_RemainingRooms > 1)
+            {
+                random = Rand.Next(4);
+                CurrentRoomIndex = CreateRoom(CurrentRoomIndex, random);
+            }
+
+            //foreach(Rooms room in levelRooms)
+            //{
+            //    MoveRoom(room);
+            //}
+
+            Console.Write("done");
+
+            /*ANYTHING UNDER THIS CAN BE DELETED. NEW FUNCTIONS ARE NOW WORKING
+             * 
+             * 
+            int RoomRow = 2;
+            int RoomCol = 2;
+            int x = 0;
+            int CR_X;
+            int CR_Y;
+            while (m_RemainingRooms > 0)
+            {
+                //if (RoomCol - 1 >= 0 && RoomCol + 1 < m_RoomCount)
+                //if (RoomRow - 1 >= 0 && RoomRow + 1 < m_RoomCount)
+                CR_X = (int)levelRooms[RoomRow, RoomCol].m_RoomPosition.X;
+                CR_Y = (int)levelRooms[RoomRow, RoomCol].m_RoomPosition.Y;
+                //create room above current room
+                if (RoomPlacement[x] == 0)
+                {
+                    //make sure room index is not outside bounds off array
+                    if (RoomRow - 1 >= 0)
+                    {
+                        //check if the room exists first
+                        if (RoomExists(RoomRow - 1, RoomCol) == false)
+                        {
+                            //if not create a door in the current room leading to the next room
+                            levelRooms[RoomRow, RoomCol].CreateDoor(0);
+                            //then create a new room with a door leading back to last room
+                            RoomRow -= 1;
+                            levelRooms[RoomRow, RoomCol] = new Rooms(CR_X, CR_Y - 832, RoomRow, RoomCol);
+                            levelRooms[RoomRow, RoomCol].CreateDoor(1);
+                            m_RemainingRooms--;
+                        }
+                        else
+                        {
+                            if (levelRooms[RoomRow, RoomCol].DoorExists(0) == false)
+                            {
+                                levelRooms[RoomRow, RoomCol].CreateDoor(0);
+                            }
+                        }
+                    }
+                }
+               
+                else if (RoomPlacement[x] == 1)
+                {
+                    //make sure room index is not outside bounds off array
+                    if (RoomRow + 1 < m_RoomCount)
+                    {
+                        //check if the room exists first
+                        if (RoomExists(RoomRow + 1, RoomCol) == false)
+                        {
+                            //if not create a door in the current room leading to the next room
+                            levelRooms[RoomRow, RoomCol].CreateDoor(1);
+                            //then create a new room with a door leading back to last room
+                            RoomRow += 1;
+                            levelRooms[RoomRow, RoomCol] = new Rooms(CR_X, CR_Y + 832, RoomRow, RoomCol);
+                            levelRooms[RoomRow, RoomCol].CreateDoor(0);
+                            m_RemainingRooms--;
+                        }
+                        else
+                        {
+                            if (levelRooms[RoomRow, RoomCol].DoorExists(1) == false)
+                            {
+                                levelRooms[RoomRow, RoomCol].CreateDoor(1);
+                            }
+                        }
+                    }
+                }
+                
+                else if (RoomPlacement[x] == 2)
+                {
+                    //make sure room index is not outside bounds off array
+                    if (RoomCol - 1 >= 0)
+                    {
+                        //check if the room exists first
+                        if (RoomExists(RoomRow, RoomCol - 1) == false)
+                        {
+                            //if not create a door in the current room leading to the next room
+                            levelRooms[RoomRow, RoomCol].CreateDoor(2);
+                            //then create a new room with a door leading back to last room
+                            RoomCol -= 1;
+                            levelRooms[RoomRow, RoomCol] = new Rooms(CR_X - 960, CR_Y, RoomRow, RoomCol);
+                            levelRooms[RoomRow, RoomCol].CreateDoor(3);
+                            m_RemainingRooms--;
+                        }
+                        else
+                        {
+                            if (levelRooms[RoomRow, RoomCol].DoorExists(2) == false)
+                            {
+                                levelRooms[RoomRow, RoomCol].CreateDoor(2);
+                            }
+                        }
+                    }
+                }
+                
+                else if (RoomPlacement[x] == 2)
+                {
+                    //make sure room index is not outside bounds off array
+                    if (RoomCol + 1 < m_RoomCount)
+                    {
+                        //check if the room exists first
+                        if (RoomExists(RoomRow, RoomCol + 1) == false)
+                        {
+                            //if not create a door in the current room leading to the next room
+                            levelRooms[RoomRow, RoomCol].CreateDoor(3);
+                            //then create a new room with a door leading back to last room
+                            RoomCol += 1;
+                            levelRooms[RoomRow, RoomCol] = new Rooms(CR_X + 960, CR_Y, RoomRow, RoomCol);
+                            levelRooms[RoomRow, RoomCol].CreateDoor(2);
+                            m_RemainingRooms--;
+                        }
+                        else
+                        {
+                            if (levelRooms[RoomRow, RoomCol].DoorExists(3) == false)
+                            {
+                                levelRooms[RoomRow, RoomCol].CreateDoor(3);
+                            }
+                        }
+                    }
+                }
+                x++;
+            }
+            */
+            m_DeadEnds = MarkDeadEnds();
+            if(m_DeadEnds < 2)
+            {
+                CreateDeadEnds();
+            }
+
+            foreach(Rooms room in levelRooms)
+            {
+                if(room != null)
+                {
+                    if (room.GetRoomRow() == m_RoomCount / 2)
+                    {
+                        if (room.GetRoomCol() != m_RoomCount / 2)
+                        {
+                            room.GenerateEnemies();
+                        }
+                    }
+                    else
+                    {
+                        room.GenerateEnemies();
+                    }
+                }
+            }
+
+
+
+            Console.Write("end");
+        }
+
+
 
         public void CreateLevel()
         {
+            //NOT SURE IF I NEED THIS STILL, MAY BE CHANGED OR DELETED ALL TOGETHER
             CreateFirstRoom();
             //m_RemainingRooms--;
             int[] RoomPlacement = new int[100];
@@ -74,7 +311,7 @@ namespace Senior_Project
             CreateRoom(0, 0);
 
         }
-
+        //DO NOT NEED ANYMORE
         public void CreateFirstRoom()
         {
             Rooms firstRoom = new Rooms();
@@ -268,7 +505,7 @@ namespace Senior_Project
         //    //    //nRoom.m_RoomDoors[1].m_nextRoom = prevRoomNum;
         //    //}
         //}
-
+        //OLD CREATE ROOM
         public int CreateRoom(int a_DoorPlacement, int a_CurrentRoomIndex)
         {
             int NewRoomIndex = 0;
@@ -353,7 +590,7 @@ namespace Senior_Project
             return NewRoomIndex;
 
         }
-
+        //OLD CREATE DEAD END
         public int CreateDeadEnd(int a_DoorPlacement, int a_CurrentRoomIndex)
         {
             int NewRoomIndex = 0;
@@ -428,18 +665,18 @@ namespace Senior_Project
             return 0;
 
         }
-
+        //NO LONGER USING A ROOM LIST SO THIS WILL BE REMOVED EVENTUALLY
         public List<Rooms> GetRoomList()
         {
             return m_LevelRooms;
         }
-
+        //STILL NEED DOOR LIST FROM ROOMS. THIS FUNCTION WILL NEED TO BE REWRITEN
         public List<Door> GetRoomDoorList(int a_CurrentRoom)
         {
             List<Rooms> LevelRooms = GetRoomList();
             return LevelRooms[a_CurrentRoom].m_RoomDoors;
         }
-
+        //NEEDS TO BE REWRITEN
         public int FindDeadEnd()
         {
             for(int i = 0; i < m_LevelRooms.Count; i++)
@@ -451,7 +688,7 @@ namespace Senior_Project
             }
             return -1;
         }
-
+        //NEEDS TO BE REWRITTEN
         public int FindNextDeadEnd(int RoomIndex)
         {
             RoomIndex++;
@@ -464,6 +701,257 @@ namespace Senior_Project
             }
             return -1;
         }
+
+
+
+        //START OF NEW FUNCTIONS USING ROOM ARRAY
+        //set all the isDeadEnd value to true for all dead ends not counting the first room.
+        public int MarkDeadEnds()
+        {
+            int numDeadEnds = m_DeadEnds;
+            foreach(Rooms room in levelRooms)
+            {
+                if (room != null)
+                {
+                    if ((room.m_RoomDoors.Count == 1 && room != levelRooms[2, 2]) && room.IsDeadEnd() == false)
+                    {
+                        room.SetDeadEnd(true);
+                        m_DeadEnds++;
+                    }
+                }
+            }
+            return m_DeadEnds;
+        }
+
+        //create dead ends from in new levelRooms array
+        public void CreateDeadEnds()
+        {
+            int random;
+            int currentNumDeadEnds;
+            Vector2 currentRoomIndex;
+            foreach(Rooms room in levelRooms)
+            {
+                if(room != null)
+                {
+                    if(room.IsDeadEnd() == false && room.m_RoomDoors.Count < 4)
+                    {
+                        
+                        currentNumDeadEnds = m_DeadEnds;
+                        currentRoomIndex = room.GetRoomIndex();
+                        random = Rand.Next(4);
+                        if (CanCreateRoom(room, random) == true)
+                        {
+                            while (currentNumDeadEnds == m_DeadEnds)
+                            {
+                                CreateRoom(currentRoomIndex, random);
+                                m_DeadEnds = MarkDeadEnds();
+                                if (m_DeadEnds >= 2)
+                                {
+                                    return;
+                                }
+                                random = Rand.Next(4);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //new create room
+        public Vector2 CreateRoom(Vector2 currentRoomindex, int NewRoomPlacement)
+        {
+            //room size 960 x 832
+            //levelRooms[m_RoomCount / 2, m_RoomCount / 2] = new Rooms();
+
+            int CR_X = (int)levelRooms[(int)currentRoomindex.X, (int)currentRoomindex.Y].m_RoomPosition.X;
+            int CR_Y = (int)levelRooms[(int)currentRoomindex.X, (int)currentRoomindex.Y].m_RoomPosition.Y;
+            int CRI_Row = (int)currentRoomindex.X;
+            int CRI_Col = (int)currentRoomindex.Y;
+
+            if (NewRoomPlacement == 0)
+            {
+                //make sure room index is not outside bounds off array
+                if (CRI_Row - 1 >= 0)
+                {
+                    //check if the room exists first
+                    if (RoomExists(CRI_Row - 1, CRI_Col) == false)
+                    {
+                        //if not create a door in the current room leading to the next room
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(0);
+                        //then create a new room with a door leading back to last room
+                        CRI_Row -= 1;
+                        levelRooms[CRI_Row, CRI_Col] = new Rooms(CR_X, CR_Y - 832, CRI_Row, CRI_Col);
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(1);
+                        m_RemainingRooms--;
+                        currentRoomindex.X = CRI_Row;
+                        currentRoomindex.Y = CRI_Col;
+                    }
+                    else
+                    {
+                        if (levelRooms[CRI_Row, CRI_Col].DoorExists(0) == false)
+                        {
+                            levelRooms[CRI_Row, CRI_Col].CreateDoor(0);
+                            levelRooms[CRI_Row - 1, CRI_Col].CreateDoor(1);
+                        }
+                    }
+                }
+            }
+
+            else if (NewRoomPlacement == 1)
+            {
+                //make sure room index is not outside bounds off array
+                if (CRI_Row + 1 < m_RoomCount)
+                {
+                    //check if the room exists first
+                    if (RoomExists(CRI_Row + 1, CRI_Col) == false)
+                    {
+                        //if not create a door in the current room leading to the next room
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(1);
+                        //then create a new room with a door leading back to last room
+                        CRI_Row += 1;
+                        levelRooms[CRI_Row, CRI_Col] = new Rooms(CR_X, CR_Y + 832, CRI_Row, CRI_Col);
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(0);
+                        m_RemainingRooms--;
+                        currentRoomindex.X = CRI_Row;
+                        currentRoomindex.Y = CRI_Col;
+                    }
+                    else
+                    {
+                        if (levelRooms[CRI_Row, CRI_Col].DoorExists(1) == false)
+                        {
+                            levelRooms[CRI_Row, CRI_Col].CreateDoor(1);
+                            levelRooms[CRI_Row + 1, CRI_Col].CreateDoor(0);
+                        }
+                    }
+                }
+            }
+
+            else if (NewRoomPlacement == 2)
+            {
+                //make sure room index is not outside bounds off array
+                if (CRI_Col - 1 >= 0)
+                {
+                    //check if the room exists first
+                    if (RoomExists(CRI_Row, CRI_Col - 1) == false)
+                    {
+                        //if not create a door in the current room leading to the next room
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(2);
+                        //then create a new room with a door leading back to last room
+                        CRI_Col -= 1;
+                        levelRooms[CRI_Row, CRI_Col] = new Rooms(CR_X - 960, CR_Y, CRI_Row, CRI_Col);
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(3);
+                        m_RemainingRooms--;
+                        currentRoomindex.X = CRI_Row;
+                        currentRoomindex.Y = CRI_Col;
+                    }
+                    else
+                    {
+                        if (levelRooms[CRI_Row, CRI_Col].DoorExists(2) == false)
+                        {
+                            levelRooms[CRI_Row, CRI_Col].CreateDoor(2);
+                            levelRooms[CRI_Row, CRI_Col - 1].CreateDoor(3);
+                        }
+                    }
+                }
+            }
+
+            else if (NewRoomPlacement == 3)
+            {
+                //make sure room index is not outside bounds off array
+                if (CRI_Col + 1 < m_RoomCount)
+                {
+                    //check if the room exists first
+                    if (RoomExists(CRI_Row, CRI_Col + 1) == false)
+                    {
+                        //if not create a door in the current room leading to the next room
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(3);
+                        //then create a new room with a door leading back to last room
+                        CRI_Col += 1;
+                        levelRooms[CRI_Row, CRI_Col] = new Rooms(CR_X + 960, CR_Y, CRI_Row, CRI_Col);
+                        levelRooms[CRI_Row, CRI_Col].CreateDoor(2);
+                        m_RemainingRooms--;
+                        currentRoomindex.X = CRI_Row;
+                        currentRoomindex.Y = CRI_Col;
+
+                    }
+                    else
+                    {
+                        if (levelRooms[CRI_Row, CRI_Col].DoorExists(3) == false)
+                        {
+                            levelRooms[CRI_Row, CRI_Col].CreateDoor(3);
+                            levelRooms[CRI_Row, CRI_Col + 1].CreateDoor(2);
+                        }
+                    }
+                }
+            }
+            MoveRoom(levelRooms[CRI_Row, CRI_Col]);
+            return currentRoomindex;
+        }
+
+
+
+        //check if room is outer edge of the array
+        //this needs to be fixed. as of right now it is based off the placement of the door but it must determine if a new room is possible from this location not matter what 
+        //the door placement is
+        bool CanCreateRoom(Rooms a_Room, int a_Placement)
+        {
+            if(a_Room.m_RoomDoors.Count == 4)
+            {
+                return false;
+            }
+            if(a_Room.m_RoomIndex.X == 0) //&& a_Room.m_RoomIndex.Y == 0) //&& (a_Placement == 0 || a_Placement == 2))
+            {
+                if((a_Room.m_RoomIndex.Y  == 0 && (a_Placement == 0 || a_Placement == 2)) && a_Room.m_RoomDoors.Count < 2)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else if (a_Room.m_RoomIndex.X == 0) //&& a_Room.m_RoomIndex.Y == 0) //&& (a_Placement == 0 || a_Placement == 2))
+            {
+                if ((a_Room.m_RoomIndex.Y == m_RoomCount - 1 && (a_Placement == 0 || a_Placement == 3)) && a_Room.m_RoomDoors.Count < 2)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else if (a_Room.m_RoomIndex.X == m_RoomCount - 1) //&& a_Room.m_RoomIndex.Y == 0) //&& (a_Placement == 0 || a_Placement == 2))
+            {
+                if ((a_Room.m_RoomIndex.Y == 0 && (a_Placement == 1 || a_Placement == 2)) && a_Room.m_RoomDoors.Count < 2)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else if (a_Room.m_RoomIndex.X == m_RoomCount - 1) //&& a_Room.m_RoomIndex.Y == 0) //&& (a_Placement == 0 || a_Placement == 2))
+            {
+                if ((a_Room.m_RoomIndex.Y == m_RoomCount - 1 && (a_Placement == 0 || a_Placement == 2)) && a_Room.m_RoomDoors.Count < 2)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+
 
         public int NumDeadEnds()
         {
@@ -478,5 +966,35 @@ namespace Senior_Project
             return DeadEndCount;
         }
 
+        //const int m_roomWidth = 960;
+        //const int m_RoomHeight = 832;
+        public void MoveRoom(Rooms a_Room)
+        {
+            if(a_Room != null)
+            {
+                return;
+            }
+            int roomCoord_X;
+            int roomCoord_Y;
+            roomCoord_X = ((int)a_Room.m_RoomIndex.Y - (m_RoomCount / 2)) * 960;
+            roomCoord_Y = ((m_RoomCount / 2) - (int)a_Room.m_RoomIndex.X) * 832;
+            a_Room.MoveRoom(roomCoord_X, roomCoord_Y);
+            Console.Write("done");
+            Console.Write("done");
+        }
+
+
+        //Set the current room index for level created from new createlevel
+        public void SetCurrentRoom(int CR_X, int CR_Y)
+        {
+            m_CurrentRoomIndex_X = CR_X;
+            m_CurrentRoomIndex_Y = CR_Y;
+        }
+
+        //get current room
+        public Rooms GetCurrentRoom()
+        {
+            return levelRooms[m_CurrentRoomIndex_X, m_CurrentRoomIndex_Y];
+        }
     }
 }

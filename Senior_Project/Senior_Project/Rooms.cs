@@ -24,6 +24,7 @@ namespace Senior_Project
         DoorPlacement doorComp = new DoorPlacement();
         public bool m_InThisRoom = false;
         public bool m_RoomEmpty = false;
+        public Vector2 m_RoomIndex;
 
         public List<Enemy> m_RoomEnemies = new List<Enemy>();
         public Vector2[] m_SpawnPoints = new Vector2[4];
@@ -47,6 +48,24 @@ namespace Senior_Project
             //m_BoundingBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
         }
 
+        //new constructor for first room. can replace regular constructor after all calls to original have been removed
+        public Rooms(int a_NumRooms)
+        {
+            m_Texture = null;
+            m_RoomPosition = new Vector2(0, 0);
+            m_Floor.m_FloorPosition = new Vector2(64, 64);
+            m_RoomIndex.X = a_NumRooms / 2;
+            m_RoomIndex.Y = a_NumRooms / 2;
+            m_SpawnPoints = new Vector2[4]
+            {
+                new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 128),
+                new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 640),
+                new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
+                new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
+            };
+            //m_BoundingBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
+        }
+
         public Rooms(int a_RoomX, int a_RoomY)
         {
             m_RoomPosition = new Vector2(a_RoomX, a_RoomY);
@@ -60,6 +79,29 @@ namespace Senior_Project
             };
         }
 
+        //new room constructor to create a room with its index in the array stored
+        public Rooms(int a_RoomX, int a_RoomY, int index_x, int index_y)
+        {
+            m_RoomIndex.X = index_x;
+            m_RoomIndex.Y = index_y;
+            m_RoomPosition = new Vector2(a_RoomX, a_RoomY);
+            m_Floor.m_FloorPosition = new Vector2(a_RoomX + 64, a_RoomY + 64);
+            m_SpawnPoints = new Vector2[4]
+            {
+                new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 128),
+                new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 640),
+                new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
+                new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
+            };
+        }
+
+        //new function to get room index
+        public Vector2 GetRoomIndex()
+        {
+            return m_RoomIndex;
+        }
+
+        /// these loadcontent and draw functions should still work regardless of room array///////////////////////////////////////////////////////
         public void LoadContent(ContentManager a_Content)
         {
             m_Texture = a_Content.Load<Texture2D>("RoomWall");
@@ -94,6 +136,8 @@ namespace Senior_Project
                 en.Draw(a_SpriteBatch);
             }
         }
+        /////////////////////////////////////////////////////////////////////////////////////
+       
         public void GenerateDoors()
         {
             int numDoors = doorGen.Next(1, 5);
@@ -206,6 +250,7 @@ namespace Senior_Project
             return -1;
         }
 
+        //old move room
         public void MoveRoom(int a_RoomX, int a_RoomY)
         {
             this.m_RoomPosition.X = a_RoomX;
@@ -214,6 +259,19 @@ namespace Senior_Project
             this.m_Floor.m_FloorPosition.Y += a_RoomY;
             this.SetSpawnPoints();
         }
+
+        //new move room
+        //m_roomWidth = 960;
+        //m_RoomHeight = 832;
+        /*public void MoveRoom()
+        {
+            this.m_RoomPosition.X = a_RoomX;
+            this.m_RoomPosition.Y = a_RoomY;
+            this.m_Floor.m_FloorPosition.X += a_RoomX;
+            this.m_Floor.m_FloorPosition.Y += a_RoomY;
+            this.SetSpawnPoints();
+        }*/
+
 
         public bool IsDeadEnd()
         {
@@ -314,6 +372,30 @@ namespace Senior_Project
             {
                 return m_RoomEmpty;
             }
+        }
+
+
+
+        //new functions to get the room x and y coordinates seperatly
+        public int GetRoomCoord_X()
+        {
+            return (int)m_RoomPosition.X;
+        }
+
+        public int GetRoomCoord_Y()
+        {
+            return (int)m_RoomPosition.Y;
+        }
+
+        //new functions to get the row and column seperately
+        public int GetRoomRow()
+        {
+            return (int)m_RoomIndex.X;
+        }
+
+        public int GetRoomCol()
+        {
+            return (int)m_RoomIndex.Y;
         }
     } 
 }
