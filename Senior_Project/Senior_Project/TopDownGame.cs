@@ -33,6 +33,8 @@ namespace Senior_Project
         const int m_RoomHeight = 832;
         public int LevelCount = 1;
 
+        Texture2D pixel;
+
         //random number generator for enemy movement delays
         public Random m_MovementRand = new Random();
 
@@ -90,6 +92,10 @@ namespace Senior_Project
             //m_Floor.LoadContent(Content);
             //m_Door.LoadContent(Content);
             m_MainPlayer.LoadContent(Content);
+
+
+            pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            pixel.SetData(new[] { Color.White }); // so that we can draw whatever color we want on top of it
             // TODO: use this.Content to load your game content here
         }
 
@@ -259,16 +265,6 @@ namespace Senior_Project
                     CurrentRoom.ActivateEnemies();
                 }
             }
-
-
-
-
-
-
-
-
-
-
 
             ////////old logic for going threw doors///////////
             //Go threw the top door
@@ -508,11 +504,51 @@ namespace Senior_Project
             m_Level_test.Draw(m_SpriteBatch, 1);
             m_MainPlayer.Draw(m_SpriteBatch);
 
+            //temporary function calls to see bounding boxes/////////////////////////////////////////////////
+            Rooms temp = m_Level_test.GetCurrentRoom();
+            if(temp.m_RoomEnemies.Count != 0)
+            {
+                foreach(Enemy tempEnemy in temp.m_RoomEnemies)
+                {
+                    DrawBorder(tempEnemy.m_BoundingBox, 2, Color.Red, m_SpriteBatch);///from internet
+                }
+                //Enemy tempEnemy = temp.m_RoomEnemies[0];
+                //DrawBorder(tempEnemy.m_BoundingBox, 2, Color.Red, m_SpriteBatch);///from internet
+            }
+            DrawBorder(m_MainPlayer.m_BoundingBox, 2, Color.Red, m_SpriteBatch);
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+
+            //Temporary function call to see bullet hit boxes
+
+
+
             m_SpriteBatch.End();
 
             // TODO: Add your drawing code here
 
             base.Draw(a_GameTime);
+        }
+
+
+        //draw method from the internet to draw my bounding box rectangles
+        private void DrawBorder(Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor, SpriteBatch temp)
+        {
+            // Draw top line
+            temp.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), borderColor);
+
+            // Draw left line
+            temp.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), borderColor);
+
+            // Draw right line
+            temp.Draw(pixel, new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder),
+                                            rectangleToDraw.Y,
+                                            thicknessOfBorder,
+                                            rectangleToDraw.Height), borderColor);
+            // Draw bottom line
+            temp.Draw(pixel, new Rectangle(rectangleToDraw.X,
+                                            rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder,
+                                            rectangleToDraw.Width,
+                                            thicknessOfBorder), borderColor);
         }
     }
 }

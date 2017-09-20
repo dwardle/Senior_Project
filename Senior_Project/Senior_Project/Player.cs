@@ -228,7 +228,7 @@ namespace Senior_Project
                     m_PlayerPosition.Y = (704 + crp_Y) + m_Texture.Height / 2;
                 }
             }
-            m_BoundingBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
+            m_BoundingBox = new Rectangle((int)m_PlayerPosition.X - 32, (int)m_PlayerPosition.Y - 32, m_Texture.Width, m_Texture.Height);
         }
 
         ////Old Player update logic
@@ -409,7 +409,8 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.Y;
                     b.m_Position.Y = b.m_Position.Y - 10;
-                    if(b.m_Position.Y <= shotStart - m_ShotRange || b.m_Position.Y <= a_CurrentRoom.m_RoomPosition.Y + 64)
+                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
+                    if (b.m_Position.Y <= shotStart - m_ShotRange || b.m_Position.Y <= a_CurrentRoom.m_RoomPosition.Y + 64)
                     {
                         b.m_IsVisible = false;
                     }
@@ -420,6 +421,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.Y;
                     b.m_Position.Y = b.m_Position.Y + 10;
+                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
                     if (b.m_Position.Y >= shotStart + m_ShotRange || b.m_Position.Y >= a_CurrentRoom.m_RoomPosition.Y + 768)
                     {
                         b.m_IsVisible = false;
@@ -430,6 +432,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X - 10;
+                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
                     if (b.m_Position.X <= shotStart - m_ShotRange || b.m_Position.X <= a_CurrentRoom.m_RoomPosition.X + 64)
                     {
                         b.m_IsVisible = false;
@@ -440,6 +443,7 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X + 10;
+                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
                     if (b.m_Position.X >= shotStart + m_ShotRange || b.m_Position.X >= a_CurrentRoom.m_RoomPosition.X + 896)
                     {
                         b.m_IsVisible = false;

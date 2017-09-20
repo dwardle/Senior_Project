@@ -21,6 +21,8 @@ namespace Senior_Project
         //public bool isVisible;
         //public float speed;
 
+
+        //bullet size 6 x 8
         public Texture2D m_Texture;
         public Vector2 m_Position;
         public bool m_IsVisible;

@@ -16,6 +16,8 @@ namespace Senior_Project
     public class EnemyNoGun : Enemy
     {
         //Random test = new Random();
+        //from rectangle draw method
+        //Texture2D pixel;
 
         public EnemyNoGun()
         {
@@ -31,7 +33,8 @@ namespace Senior_Project
         {
             if(this.m_IsActive)
             {
-                this.m_BoundingBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, m_Texture.Width, m_Texture.Height);
+                //this.m_BoundingBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, m_Texture.Width, m_Texture.Height);
+                //this.m_BoundingBox = new Rectangle((int)this.m_Position.X - 32, (int)this.m_Position.Y - 28, this.m_Texture.Width, this.m_Texture.Height);
                 if (this.m_MoveCount > 0)
                 {
                     this.MoveToPlayer(a_MainPlayer, a_RoomEnemies);//, a_CurrentRoom);
@@ -53,6 +56,15 @@ namespace Senior_Project
                 }
                 
             }
+        }
+        public void Draw2(SpriteBatch a_SpriteBatch)
+        {
+            //GraphicsDevice x;
+            //var rect = new Texture2D(x, 1, 1);
+
+            m_EnemyOrigin.X = m_Texture.Width / 2;
+            m_EnemyOrigin.Y = m_Texture.Height / 2;
+            a_SpriteBatch.Draw(m_Texture, m_Position, null, Color.White, m_Rotation, m_EnemyOrigin, 1.0f, SpriteEffects.None, 0f);
         }
     }
 }
