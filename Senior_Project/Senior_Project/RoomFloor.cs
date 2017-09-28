@@ -25,7 +25,7 @@ namespace Senior_Project
 
         public void LoadContent(ContentManager a_Content)
         {
-            m_Texture = a_Content.Load<Texture2D>("roomFloor");
+            m_Texture = a_Content.Load<Texture2D>("Rooms/roomFloor");
         }
 
         public void Draw(SpriteBatch a_SpriteBatch)

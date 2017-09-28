@@ -23,6 +23,17 @@ namespace Senior_Project
         public int m_DamageDelay = 30;
         public float m_Damage = 2.5f;
 
+        //multipliers
+        public float m_ShotSpeedMultiplyer = 1;
+        public float m_ShotDelayMultiplyer = 1;
+        public float m_ShotRangeMultiplyer = 1;
+        public float m_DamageMultiplier = 1;
+        public float m_PlayerSpeedMultiplyer = 1;
+
+
+        //testing heart case image
+        public Heart m_PlayerHeart = new Heart();
+        public List<Heart> m_PlayerHearts;
 
         public Texture2D m_Texture;
         public Texture2D m_BulletTexture;
@@ -31,7 +42,7 @@ namespace Senior_Project
         public float m_PlayerRotation;
         public Vector2 m_PlayerOrigin;
         //public float bulletDelay;
-        public Rectangle m_BoundingBox;
+        public Rectangle m_HitBox;
         //TopDownGame m_CurrentGame;
         Level m_CurrentLevel;
         public int m_CurrentRoom = 0;
@@ -47,12 +58,25 @@ namespace Senior_Project
             m_Texture = null;
             m_PlayerSpeed = 5;
             m_PlayerPosition = new Vector2(480, 462);
+            m_PlayerHearts = new List<Heart>();
+            for(int i = 0; i < m_MaxHealth; i++)
+            {
+                m_PlayerHearts.Add(new Heart(new Vector2(40 + (i * 40), 16)));
+            }
+            //ChangeHeartTexture();
+            Console.Write("Done");
         }
 
         public void LoadContent(ContentManager a_Content)
         {
-            m_Texture = a_Content.Load<Texture2D>("batDoug5");
-            m_BulletTexture = a_Content.Load<Texture2D>("Bullet1");
+            m_Texture = a_Content.Load<Texture2D>("Player/batDoug5");
+            m_BulletTexture = a_Content.Load<Texture2D>("Player/Bullet1");
+            //m_PlayerHeart.LoadContent(a_Content);
+            foreach(Heart h in m_PlayerHearts)
+            {
+                h.LoadContent(a_Content);
+            }
+            Console.Write("Done");
         }
 
         public void Draw(SpriteBatch a_SpriteBatch)
@@ -64,6 +88,11 @@ namespace Senior_Project
             {
                 b.Draw(a_SpriteBatch);
             }
+            foreach(Heart h in m_PlayerHearts)
+            {
+                h.Draw(a_SpriteBatch);
+            }
+            //m_PlayerHeart.Draw(a_SpriteBatch);
             //a_SpriteBatch.Draw(m_Texture, m_PlayerPosition, Color.White);
         }
 
@@ -228,7 +257,14 @@ namespace Senior_Project
                     m_PlayerPosition.Y = (704 + crp_Y) + m_Texture.Height / 2;
                 }
             }
-            m_BoundingBox = new Rectangle((int)m_PlayerPosition.X - 32, (int)m_PlayerPosition.Y - 32, m_Texture.Width, m_Texture.Height);
+            m_HitBox = new Rectangle((int)m_PlayerPosition.X - 32, (int)m_PlayerPosition.Y - 32, m_Texture.Width, m_Texture.Height);
+
+
+            //Move hearts to current room
+            for(int i = 0; i < m_MaxHealth; i++)
+            {
+                m_PlayerHearts[i].SetPosition(new Vector2((currentRoom.GetRoomCoord_X() + 40) + (i * 40), currentRoom.GetRoomCoord_Y() + 16));
+            }
         }
 
         ////Old Player update logic
@@ -351,7 +387,7 @@ namespace Senior_Project
         //            m_PlayerPosition.Y = (704 + cRoom_Y) + m_Texture.Height / 2;
         //        }
         //    }
-        //    m_BoundingBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
+        //    m_HitBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
         //}
 
         public void Shoot(Keys a_ShotDirection)
@@ -404,12 +440,12 @@ namespace Senior_Project
         {
             foreach(Bullet b in m_BulletList)
             {
-                b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
+               // b.m_HitBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
                 if(b.m_BulletDirection == Keys.Up)
                 {
                     float shotStart = m_PlayerPosition.Y;
-                    b.m_Position.Y = b.m_Position.Y - 10;
-                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
+                    b.m_Position.Y = b.m_Position.Y - (m_ShotSpeedMultiplyer * b.GetSpeed());
+                    b.m_HitBox = new Rectangle((int)b.m_Position.X - (b.m_Texture.Width/2), (int)b.m_Position.Y - (b.m_Texture.Height/2), b.m_Texture.Width, b.m_Texture.Height);
                     if (b.m_Position.Y <= shotStart - m_ShotRange || b.m_Position.Y <= a_CurrentRoom.m_RoomPosition.Y + 64)
                     {
                         b.m_IsVisible = false;
@@ -421,7 +457,8 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.Y;
                     b.m_Position.Y = b.m_Position.Y + 10;
-                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
+                    //b.m_HitBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
+                    b.m_HitBox = new Rectangle((int)b.m_Position.X - (b.m_Texture.Width / 2), (int)b.m_Position.Y - (b.m_Texture.Height / 2), b.m_Texture.Width, b.m_Texture.Height);
                     if (b.m_Position.Y >= shotStart + m_ShotRange || b.m_Position.Y >= a_CurrentRoom.m_RoomPosition.Y + 768)
                     {
                         b.m_IsVisible = false;
@@ -432,7 +469,8 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X - 10;
-                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
+                    //b.m_HitBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
+                    b.m_HitBox = new Rectangle((int)b.m_Position.X - (b.m_Texture.Height / 2), (int)b.m_Position.Y - (b.m_Texture.Width / 2), b.m_Texture.Height, b.m_Texture.Width);
                     if (b.m_Position.X <= shotStart - m_ShotRange || b.m_Position.X <= a_CurrentRoom.m_RoomPosition.X + 64)
                     {
                         b.m_IsVisible = false;
@@ -443,7 +481,8 @@ namespace Senior_Project
                 {
                     float shotStart = m_PlayerPosition.X;
                     b.m_Position.X = b.m_Position.X + 10;
-                    b.m_BoundingBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
+                    //b.m_HitBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
+                    b.m_HitBox = new Rectangle((int)b.m_Position.X - (b.m_Texture.Height / 2), (int)b.m_Position.Y - (b.m_Texture.Width / 2), b.m_Texture.Height, b.m_Texture.Width);
                     if (b.m_Position.X >= shotStart + m_ShotRange || b.m_Position.X >= a_CurrentRoom.m_RoomPosition.X + 896)
                     {
                         b.m_IsVisible = false;
@@ -463,6 +502,7 @@ namespace Senior_Project
         public void LowerHealth(float a_Damage)
         {
             m_PlayerHealth -= a_Damage;
+            ChangeHeartTexture();
         }
 
         public void IncreaseHealth(float a_Health)
@@ -494,7 +534,8 @@ namespace Senior_Project
         {
             if(this.m_CantTakeDamage == false)
             {
-                m_PlayerHealth -= a_Damage;
+                LowerHealth(a_Damage);
+                //m_PlayerHealth -= a_Damage;
                 m_CantTakeDamage = true;
             }
             else
@@ -511,6 +552,36 @@ namespace Senior_Project
                 m_CantTakeDamage = false;
                 m_DamageDelay = 30;
             }
+        }
+
+        public void IncreaseShotSpeed(float a_Multiplier)
+        {
+            m_ShotSpeedMultiplyer = m_ShotSpeedMultiplyer + a_Multiplier;
+        }
+
+        public void ChangeHeartTexture()
+        {
+            for(int i = 0; i < m_MaxHealth; i++)
+            {
+                if(i + 1 > m_PlayerHealth)
+                {
+                    
+                    if((i+1) - m_PlayerHealth == .5)
+                    {
+                        m_PlayerHearts[i].SetTextureType(1);
+                    }
+                    else
+                    {
+                        m_PlayerHearts[i].SetTextureType(2);
+                    }
+                }
+                
+            }
+        }
+
+        public List<Heart> GetHearts()
+        {
+            return m_PlayerHearts;
         }
     }
 }

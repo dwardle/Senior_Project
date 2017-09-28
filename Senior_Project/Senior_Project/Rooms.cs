@@ -13,6 +13,8 @@ namespace Senior_Project
 {
     public class Rooms
     {
+        //Work on 9/27 start to add boss to game
+
         enum m_DoorPlacement { Up, Down, Left, Right };
 
         public Texture2D m_Texture;
@@ -30,12 +32,17 @@ namespace Senior_Project
         public Vector2[] m_SpawnPoints = new Vector2[4];
         int enemyType = 1;
 
+        //boolean values to tell if this is a boss room or an item room. if both are false it is a regular room
+        public bool m_IsItemRoom;
+        public bool m_IsBossRoom;
 
-        //public Rectangle m_BoundingBox;
+        //public Rectangle m_HitBox;
 
         public Rooms()
         {
             m_Texture = null;
+            m_IsItemRoom = false;
+            m_IsBossRoom = false;
             m_RoomPosition = new Vector2(0, 0);
             m_Floor.m_FloorPosition = new Vector2(64, 64);
             m_SpawnPoints = new Vector2[4]
@@ -45,13 +52,15 @@ namespace Senior_Project
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
             };
-            //m_BoundingBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
+            //m_HitBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
         }
 
         //new constructor for first room. can replace regular constructor after all calls to original have been removed
         public Rooms(int a_NumRooms)
         {
             m_Texture = null;
+            m_IsItemRoom = false;
+            m_IsBossRoom = false;
             m_RoomPosition = new Vector2(0, 0);
             m_Floor.m_FloorPosition = new Vector2(64, 64);
             m_RoomIndex.X = a_NumRooms / 2;
@@ -63,12 +72,14 @@ namespace Senior_Project
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
             };
-            //m_BoundingBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
+            //m_HitBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
         }
 
         public Rooms(int a_RoomX, int a_RoomY)
         {
             m_RoomPosition = new Vector2(a_RoomX, a_RoomY);
+            m_IsItemRoom = false;
+            m_IsBossRoom = false;
             m_Floor.m_FloorPosition = new Vector2(a_RoomX + 64, a_RoomY + 64);
             m_SpawnPoints = new Vector2[4]
             {
@@ -84,6 +95,8 @@ namespace Senior_Project
         {
             m_RoomIndex.X = index_x;
             m_RoomIndex.Y = index_y;
+            m_IsItemRoom = false;
+            m_IsBossRoom = false;
             m_RoomPosition = new Vector2(a_RoomX, a_RoomY);
             m_Floor.m_FloorPosition = new Vector2(a_RoomX + 64, a_RoomY + 64);
             m_SpawnPoints = new Vector2[4]
@@ -104,7 +117,7 @@ namespace Senior_Project
         /// these loadcontent and draw functions should still work regardless of room array///////////////////////////////////////////////////////
         public void LoadContent(ContentManager a_Content)
         {
-            m_Texture = a_Content.Load<Texture2D>("RoomWall");
+            m_Texture = a_Content.Load<Texture2D>("Rooms/RoomWall");
             m_Floor.LoadContent(a_Content);
 
             foreach(Door d in m_RoomDoors)
@@ -119,6 +132,13 @@ namespace Senior_Project
                     en.LoadContent(a_Content);
                 }
             }
+            else if(enemyType == 2)
+            {
+                foreach(Boss b in m_RoomEnemies)
+                {
+                    b.LoadContent(a_Content);
+                }
+            }
             
         }
 
@@ -131,10 +151,22 @@ namespace Senior_Project
                 d.Draw(a_SpriteBatch);
             }
 
-            foreach (EnemyNoGun en in m_RoomEnemies)
+            if (m_IsBossRoom)
             {
-                en.Draw(a_SpriteBatch);
+                foreach (Boss b in m_RoomEnemies)
+                {
+                    b.Draw2(a_SpriteBatch);
+                }
             }
+            else
+            {
+                foreach (EnemyNoGun en in m_RoomEnemies)
+                {
+                    en.Draw(a_SpriteBatch);
+                }
+            }
+            
+
         }
         /////////////////////////////////////////////////////////////////////////////////////
        
@@ -285,6 +317,8 @@ namespace Senior_Project
 
         public void GenerateEnemies()
         {
+            //enemy type 1 = enemy no gun
+            //enemy type 2 = Boss
             //Vector2[] m_SpawnPoints = new Vector2[4]
             //{
             //    new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 128),
@@ -397,5 +431,81 @@ namespace Senior_Project
         {
             return (int)m_RoomIndex.Y;
         }
+
+        public Vector2 GetRoomPosition()
+        {
+            return m_RoomPosition;
+        }
+
+        public void SetAsItemRoom()
+        {
+            m_IsItemRoom = true;
+        }
+
+        public void SetAsBossRoom()
+        {
+            m_IsBossRoom = true;
+        }
+
+        public bool IsBossRoom()
+        {
+            return m_IsBossRoom;
+        }
+
+        public bool IsItemRoom()
+        {
+            return m_IsItemRoom;
+        }
+
+        public void CreateBoss()
+        {
+            if(m_IsBossRoom != true)
+            {
+                return;
+            }
+            enemyType = 2;
+            Boss levelBoss = new Boss();
+            levelBoss.SetPosition(m_SpawnPoints[0].X, m_SpawnPoints[0].Y);
+            m_RoomEnemies.Add(levelBoss);
+        }
+
+        //public Boss GetBoss()
+        //{
+            
+        //}
+        //public void GenerateEnemies()
+        //{
+        //    //enemy type 1 = enemy no gun
+        //    //enemy type 2 = Boss
+        //    //Vector2[] m_SpawnPoints = new Vector2[4]
+        //    //{
+        //    //    new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 128),
+        //    //    new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 640),
+        //    //    new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
+        //    //    new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
+        //    //};
+        //    Random enemyRand = new Random();
+        //    int enemyType = 1;//enemyRand.Next(0, 4);
+        //    int numEnemies = enemyRand.Next(0, 5);
+        //    if (enemyType == 1)
+        //    {
+        //        for (int i = 0; i < 4; i++)
+        //        {
+        //            EnemyNoGun newEnemy = new EnemyNoGun();
+        //            newEnemy.SetPosition(m_SpawnPoints[i].X, m_SpawnPoints[i].Y);
+        //            if (i % 2 == 0)
+        //            {
+        //                newEnemy.SetRotation('S');
+        //            }
+        //            else
+        //            {
+        //                newEnemy.SetRotation('W');
+        //            }
+
+        //            m_RoomEnemies.Add(newEnemy);
+        //        }
+        //    }
+        //}
+
     } 
 }

@@ -14,7 +14,7 @@ namespace Senior_Project
     class Camera
     {
         public Matrix m_Transform;
-        Viewport m_View;
+        public Viewport m_View;
         Vector2 m_Center;
 
         public Camera(Viewport a_View)
