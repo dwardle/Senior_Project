@@ -115,17 +115,17 @@ namespace Senior_Project
                 this.SetRotation('D'); // #
 
                 //when facing left or right, the bounding box height and width need to be swapped to make it correct with the rotation
-                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height/2), 
-                    (int)this.m_Position.Y - (this.m_Texture.Width/2), this.m_Texture.Height, this.m_Texture.Width);
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height / 2),
+                    (int)this.m_Position.Y - (this.m_Texture.Width / 2), this.m_Texture.Height, this.m_Texture.Width);
                 m_Position.X = m_Position.X + m_Speed; // #
             }
-            
+
             //move down, toward player
             if (a_MainPlayer.m_PlayerPosition.Y > this.m_Position.Y)
             {
                 this.SetRotation('S'); // #
                 //this.m_HitBox = new Rectangle((int)this.m_Position.X - 32, (int)this.m_Position.Y - 28, this.m_Texture.Width, this.m_Texture.Height);
-                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2), 
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Height / 2), this.m_Texture.Width, this.m_Texture.Height);
                 m_Position.Y = m_Position.Y + m_Speed; // #
             }
@@ -134,7 +134,7 @@ namespace Senior_Project
             if (a_MainPlayer.m_PlayerPosition.X < this.m_Position.X)
             {
                 this.SetRotation('A');// #
-                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height / 2), 
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Width / 2), this.m_Texture.Height, this.m_Texture.Width);
                 m_Position.X = m_Position.X - m_Speed;// #
             }
@@ -143,7 +143,7 @@ namespace Senior_Project
             if (a_MainPlayer.m_PlayerPosition.Y < this.m_Position.Y)
             {
                 this.SetRotation('W');// #
-                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2), 
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Height / 2), this.m_Texture.Width, this.m_Texture.Height);
                 m_Position.Y = m_Position.Y - m_Speed;// #
             }
@@ -152,9 +152,33 @@ namespace Senior_Project
         public void TakeDamage(float a_Damage)
         {
             m_Health -= a_Damage;
-            if(m_Health <= 0)
+            if (m_Health <= 0)
             {
                 this.m_IsAlive = false;
+            }
+        }
+
+        public void SetHitbox(char a_Rotation)
+        {
+            if (a_Rotation == 'D')
+            {
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height / 2),
+                    (int)this.m_Position.Y - (this.m_Texture.Width / 2), this.m_Texture.Height, this.m_Texture.Width);
+            }
+            else if (a_Rotation == 'S')
+            {
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2),
+                    (int)this.m_Position.Y - (this.m_Texture.Height / 2), this.m_Texture.Width, this.m_Texture.Height);
+            }
+            else if (a_Rotation == 'A')
+            {
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height / 2),
+                    (int)this.m_Position.Y - (this.m_Texture.Width / 2), this.m_Texture.Height, this.m_Texture.Width);
+            }
+            else if(a_Rotation == 'W')
+            {
+                this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2),
+                    (int)this.m_Position.Y - (this.m_Texture.Height / 2), this.m_Texture.Width, this.m_Texture.Height);
             }
         }
     }

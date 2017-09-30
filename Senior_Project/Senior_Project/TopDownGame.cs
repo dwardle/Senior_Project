@@ -259,11 +259,26 @@ namespace Senior_Project
                     }
                     else if (CurrentEnemyType == 2)
                     {
-                        foreach(Boss boss in CurrentEnemies)
+                        //Right not the boss is set to move to players last location then stop till the move delay hits zero
+                        //what i should do is have enemy type 3 be for the next boss and it will move this way or based off of the boss's speed
+                        //it will either chase the player or it will do this. if the boss' speed is too high it will always be hitting the player if it chases the player
+                        //so in that event make it do this movement.
+                        Boss levelBoss = CurrentRoom.GetBoss();
+                        if (levelBoss.CanMove() && levelBoss.IsMoving() == false)
                         {
-                            boss.MoveToPlayer(m_MainPlayer);
+                            //not sure why this works but the moving to the players exact position works
+                            float PlayerLastX = m_MainPlayer.m_PlayerPosition.X;// - levelBoss.GetTextureOriginX();
+                            float PlayerLastY = m_MainPlayer.m_PlayerPosition.Y;// - levelBoss.GetTextureOriginY();
+                            // levelBoss.SetIsActive(true);
+                            //levelBoss.SetCanMove();
+                            levelBoss.SetMoveLocation(new Vector2(PlayerLastX, PlayerLastY));
+                            levelBoss.SetIsMoving(true);
                         }
-                        //Boss cBoss = CurrentEnemies[0];
+                        else if (levelBoss.CanMove() && levelBoss.IsMoving())
+                        {
+                            levelBoss.MoveToPlayer();
+                        }
+
                     }
                     else if (CurrentEnemyType == 2)
                     {

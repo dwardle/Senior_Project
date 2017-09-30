@@ -27,6 +27,7 @@ namespace Senior_Project
         public bool m_InThisRoom = false;
         public bool m_RoomEmpty = false;
         public Vector2 m_RoomIndex;
+        public Boss m_RoomBoss;
 
         public List<Enemy> m_RoomEnemies = new List<Enemy>();
         public Vector2[] m_SpawnPoints = new Vector2[4];
@@ -134,10 +135,11 @@ namespace Senior_Project
             }
             else if(enemyType == 2)
             {
-                foreach(Boss b in m_RoomEnemies)
+                if(m_RoomBoss != null)
                 {
-                    b.LoadContent(a_Content);
+                    m_RoomBoss.LoadContent(a_Content);
                 }
+                
             }
             
         }
@@ -153,10 +155,7 @@ namespace Senior_Project
 
             if (m_IsBossRoom)
             {
-                foreach (Boss b in m_RoomEnemies)
-                {
-                    b.Draw2(a_SpriteBatch);
-                }
+                m_RoomBoss.Draw(a_SpriteBatch);
             }
             else
             {
@@ -371,6 +370,16 @@ namespace Senior_Project
             for (int i = 0; i < m_RoomEnemies.Count; i++)
             {
                 m_RoomEnemies[i].SetPosition(m_SpawnPoints[i].X, m_SpawnPoints[i].Y);
+                //added to reset hitboxes if player leaves the room and comes back in
+                if(i % 2 == 0)
+                {
+                    m_RoomEnemies[i].SetHitbox('S');
+                }
+                else
+                {
+                    m_RoomEnemies[i].SetHitbox('W');
+                }
+                
             }
         }
 
@@ -465,14 +474,28 @@ namespace Senior_Project
             }
             enemyType = 2;
             Boss levelBoss = new Boss();
+            levelBoss.SetMoveDelay(500); 
             levelBoss.SetPosition(m_SpawnPoints[0].X, m_SpawnPoints[0].Y);
             m_RoomEnemies.Add(levelBoss);
         }
 
-        //public Boss GetBoss()
-        //{
-            
-        //}
+        public void CreateBoss1()
+        {
+            if (m_IsBossRoom != true)
+            {
+                return;
+            }
+            enemyType = 2;
+            m_RoomBoss = new Boss();
+            m_RoomBoss.SetMoveDelay(500);
+            //set the boss location to middle of the room so that no mater what door they come in the player is not getting hit when they enter
+            m_RoomBoss.SetPosition(m_RoomPosition.X + (480 - (m_RoomBoss.GetTextureOriginX() / 32)), m_RoomPosition.Y + (416 - (m_RoomBoss.GetTextureOriginY()/32))); //- m_RoomBoss.GetTextureOriginX())// //
+            //m_RoomEnemies.Add(levelBoss);
+        }
+        public Boss GetBoss()
+        {
+            return m_RoomBoss;
+        }
         //public void GenerateEnemies()
         //{
         //    //enemy type 1 = enemy no gun
@@ -507,5 +530,5 @@ namespace Senior_Project
         //    }
         //}
 
-    } 
+    }
 }

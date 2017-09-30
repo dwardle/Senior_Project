@@ -528,7 +528,8 @@ namespace Senior_Project
             {
                 deadEnd = FindDeadEnd(deadEnd);
                 deadEnd.SetAsBossRoom();
-                deadEnd.CreateBoss();
+                //deadEnd.CreateBoss(); commented out to test new createboss1
+                deadEnd.CreateBoss1();
             }
             else
             {
