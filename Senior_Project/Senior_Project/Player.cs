@@ -456,7 +456,7 @@ namespace Senior_Project
                 if (b.m_BulletDirection == Keys.Down)
                 {
                     float shotStart = m_PlayerPosition.Y;
-                    b.m_Position.Y = b.m_Position.Y + 10;
+                    b.m_Position.Y = b.m_Position.Y + (m_ShotSpeedMultiplyer * b.GetSpeed());
                     //b.m_HitBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Width, b.m_Texture.Height);
                     b.m_HitBox = new Rectangle((int)b.m_Position.X - (b.m_Texture.Width / 2), (int)b.m_Position.Y - (b.m_Texture.Height / 2), b.m_Texture.Width, b.m_Texture.Height);
                     if (b.m_Position.Y >= shotStart + m_ShotRange || b.m_Position.Y >= a_CurrentRoom.m_RoomPosition.Y + 768)
@@ -468,7 +468,7 @@ namespace Senior_Project
                 if (b.m_BulletDirection == Keys.Left)
                 {
                     float shotStart = m_PlayerPosition.X;
-                    b.m_Position.X = b.m_Position.X - 10;
+                    b.m_Position.X = b.m_Position.X - (m_ShotSpeedMultiplyer * b.GetSpeed());
                     //b.m_HitBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
                     b.m_HitBox = new Rectangle((int)b.m_Position.X - (b.m_Texture.Height / 2), (int)b.m_Position.Y - (b.m_Texture.Width / 2), b.m_Texture.Height, b.m_Texture.Width);
                     if (b.m_Position.X <= shotStart - m_ShotRange || b.m_Position.X <= a_CurrentRoom.m_RoomPosition.X + 64)
@@ -480,7 +480,7 @@ namespace Senior_Project
                 if (b.m_BulletDirection == Keys.Right)
                 {
                     float shotStart = m_PlayerPosition.X;
-                    b.m_Position.X = b.m_Position.X + 10;
+                    b.m_Position.X = b.m_Position.X + (m_ShotSpeedMultiplyer * b.GetSpeed());
                     //b.m_HitBox = new Rectangle((int)b.m_Position.X, (int)b.m_Position.Y, b.m_Texture.Height, b.m_Texture.Width);
                     b.m_HitBox = new Rectangle((int)b.m_Position.X - (b.m_Texture.Height / 2), (int)b.m_Position.Y - (b.m_Texture.Width / 2), b.m_Texture.Height, b.m_Texture.Width);
                     if (b.m_Position.X >= shotStart + m_ShotRange || b.m_Position.X >= a_CurrentRoom.m_RoomPosition.X + 896)
@@ -506,8 +506,12 @@ namespace Senior_Project
         }
 
         public void IncreaseHealth(float a_Health)
-        { 
-            m_PlayerHealth += a_Health;
+        {
+            m_MaxHealth += a_Health;
+            m_PlayerHealth = m_MaxHealth;
+            //Heart addHeart = new Heart(new Vector2(40 + (m_PlayerHearts.Count * 40), 16));
+            //m_PlayerHearts.Add(new Heart(new Vector2(40 + (m_PlayerHearts.Count * 40), 16)));
+            
         }
 
         public void LowerPlayerSpeed(float a_SpeedDecrease)
@@ -542,10 +546,10 @@ namespace Senior_Project
             {
                 m_DamageDelay--;
             }
-            if(m_PlayerHealth <= 0)
-            {
-                System.Environment.Exit(0);
-            }
+            //if(m_PlayerHealth <= 0)
+            //{
+            //    System.Environment.Exit(0);
+            //}
 
             if(m_DamageDelay <= 0)
             {
@@ -557,6 +561,7 @@ namespace Senior_Project
         public void IncreaseShotSpeed(float a_Multiplier)
         {
             m_ShotSpeedMultiplyer = m_ShotSpeedMultiplyer + a_Multiplier;
+            
         }
 
         public void ChangeHeartTexture()
@@ -582,6 +587,16 @@ namespace Senior_Project
         public List<Heart> GetHearts()
         {
             return m_PlayerHearts;
+        }
+
+        public void SetPosition(Vector2 a_Position)
+        {
+            m_PlayerPosition = a_Position;
+        }
+
+        public float GetHealth()
+        {
+            return m_PlayerHealth;
         }
     }
 }

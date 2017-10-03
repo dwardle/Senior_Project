@@ -79,6 +79,7 @@
     <Compile Include="Enemy.cs" />
     <Compile Include="EnemyNoGun.cs" />
     <Compile Include="FastShot.cs" />
+    <Compile Include="HealthUp.cs" />
     <Compile Include="Heart.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Level.cs" />

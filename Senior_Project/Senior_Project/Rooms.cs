@@ -37,6 +37,8 @@ namespace Senior_Project
         public bool m_IsItemRoom;
         public bool m_IsBossRoom;
 
+        //new random number generator for 
+
         //public Rectangle m_HitBox;
 
         public Rooms()
@@ -155,7 +157,11 @@ namespace Senior_Project
 
             if (m_IsBossRoom)
             {
-                m_RoomBoss.Draw(a_SpriteBatch);
+                if(m_RoomBoss.m_IsAlive)
+                {
+                    m_RoomBoss.Draw(a_SpriteBatch);
+                }
+                
             }
             else
             {
@@ -487,11 +493,49 @@ namespace Senior_Project
             }
             enemyType = 2;
             m_RoomBoss = new Boss();
-            m_RoomBoss.SetMoveDelay(500);
+            m_RoomBoss.SetMoveDelay(50);
             //set the boss location to middle of the room so that no mater what door they come in the player is not getting hit when they enter
             m_RoomBoss.SetPosition(m_RoomPosition.X + (480 - (m_RoomBoss.GetTextureOriginX() / 32)), m_RoomPosition.Y + (416 - (m_RoomBoss.GetTextureOriginY()/32))); //- m_RoomBoss.GetTextureOriginX())// //
+
             //m_RoomEnemies.Add(levelBoss);
         }
+
+        public void CreateBoss1(int a_LevelNumber)
+        {
+            if (m_IsBossRoom != true)
+            {
+                return;
+            }
+            enemyType = 2;
+            
+            m_RoomBoss = new Boss();
+            if (a_LevelNumber == 1)
+            {
+                
+            }
+            else if (a_LevelNumber == 2)
+            {
+                m_RoomBoss.MultiplyDamage(1f);
+                m_RoomBoss.MultiplyHealth(.5f);
+                m_RoomBoss.MultiplySpeed(.25f);
+            }
+            else if (a_LevelNumber == 3)
+            {
+                m_RoomBoss.MultiplyDamage(2f);
+                m_RoomBoss.MultiplyHealth(.5f);
+                m_RoomBoss.MultiplySpeed(.25f);
+            }
+            m_RoomBoss.SetMoveDelay(50);
+            //set the boss location to middle of the room so that no mater what door they come in the player is not getting hit when they enter
+            m_RoomBoss.SetPosition(m_RoomPosition.X + (480 - (m_RoomBoss.GetTextureOriginX() / 32)), m_RoomPosition.Y + (416 - (m_RoomBoss.GetTextureOriginY() / 32))); //- m_RoomBoss.GetTextureOriginX())// //
+
+            //m_RoomEnemies.Add(levelBoss);
+        }
+
+
+
+
+
         public Boss GetBoss()
         {
             return m_RoomBoss;

@@ -30,6 +30,7 @@ namespace Senior_Project
         public Rectangle m_HitBox = new Rectangle();
         public int m_MoveDelay = 0;
         public int m_MoveCount = 10;
+        public int m_Type;
 
 
 
@@ -180,6 +181,26 @@ namespace Senior_Project
                 this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Height / 2), this.m_Texture.Width, this.m_Texture.Height);
             }
+        }
+
+        public void SetIsAlive(bool a_IsAlive)
+        {
+            m_IsAlive = a_IsAlive;
+        }
+
+        public void MultiplyHealth(float a_Multiplier)
+        {
+            m_Health = m_Health + (m_Health * a_Multiplier);
+        }
+
+        public void MultiplySpeed(float a_Multiplier)
+        {
+            m_Speed = m_Speed + (m_Speed * a_Multiplier);
+        }
+
+        public void MultiplyDamage(float a_Multiplyer)
+        {
+            m_Damage = m_Damage + (m_Damage * (a_Multiplyer * .5f));
         }
     }
 }

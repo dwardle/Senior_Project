@@ -10,6 +10,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
+/// <name></name>
+/// <author></author>
+/// <date></date>
+
 namespace Senior_Project
 {
     //
@@ -27,40 +31,52 @@ namespace Senior_Project
         int m_CurrentRoomIndex_Y;
         Random Rand = new Random();
         Rooms[,] levelRooms;
+        float m_StatMultiplier = 1f;
 
 
         //Testing item//////////////////////////////////////////////////////////////
         public FastShot m_FastShot;
+        public HealthUp m_HealthUp;
         ////////////////////////////////////////////////////////////////////////////
+        int m_LevelItem_Type = 0;
+        
+
 
         //new deadends variable
         int m_DeadEnds = 0;
 
+        /// <summary>
+        /// 
+        /// 
+        /// 
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="a_LevelCount"></param>
         public Level(int a_LevelCount)
         {
+            m_RoomCount = 3 + (a_LevelCount * 2);
             m_LevelCount = a_LevelCount;
             m_RemainingRooms = m_RoomCount;
             levelRooms = new Rooms[m_RemainingRooms, m_RemainingRooms];
             m_CurrentRoomIndex_X = m_RoomCount / 2;
             m_CurrentRoomIndex_Y = m_RoomCount / 2;
             m_FastShot = new FastShot();
+            m_HealthUp = new HealthUp();
             CreateLevel1();
-            //CreateLevel();
         }
 
-        ///////old load content//////
-        public void LoadContent(ContentManager a_Content)
-        {
-            foreach(Rooms r in m_LevelRooms)
-            {
-                r.LoadContent(a_Content);
-            }
 
-            //m_FastShot.LoadContent(a_Content);
-        }
-        ///end old load content/////
-        ///
         ////new load content using room array
+
+        /// <name>Level::LoadContent()</name>
+        /// <summary>
+        /// This function is called too load all the content for the level.
+        /// </summary>
+        /// <param name="a_Content">Content manager passed from TopDownGame. Used to set all textures for all objects that need to be drawn</param>
+        /// <param name="temp"></param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void LoadContent(ContentManager a_Content, int temp)
         {
             foreach(Rooms room in levelRooms)
@@ -68,25 +84,35 @@ namespace Senior_Project
                 if(room != null)
                 {
                     room.LoadContent(a_Content);
+                    if (room.IsItemRoom())
+                    {
+                        if (m_LevelItem_Type == 0)
+                        {
+                            m_FastShot.LoadContent(a_Content);
+                        }
+                        else if (m_LevelItem_Type == 1)
+                        {
+                            m_HealthUp.LoadContent(a_Content);
+                        }
+                    }
                 }
-            }
-            m_FastShot.LoadContent(a_Content);
-
-        }
-        
-        ///old draw using room list///
-        public void Draw(SpriteBatch a_SpriteBatch)
-        {
-           
-            foreach (Rooms r in m_LevelRooms)
-            {
-                r.Draw(a_SpriteBatch);
+                
             }
             
-        }
-        ///end old draw///
 
-        ///new Draw using room array
+        }
+
+        //new Draw using room array
+        //
+
+        /// <name>Level::Draw()</name>
+        /// <summary>
+        /// This function is called to draw all level content to the screen.
+        /// </summary>
+        /// <param name="a_SpriteBatch">SpriteBatch object passed from TopDownGame. Contains all sprites to be drawn</param>
+        /// <param name="temp"></param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void Draw(SpriteBatch a_SpriteBatch, int temp)
         {
             foreach(Rooms room in levelRooms)
@@ -94,14 +120,32 @@ namespace Senior_Project
                 if(room != null)
                 {
                     room.Draw(a_SpriteBatch);
+                    if(room.IsItemRoom())
+                    {
+                        if(m_LevelItem_Type == 0)
+                        {
+                            m_FastShot.Draw(a_SpriteBatch);
+                        }
+                        else if(m_LevelItem_Type == 1)
+                        {
+                            m_HealthUp.Draw(a_SpriteBatch);
+                        }
+                    }
                 }
-                m_FastShot.Draw(a_SpriteBatch);
+               // m_FastShot.Draw(a_SpriteBatch);
             }
         }
-        
 
-
-        //check if room already exists
+        /// <name>Level::RoomExists()</name>
+        /// <summary>
+        /// This function is called to check if a room exisits at the specified array location.
+        /// checks if the room at the row and column of the array is a null room.
+        /// </summary>
+        /// <param name="Row">Row index of the room to be checked</param>
+        /// <param name="Col">Column index of the room to be checked</param>
+        /// <returns>true if the room at the specified location is not null, false otherwise</returns>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public bool RoomExists(int Row, int Col)
         {
             if(levelRooms[Row,Col] != null)
@@ -113,9 +157,20 @@ namespace Senior_Project
                 return false;
             }
         }
-       
+
         //new create level
         //currently creates a level without overlapping rooms, still need to make sure there are 2 dead ends not counting the first room
+        
+
+        /// <name>Level::CreateLevel1()</name>
+        /// <summary>
+        /// This function is called to create a randomly generated level. it will first create all the rooms for the level. after initial room creation
+        /// it will check if the level has at least 2 dead ends. 1 dead end for an item and 1 for the boss. if there is not 2 dead ends it will create
+        /// new rooms until there is 2 dead ends. after all rooms are created it will then place an item in one room and a boss in another. then generate 
+        /// enemies for all rooms except for the item room, boss room, and the first room.
+        /// </summary>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void CreateLevel1()
         {
             //room size 960 x 832
@@ -123,12 +178,6 @@ namespace Senior_Project
             int random;
             levelRooms[m_RoomCount / 2, m_RoomCount / 2] = new Rooms(m_RoomCount);
             CurrentRoomIndex = levelRooms[m_RoomCount / 2, m_RoomCount / 2].m_RoomIndex;
-            //int[] RoomPlacement = new int[100];
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    random = Rand.Next(4);
-            //    RoomPlacement[i] = random;
-            //}
             
             while(m_RemainingRooms > 1)
             {
@@ -143,7 +192,7 @@ namespace Senior_Project
             {
                 CreateDeadEnds();
             }
-            PlaceItem();
+            PlaceItem(1);
             //boss never gets drawn because this is called before generate enemies and the boss gets over written
             CreateBossRoom();
             foreach (Rooms room in levelRooms)
@@ -168,13 +217,27 @@ namespace Senior_Project
                 }
             }
 
-
+            foreach (Door d in levelRooms[m_RoomCount / 2, m_RoomCount / 2].GetDoorList())
+            {
+                d.SetIsOpen(true);
+            }
 
             Console.Write("end");
         }
 
         //START OF NEW FUNCTIONS USING ROOM ARRAY
         //set all the isDeadEnd value to true for all dead ends not counting the first room.
+
+        
+
+        /// <name>Level::MarkDeadEnds()</name>
+        /// <summary>
+        /// This function is called to search through the levelRooms array and set the IsDeadEnd value to true for any room
+        /// that is a dead end. a dead end is defined as a room that only contains 1 door.
+        /// </summary>
+        /// <returns>The number of dead ends in the levelRooms array</returns>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public int MarkDeadEnds()
         {
             int numDeadEnds = m_DeadEnds;
@@ -182,7 +245,7 @@ namespace Senior_Project
             {
                 if (room != null)
                 {
-                    if ((room.m_RoomDoors.Count == 1 && room != levelRooms[2, 2]) && room.IsDeadEnd() == false)
+                    if ((room.m_RoomDoors.Count == 1 && room != levelRooms[m_RoomCount/2, m_RoomCount/2]) && room.IsDeadEnd() == false)
                     {
                         room.SetDeadEnd(true);
                         m_DeadEnds++;
@@ -193,6 +256,15 @@ namespace Senior_Project
         }
 
         //create dead ends from in new levelRooms array
+
+
+        /// <name>Level::CreateDeadEnds()</name>
+        /// <summary>
+        /// This function is called when dead ends need to be created in the level. if a level does not have at least 2 dead ends
+        /// this function will create new rooms until the number of dead ends is at least 2
+        /// </summary>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void CreateDeadEnds()
         {
             int random;
@@ -228,6 +300,18 @@ namespace Senior_Project
 
 
         //new create room
+
+        /// <name>Level::CreateRoom()</name>
+        /// <summary>
+        /// This function is called to create a new room at a specified location in relation to the current room the levelRooms array. it will first check if
+        /// the room trying to be created already exisits. if the room already exists it will not create a new room, it will instead create a door to the
+        /// already exisiting room. if it does not exisist, a room will be created in relation to the current room based off of the placement
+        /// </summary>
+        /// <param name="currentRoomindex">Current room that a new room will be connected to</param>
+        /// <param name="NewRoomPlacement">Placement of the new room in relation to the current room</param>
+        /// <returns>Returns a Vector2 with the index of the room connected to the current room</returns>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public Vector2 CreateRoom(Vector2 currentRoomindex, int NewRoomPlacement)
         {
             //room size 960 x 832
@@ -363,6 +447,16 @@ namespace Senior_Project
         //check if room is outer edge of the array
         //this needs to be fixed. as of right now it is based off the placement of the door but it must determine if a new room is possible from this location not matter what 
         //the door placement is
+
+        /// <name>Level::CanCreateRoom()</name>
+        /// <summary>
+        /// Function checks to see if a room can be created in the specified location relative to a_Room. 
+        /// </summary>
+        /// <param name="a_Room">Room that a new room is to be connected to if a new room can be created</param>
+        /// <param name="a_Placement">location the new room will be placed in relation to a_Room</param>
+        /// <returns>true if a room can be created, false otherwise</returns>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         bool CanCreateRoom(Rooms a_Room, int a_Placement)
         {
             if(a_Room.m_RoomDoors.Count == 4)
@@ -420,8 +514,11 @@ namespace Senior_Project
         }
 
 
+        /// <name></name>
+        /// <author></author>
+        /// <date></date>
 
-
+       //not using anymore
         public int NumDeadEnds()
         {
             int DeadEndCount = 0;
@@ -437,12 +534,25 @@ namespace Senior_Project
 
         //const int m_roomWidth = 960;
         //const int m_RoomHeight = 832;
+
+        /// <name></name>
+        /// <author></author>
+        /// <date></date>
+
+        /// <name>Level::MoveRoom()</name>
+        /// <summary>
+        /// Function is called to move a specified room to the proper game window coordiantes. function first calculates the correct coordiantes
+        /// then passes them to the Rooms::MoveRoom() for a_Room.
+        /// </summary>
+        /// <param name="a_Room"></param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void MoveRoom(Rooms a_Room)
         {
-            if(a_Room != null)
-            {
-                return;
-            }
+            //if (a_Room != null)
+            //{
+            //    return;
+            //}
             int roomCoord_X;
             int roomCoord_Y;
             roomCoord_X = ((int)a_Room.m_RoomIndex.Y - (m_RoomCount / 2)) * 960;
@@ -475,6 +585,28 @@ namespace Senior_Project
             ItemPostition.X = ItemPostition.X + (960 / 2);
             ItemPostition.Y = ItemPostition.Y + (832 / 2);
             m_FastShot.SetPosition(ItemPostition);
+            ItemRoom.SetAsItemRoom();
+            //m_FastShot.SetUsed(true);
+        }
+
+        public void PlaceItem(int a_ItemType)
+        {
+            Rooms ItemRoom = FindDeadEnd();
+            Vector2 ItemPostition = ItemRoom.GetRoomPosition();
+            ItemPostition.X = ItemPostition.X + (960 / 2);
+            ItemPostition.Y = ItemPostition.Y + (832 / 2);
+
+            if(a_ItemType == 0)
+            {
+                m_FastShot.SetPosition(ItemPostition);
+            }
+            else if(a_ItemType == 1)
+            {
+                m_HealthUp.SetPosition(ItemPostition);
+                m_LevelItem_Type = 1;
+            }
+
+            
             ItemRoom.SetAsItemRoom();
             //m_FastShot.SetUsed(true);
         }
@@ -528,14 +660,30 @@ namespace Senior_Project
             {
                 deadEnd = FindDeadEnd(deadEnd);
                 deadEnd.SetAsBossRoom();
-                //deadEnd.CreateBoss(); commented out to test new createboss1
-                deadEnd.CreateBoss1();
+                List<Door> bossRoomDoors = deadEnd.GetDoorList();
+                deadEnd.CreateBoss1(m_LevelCount);
             }
             else
             {
                 deadEnd.IsBossRoom();
+                List<Door> bossRoomDoors = deadEnd.GetDoorList();
             }
             Console.Write("Done");
+        }
+
+        public void DefeatBoss(Boss a_LevelBoss)
+        {
+            a_LevelBoss = null;
+        }
+
+        public int GetLevelCount()
+        {
+            return m_LevelCount;
+        }
+
+        public int GetItemType()
+        {
+            return m_LevelItem_Type;
         }
     }
 }

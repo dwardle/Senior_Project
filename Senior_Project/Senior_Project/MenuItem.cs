@@ -59,6 +59,22 @@ namespace Senior_Project
             {
                 m_Texture = a_Content.Load<Texture2D>("Menus/Exit");
             }
+            else if(m_Option == 2)
+            {
+                m_Texture = a_Content.Load<Texture2D>("Menus/size5");
+            }
+            else if (m_Option == 3)
+            {
+                m_Texture = a_Content.Load<Texture2D>("Menus/size7");
+            }
+            else if (m_Option == 4)
+            {
+                m_Texture = a_Content.Load<Texture2D>("Menus/size9");
+            }
+            else if(m_Option == 5)
+            {
+                m_Texture = a_Content.Load<Texture2D>("Menus/NewGame");
+            }
         }
 
         public void SetPosition(Vector2 a_Position)

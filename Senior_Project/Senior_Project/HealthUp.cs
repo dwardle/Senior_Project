@@ -9,40 +9,34 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-
 namespace Senior_Project
 {
-    public class FastShot : Item
+    public class HealthUp : Item
     {
-        public float m_ShotMultiplyer;
-        
-        public FastShot()
+        public HealthUp()
         {
             m_Used = false;
-            m_ShotMultiplyer = 0.5f;
-            //m_HitBox = new Rectangle(0, 0, 0, 0);
         }
 
         public void LoadContent(ContentManager a_Content)
         {
             if(m_Used == false)
             {
-                m_Texture = a_Content.Load<Texture2D>("Items/FastShot");
+                m_Texture = a_Content.Load<Texture2D>("Items/HeartsUp");
                 m_HitBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, m_Texture.Width, m_Texture.Height);
             }
             else
             {
                 m_Texture = null;
-                m_HitBox = new Rectangle(0, 0, 0, 0);
             }
             
         }
 
-        public void IncreaseShotSpeed(Player a_MainPlayer)
+        public void IncreasePlayerHealth(Player a_MainPlayer)
         {
             if(m_Used == false)
             {
-                a_MainPlayer.IncreaseShotSpeed(m_ShotMultiplyer);
+                a_MainPlayer.IncreaseHealth(1);
                 SetUsed(true);
             }
         }

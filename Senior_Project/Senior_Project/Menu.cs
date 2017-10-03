@@ -39,6 +39,18 @@ namespace Senior_Project
             {
                 m_Texture = a_Content.Load<Texture2D>("Menus/PauseMenu");
             }
+            else if(m_MenuType == 2)
+            {
+                m_Texture = a_Content.Load<Texture2D>("Menus/LevelSize");
+            }
+            else if(m_MenuType == 3)
+            {
+                m_Texture = a_Content.Load<Texture2D>("Menus/WinMenu");
+            }
+            else if(m_MenuType == 4)
+            {
+                m_Texture = a_Content.Load<Texture2D>("Menus/GameOverMenu");
+            }
             //AddMenuItem(a_Content, 0);
             foreach(MenuItem mi in m_MenuOptions)
             {
@@ -62,7 +74,6 @@ namespace Senior_Project
         public void AddMenuItem(ContentManager a_Content, int a_Option)
         {
             MenuItem tempItem = new MenuItem(a_Option);
-            //tempItem.SetTexture(a_Content, a_Option);
             m_MenuOptions.Add(tempItem);
         }
 
@@ -73,6 +84,26 @@ namespace Senior_Project
             {
                 m_MenuOptions[i].SetPosition(newPosition);
                 newPosition.Y = newPosition.Y + 192;
+            }
+        }
+
+        public void SetOptionPositions(float a_PositionX, float a_PositionY)
+        {
+            Vector2 newPosition = new Vector2(m_Position.X + a_PositionX, m_Position.Y + a_PositionY);
+            for (int i = 0; i < m_MenuOptions.Count; i++)
+            {
+                m_MenuOptions[i].SetPosition(newPosition);
+                newPosition.Y = newPosition.Y + 192;
+            }
+        }
+
+        public void SetOptionPositions2()
+        {
+            Vector2 newPosition = new Vector2(m_Position.X + 300, m_Position.Y + 500);
+            for (int i = 0; i < m_MenuOptions.Count; i++)
+            {
+                m_MenuOptions[i].SetPosition(newPosition);
+                newPosition.X = newPosition.X + 128;
             }
         }
 

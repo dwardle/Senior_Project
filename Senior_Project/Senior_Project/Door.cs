@@ -138,6 +138,12 @@ namespace Senior_Project
 
         }
 
+        public void SetIsOpen(bool a_IsOpen)
+        {
+            m_IsDoorOpen = a_IsOpen;
+        }
+
+
     }
 
     

@@ -29,7 +29,10 @@ namespace Senior_Project
 
         public void Draw(SpriteBatch a_SpriteBatch)
         {
-            a_SpriteBatch.Draw(m_Texture, m_Position, Color.White);
+            if(m_Texture != null)
+            {
+                a_SpriteBatch.Draw(m_Texture, m_Position, Color.White);
+            }       
         }
 
 
