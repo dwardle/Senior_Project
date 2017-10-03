@@ -11,12 +11,20 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
+    //have done commenting
     class Camera
     {
         public Matrix m_Transform;
         public Viewport m_View;
         Vector2 m_Center;
 
+        /// <name>Camera::Camera()</name>
+        /// <summary>
+        /// Constructor for a Camera object. accepts a Viewport object to set the default viewport at the start of the game
+        /// </summary>
+        /// <param name="a_View">Viewport object containing the default viewport for the game</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public Camera(Viewport a_View)
         {
             m_View = a_View;
@@ -24,6 +32,15 @@ namespace Senior_Project
             m_Transform = Matrix.CreateScale(new Vector3(1, 1, 0)) * Matrix.CreateTranslation(new Vector3(-m_Center.X, -m_Center.Y, 0));
         }
 
+        /// <name>Camera::Update()</name>
+        /// <summary>
+        /// Function is called whenever the camera needs to be updated. It will move the camera to the coordiates provided
+        /// </summary>
+        /// <param name="a_GameTime"></param>
+        /// <param name="a_NewX">new camera coordinate X</param>
+        /// <param name="a_NewY">new camera coordinate Y</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void Update(GameTime a_GameTime, int a_NewX, int a_NewY)
         {
             m_Center = new Vector2(a_NewX, a_NewY);

@@ -102,19 +102,13 @@ namespace Senior_Project
         GraphicsDeviceManager m_Graphics;
         SpriteBatch m_SpriteBatch;
         public List<Rooms> m_RoomList = new List<Rooms>();
-        //public Rooms m_Room = new Rooms();
-        //public Rooms m_Room2 = new Rooms(0, -832);
-        //RoomFloor m_Floor = new RoomFloor();
-        //public Door m_Door = new Door();
         Player m_MainPlayer;
         Camera m_Camera;
-        //Level m_Level_1 = new Level(1);
-        Level m_Level_test;
-        //Level m_Level2 = new Level(2);
-        //Level m_Level3 = new Level(3);
+        Level m_Level;
+
         const int m_roomWidth = 960;
         const int m_RoomHeight = 832;
-        public int LevelCount = 1;
+        public int m_LevelCount = 1;
 
         Texture2D pixel;
 
@@ -128,18 +122,15 @@ namespace Senior_Project
         int m_GameState;
         Menu m_StartMenu;
         Menu m_PauseMenu;
-        Menu m_SizeMenu;
         Menu m_WinMenu;
         Menu m_GameOverMenu;
 
         const int m_Start = 0;
         const int m_GamePlay = 1;
         const int m_GamePaused = 2;
-        const int m_SizeSelect = 3;
-        const int m_GameWin = 4;
-        const int m_GameOver = 5;
-        const int m_NextLevel = 6;
-        int m_MenuDelay = 3000;
+        const int m_GameWin = 3;
+        const int m_GameOver = 4;
+        const int m_NextLevel = 5;
 
 
         /// <summary>
@@ -155,7 +146,7 @@ namespace Senior_Project
         ///     m_MainPlayer        --> Player object to control the users character
         ///     m_Camera            --> Object to control the viewport for the game
         ///     m_Level_Test        --> Level object to hold the current level
-        ///     LevelCount          --> Number of the current level i.e. level 1 = 1
+        ///     m_LevelCount          --> Number of the current level i.e. level 1 = 1
         ///     m_MovementRand      --> Random number generator for enenemy movement
         ///     m_GameState         --> Current state of the game
         ///     m_StartMenu         --> Menu object for the games start menu
@@ -195,53 +186,35 @@ namespace Senior_Project
             m_Graphics.IsFullScreen = false;/////////
             m_Graphics.PreferredBackBufferWidth = m_roomWidth;//////
             m_Graphics.PreferredBackBufferHeight = m_RoomHeight;/////
-            //m_MainPlayer = new Player(m_Level_1);
-            //m_MainPlayer = new Player(m_Level_test);
             this.Window.Title = "batdoug";
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
 
-            //set gamestate variable
-            //m_GameState = m_GamePlay;
+            //initialize Start menu
             m_StartMenu = new Menu();
             m_StartMenu.AddMenuItem(Content, 0);
             m_StartMenu.AddMenuItem(Content, 1);
             m_StartMenu.SetOptionPositions();
-
-            m_SizeMenu = new Menu();
-            m_SizeMenu.SetMenuType(2);
-            m_SizeMenu.AddMenuItem(Content, 2);
-            m_SizeMenu.AddMenuItem(Content, 3);
-            m_SizeMenu.AddMenuItem(Content, 4);
-            m_SizeMenu.SetOptionPositions2();
-
+        
+            //initialize pause menu
             m_PauseMenu = new Menu();
             m_PauseMenu.SetMenuType(1);
             m_PauseMenu.AddMenuItem(Content, 1);
 
-
+            //initialize win menu
             m_WinMenu = new Menu();
             m_WinMenu.SetMenuType(3);
             m_WinMenu.AddMenuItem(Content, 5);
             m_WinMenu.AddMenuItem(Content, 1);
 
+            //initialize game over menu
             m_GameOverMenu = new Menu();
             m_GameOverMenu.SetMenuType(4);
             m_GameOverMenu.AddMenuItem(Content, 5);
             m_GameOverMenu.AddMenuItem(Content, 1);
-            //m_WinMenu.SetOptionPositions();
-
-
-            //m_GameState = m_GamePlay;
+            
             m_GameState = m_Start;
 
-
-
-            //m_RoomList.Add(m_Room);
-            // m_RoomList.Add(m_Room2);
-            // m_Room2.GenerateDoors(0, 0);
-            // m_Room2.GenerateDoors(2, 2);
-            //m_Room2.GenerateDoors(2, 3);
         }
 
         /// <summary>
@@ -275,17 +248,14 @@ namespace Senior_Project
             //Switch to load content based off of the current gamestate
             switch (m_GameState)
             {
+                //Load content based off of which game state the game is in
                 case m_Start:
                     m_StartMenu.LoadContent(Content);
                     pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
                     pixel.SetData(new[] { Color.White });
                     break;
-
-                case m_SizeSelect:
-                    m_SizeMenu.LoadContent(Content);
-                    break;
                 case m_GamePaused:
-                    Rooms testRoom = m_Level_test.GetCurrentRoom();
+                    Rooms testRoom = m_Level.GetCurrentRoom();
                     m_PauseMenu.m_Position = testRoom.m_RoomPosition;
                     m_PauseMenu.SetOptionPositions();
                     m_PauseMenu.LoadContent(Content);
@@ -293,17 +263,7 @@ namespace Senior_Project
                     pixel.SetData(new[] { Color.White });
                     break;
                 case m_GamePlay:
-                   
-                    ///////commented out for testing of new load content and draw
-                    ///m_Level_1.LoadContent(Content);
-                    ///////////////
-                    m_Level_test.LoadContent(Content, 1);
-
-
-                    //m_Room.LoadContent(Content);
-                    //m_Room2.LoadContent(Content);
-                    //m_Floor.LoadContent(Content);
-                    //m_Door.LoadContent(Content);
+                    m_Level.LoadContent(Content, 1);
                     m_MainPlayer.LoadContent(Content);
 
                     //code to work with drawboarder function found online/////////////////////////////////////////////
@@ -314,15 +274,14 @@ namespace Senior_Project
                     break;
 
                 case m_GameWin:
-                    //Wait 5 seconds before showing the you win menu
-                    System.Threading.Thread.Sleep(500);
-                    Rooms testRoom1 = m_Level_test.GetCurrentRoom();
+                    System.Threading.Thread.Sleep(500); //Wait 5 seconds before showing the you win menu
+                    Rooms testRoom1 = m_Level.GetCurrentRoom();
                     m_WinMenu.m_Position = testRoom1.m_RoomPosition;
                     m_WinMenu.SetOptionPositions();
                     m_WinMenu.LoadContent(Content);
                     break;
                 case m_GameOver:
-                    testRoom = m_Level_test.GetCurrentRoom();
+                    testRoom = m_Level.GetCurrentRoom();
                     m_GameOverMenu.m_Position = testRoom.m_RoomPosition;
                     m_GameOverMenu.SetOptionPositions(350, 450);
                     m_GameOverMenu.LoadContent(Content);
@@ -351,21 +310,18 @@ namespace Senior_Project
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-
-
-            //Switch to load the correct images for the game state
             MouseState ms = Mouse.GetState();
             Rectangle t_MousePosition = new Rectangle(ms.X, ms.Y, 10, 10);
-            switch (m_GameState)
+            switch (m_GameState) //Switch to load the correct images for the game state
             {
                 case m_Start:
-                    //MouseState ms = Mouse.GetState();
-                    //Rectangle t_MousePosition = new Rectangle(ms.X, ms.Y, 10, 10);
-                    foreach (MenuItem mi in m_StartMenu.m_MenuOptions)
+                    foreach (MenuItem mi in m_StartMenu.m_MenuOptions) //Allows the user to select a menu item from the start menu
                     {
                         if (t_MousePosition.Intersects(mi.m_Hitbox) && ms.LeftButton == ButtonState.Pressed && mi.m_Option == 0)
                         {
-                            m_GameState = m_SizeSelect;
+                            m_GameState = m_GamePlay;
+                            m_Level = new Level(m_LevelCount);
+                            m_MainPlayer = new Player(m_Level);
                             LoadContent();
                         }
                         else if (t_MousePosition.Intersects(mi.m_Hitbox) && ms.LeftButton == ButtonState.Pressed && mi.m_Option == 1)
@@ -373,45 +329,11 @@ namespace Senior_Project
                             this.Exit();
                         }
                     }
-
-                    break;
-
-                case m_SizeSelect:
-                    ms = Mouse.GetState();
-                    t_MousePosition = new Rectangle(ms.X, ms.Y, 10, 10);
-                    foreach (MenuItem mi in m_SizeMenu.m_MenuOptions)
-                    {
-                        if (t_MousePosition.Intersects(mi.m_Hitbox) && ms.LeftButton == ButtonState.Pressed && mi.m_Option == 2)
-                        {
-                            m_GameState = m_GamePlay;
-                            m_Level_test = new Level(1);
-                            m_MainPlayer = new Player(m_Level_test);
-                            LoadContent();
-                        }
-                        else if (t_MousePosition.Intersects(mi.m_Hitbox) && ms.LeftButton == ButtonState.Pressed && mi.m_Option == 3)
-                        {
-                            m_GameState = m_GamePlay;
-                            m_Level_test = new Level(2);
-                            m_MainPlayer = new Player(m_Level_test);
-                            LoadContent();
-                        }
-                        else if (t_MousePosition.Intersects(mi.m_Hitbox) && ms.LeftButton == ButtonState.Pressed && mi.m_Option == 4)
-                        {
-                            m_GameState = m_GamePlay;
-                            m_Level_test = new Level(3);
-                            m_MainPlayer = new Player(m_Level_test);
-                            LoadContent();
-                        }
-                    }
                     break;
 
                 case m_GamePaused:
-                    //Rooms testRoom = m_Level_test.GetCurrentRoom();
-                    //m_PauseMenu.m_Position = testRoom.m_RoomPosition;
-                    // m_PauseMenu.SetOptionPositions();
-                    foreach (MenuItem mi in m_PauseMenu.m_MenuOptions)
+                    foreach (MenuItem mi in m_PauseMenu.m_MenuOptions) //Allows the user to select a menu item from the pause menu
                     {
-                        //MouseState ms = Mouse.GetState();
                         ms = Mouse.GetState();
                         t_MousePosition = new Rectangle(ms.X + (int)m_PauseMenu.m_Position.X, ms.Y + (int)m_PauseMenu.m_Position.Y, 10, 10);
                         if (t_MousePosition.Intersects(mi.m_Hitbox) && ms.LeftButton == ButtonState.Pressed && mi.m_Option == 0)
@@ -423,30 +345,23 @@ namespace Senior_Project
                         {
                             m_GameState = m_GamePlay;
                             LoadContent();
-                            //this.Exit();
                         }
                     }
                     break;
-
                 case m_GamePlay:
                     if (Keyboard.GetState().IsKeyDown(Keys.P))
                     {
                         m_GameState = m_GamePaused;
                         LoadContent();
                     }
-
-                    // TODO: Add your update logic here
-                    //m_MainPlayer.Update(a_GameTime, m_Level_1);  //this line now works with levelrooms array but for sake of testing I will commenet it out and use next line
-                    m_MainPlayer.Update(a_GameTime, m_Level_test);
-                    ///new update logic using rooms from level array///
-                    Rooms CurrentRoom = m_Level_test.GetCurrentRoom();
-
-                    //List<Rooms> CurrenRoomList = new List<Rooms>();
-                    //CurrenRoomList = m_Level_1.GetRoomList();
+                    m_MainPlayer.Update(a_GameTime, m_Level);
+                    Rooms CurrentRoom = m_Level.GetCurrentRoom();
 
                     List<Enemy> CurrentEnemies = new List<Enemy>();
                     CurrentEnemies = CurrentRoom.GetEnemyList();
                     int CurrentEnemyType = CurrentRoom.GetEnemyType();
+
+                    //Set the doors to open if there are no more enemies in the room
                     if (CurrentEnemies.Count == 0)
                     {
                         foreach (Door d in CurrentRoom.GetDoorList())
@@ -478,7 +393,7 @@ namespace Senior_Project
                     {
                         //Right now after the boss is defeated and the player enters the door in the room, a new level is loaded
                         Boss levelBoss = CurrentRoom.GetBoss();
-                        if (levelBoss.BossDefeated() && m_Level_test.GetLevelCount() == 3)
+                        if (levelBoss.BossDefeated() && m_Level.GetLevelCount() == 3)
                         {
                             m_GameState = m_GameWin;
                             LoadContent();
@@ -535,12 +450,9 @@ namespace Senior_Project
                         }
 
                     }
-                    //else if (CurrentEnemyType == 2)
-                    //{
 
-                    //}
-
-                    foreach (Enemy en in CurrentEnemies)
+                    
+                    foreach (Enemy en in CurrentEnemies) //Damage enemies if a bullets hitbox intersects with the enemy
                     {
                         foreach (Bullet b in m_MainPlayer.m_BulletList)
                         {
@@ -551,76 +463,65 @@ namespace Senior_Project
                             }
                         }
                     }
-                    if (CurrentRoom.IsBossRoom() == false)
+                    if (CurrentRoom.IsBossRoom() == false)//allow player to traverse rooms as long as the room in not a boss room
                     {
                         TraverseRooms(a_GameTime);
                     }
                     else
                     {
-                        if (CurrentRoom.GetBoss().m_IsAlive == false && CurrentRoom.GetDoorList().Count != 0)
+                        if (CurrentRoom.GetBoss().m_IsAlive == false && CurrentRoom.GetDoorList().Count != 0)//if room is a boss room, allow player to go to the next level
                         {
                             TraveseLevel(a_GameTime, CurrentRoom);
                         }
 
                     }
 
-                    foreach (Heart h in m_MainPlayer.GetHearts())
+                    foreach (Heart h in m_MainPlayer.GetHearts()) //Load the players current heart textures
                     {
                         h.LoadContent(Content);
                     }
-                    if (m_Level_test.GetItemType() == 0)
+                    if (m_Level.GetItemType() == 1)//Allows player to pick up the fast shot item if the players hitbox intersects with the item hitbox
                     {
-                        if (m_MainPlayer.m_HitBox.Intersects(m_Level_test.m_FastShot.m_HitBox))
+                        if (m_MainPlayer.m_HitBox.Intersects(m_Level.m_FastShot.m_HitBox))
                         {
-                            m_Level_test.m_FastShot.IncreaseShotSpeed(m_MainPlayer);
-                            m_Level_test.m_FastShot.LoadContent(Content);
+                            m_Level.m_FastShot.IncreaseShotSpeed(m_MainPlayer);
+                            m_Level.m_FastShot.LoadContent(Content);
                         }
                     }
-                    else if (m_Level_test.GetItemType() == 1)
+                    else if (m_Level.GetItemType() >= 2)//allows player to pick up the heartsUp item if the players hit box intersects with the item hitbox
                     {
-                        if (m_MainPlayer.m_HitBox.Intersects(m_Level_test.m_HealthUp.m_HitBox) && m_Level_test.m_HealthUp.GetUsed() == false)
+                        if (m_MainPlayer.m_HitBox.Intersects(m_Level.m_HealthUp.m_HitBox) && m_Level.m_HealthUp.GetUsed() == false)
                         {
-                            m_Level_test.m_HealthUp.IncreasePlayerHealth(m_MainPlayer);
+                            m_Level.m_HealthUp.IncreasePlayerHealth(m_MainPlayer);
                             List<Heart> PlayerHearts = m_MainPlayer.GetHearts();
                             Heart addHeart = new Heart(new Vector2(CurrentRoom.GetRoomCoord_X() + ((PlayerHearts.Count + 1) * 40), CurrentRoom.GetRoomCoord_Y() + 16));
                             addHeart.LoadContent(Content);
                             PlayerHearts.Add(addHeart);
-                            //PlayerHearts.Add(new Heart(CurrentRoom.GetRoomCoord_X() + (PlayerHearts.Count * 40), CurrentRoom.GetRoomCoord_Y() + (PlayerHearts.Count * 40)));
-                            m_Level_test.m_HealthUp.LoadContent(Content);
-                            //foreach (Heart h in m_MainPlayer.m_PlayerHearts)
-                            //{
-                            //    h.LoadContent(Content);
-                            //}
+                            m_MainPlayer.ChangeHeartTexture();
+                            foreach(Heart h in PlayerHearts)
+                            {
+                                h.LoadContent(Content);
+                            }
+                            m_Level.m_HealthUp.LoadContent(Content);
 
                         }
                     }
 
-
-
-                    if (m_MainPlayer.GetHealth() <= 0)
+                    if (m_MainPlayer.GetHealth() <= 0)//if the players health is less or equal to 0 then they have died and the game switches game state to game over state
                     {
                         m_GameState = m_GameOver;
                         LoadContent();
 
                     }
-
-                    
                     break;
-                case m_NextLevel:
-                    
+                case m_NextLevel: //if in this game state, create a new level and set the game state to game play and load content for the next level
                     m_Camera.Update(a_GameTime, 0, 0);
-                    m_Level_test = new Level(m_Level_test.GetLevelCount() + 1);
+                    m_Level = new Level(m_Level.GetLevelCount() + 1);
                     m_MainPlayer.SetPosition(new Vector2(480, 462));
-                    //m_MainPlayer = new Player(m_Level_test);
                     m_GameState = m_GamePlay;
                     LoadContent();
-                    
-                    //Update(a_GameTime);
-
                     break;
-
-                case m_GameWin:
-                    
+                case m_GameWin: //if in this game state then the player has beaten the game. ask if they would like to start a new game or exit
                     ms = Mouse.GetState();
                     t_MousePosition = new Rectangle(ms.X + (int)m_WinMenu.m_Position.X, ms.Y + (int)m_WinMenu.m_Position.Y, 10, 10);
                     foreach (MenuItem mi in m_WinMenu.m_MenuOptions)
@@ -638,8 +539,7 @@ namespace Senior_Project
                         }
                     }
                     break;
-
-                case m_GameOver:
+                case m_GameOver: //if in this game state then the player has lost and will be asked if they wish to play again
                     ms = Mouse.GetState();
                     t_MousePosition = new Rectangle(ms.X + (int)m_GameOverMenu.m_Position.X, ms.Y + (int)m_GameOverMenu.m_Position.Y, 10, 10);
                     foreach (MenuItem mi in m_GameOverMenu.m_MenuOptions)
@@ -693,17 +593,6 @@ namespace Senior_Project
                     }
             
                     break;
-
-                case m_SizeSelect:
-                    m_SizeMenu.Draw(m_SpriteBatch);
-                    foreach(MenuItem mi in m_SizeMenu.m_MenuOptions)
-                    {
-                        if(m_SpriteBatch != null)
-                        {
-                            DrawBorder(mi.m_Hitbox, 2, Color.Blue, m_SpriteBatch);
-                        }
-                    }
-                    break;
                 case m_GamePaused:
                     m_PauseMenu.Draw(m_SpriteBatch);
                     foreach (MenuItem mi in m_PauseMenu.m_MenuOptions)
@@ -716,26 +605,11 @@ namespace Senior_Project
 
                     break;
                 case m_GamePlay:
-                    //if(m_Door.m_IsDoorOpen == true)
-                    //{
-                    //    m_Door.LoadContent(Content);
-                    //}
-                    //m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, m_Camera.m_Transform);
-
-                    //m_Room.Draw(m_SpriteBatch);
-                    //m_Room2.Draw(m_SpriteBatch);
-                    //m_Floor.Draw(m_SpriteBatch);
-                    //m_Door.Draw(m_SpriteBatch);
-
-                    ///////commented out for testing of new level draw and load content
-                    //m_Level_1.Draw(m_SpriteBatch);
-                    ////////////////////////
-
-                    m_Level_test.Draw(m_SpriteBatch, 1);
+                    m_Level.Draw(m_SpriteBatch, 1);
                     m_MainPlayer.Draw(m_SpriteBatch);
 
                     //temporary function calls to see bounding boxes/////////////////////////////////////////////////
-                    Rooms temp = m_Level_test.GetCurrentRoom();
+                    Rooms temp = m_Level.GetCurrentRoom();
                     if (temp.m_RoomEnemies.Count != 0)
                     {
                         foreach (Enemy tempEnemy in temp.m_RoomEnemies)
@@ -764,11 +638,11 @@ namespace Senior_Project
                     }
                     /////////////////////////////////////////////////////////////////////////////////////////////////
                     //Temporary function call to see item bounding box///////////////////////////////////////////////
-                    DrawBorder(m_Level_test.m_FastShot.m_HitBox, 2, Color.Red, m_SpriteBatch);
+                    DrawBorder(m_Level.m_FastShot.m_HitBox, 2, Color.Red, m_SpriteBatch);
                     /////////////////////////////////////////////////////////////////////////////////////////////////
-                    if(m_Level_test.GetCurrentRoom().GetBoss() != null)
+                    if(m_Level.GetCurrentRoom().GetBoss() != null)
                     {
-                        Boss tempBoss = m_Level_test.GetCurrentRoom().GetBoss();
+                        Boss tempBoss = m_Level.GetCurrentRoom().GetBoss();
                         DrawBorder(tempBoss.m_HitBox, 2, Color.Red, m_SpriteBatch);
                         DrawBorder(tempBoss.m_HitBox2, 2, Color.Red, m_SpriteBatch);
                     }
@@ -805,10 +679,6 @@ namespace Senior_Project
             base.Draw(a_GameTime);
         }
 
-
-
-
-
         /// <name>TopDownGame::TraverseRooms()</name>
         /// <summary>
         /// Function allows the player to travel between rooms. if the players hitbox intersects with a doors hitbox
@@ -820,9 +690,9 @@ namespace Senior_Project
         ///<date></date>
         public void TraverseRooms(GameTime a_GameTime)
         {
-            Rooms CurrentRoom = m_Level_test.GetCurrentRoom();
-            //new logic for going threw doors
-            //Go threw the top door
+            Rooms CurrentRoom = m_Level.GetCurrentRoom();
+
+            //Allows player to walk through a door placed at placement top if the door is open
             if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Up))
             {
                 int TopDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Up);
@@ -832,11 +702,8 @@ namespace Senior_Project
                     {
                         CurrentRoom.DeactivateEnemies();
                     }
-                    //m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 704;
-                    //m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
-                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow() - 1, CurrentRoom.GetRoomCol());
-                    CurrentRoom = m_Level_test.GetCurrentRoom();
-                    //m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[TopDoor].m_nextRoom;
+                    m_Level.SetCurrentRoom(CurrentRoom.GetRoomRow() - 1, CurrentRoom.GetRoomCol());
+                    CurrentRoom = m_Level.GetCurrentRoom();
                     m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 704;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
@@ -844,7 +711,7 @@ namespace Senior_Project
                 }
             }
 
-            //go threw bottom door
+            //Allows player to walk through a door placed at placement down if the door is open
             if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Down))
             {
                 int DownDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Down);
@@ -854,13 +721,8 @@ namespace Senior_Project
                     {
                         CurrentRoom.DeactivateEnemies();
                     }
-                    //CurrentRoom.DeactivateEnemies();
-                    //m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 128;
-                    //m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
-                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow() + 1, CurrentRoom.GetRoomCol());
-                    CurrentRoom = m_Level_test.GetCurrentRoom();
-
-                    //m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[DownDoor].m_nextRoom;
+                    m_Level.SetCurrentRoom(CurrentRoom.GetRoomRow() + 1, CurrentRoom.GetRoomCol());
+                    CurrentRoom = m_Level.GetCurrentRoom();
                     m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 128;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 480;
@@ -868,7 +730,7 @@ namespace Senior_Project
                 }
             }
 
-            //go threw left door
+            //Allows player to walk through a door placed at placement left if the door is open
             if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Left))
             {
                 int LeftDoor = CurrentRoom.FindDoor((int)Level.m_DoorPlacement.Left);
@@ -878,13 +740,8 @@ namespace Senior_Project
                     {
                         CurrentRoom.DeactivateEnemies();
                     }
-                    //CurrentRoom.DeactivateEnemies();
-                    //m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
-                    //m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 832;
-                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow(), CurrentRoom.GetRoomCol() - 1);
-                    CurrentRoom = m_Level_test.GetCurrentRoom();
-
-                    //m_MainPlayer.RoomIndex = CurrentRoom.m_RoomDoors[LeftDoor].m_nextRoom;
+                    m_Level.SetCurrentRoom(CurrentRoom.GetRoomRow(), CurrentRoom.GetRoomCol() - 1);
+                    CurrentRoom = m_Level.GetCurrentRoom();
                     m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 832;
@@ -892,7 +749,7 @@ namespace Senior_Project
                 }
             }
 
-            //go threw right door
+            //Allows player to walk through a door placed at placement right if the door is open
             if (CurrentRoom.DoorExists((int)Level.m_DoorPlacement.Right))
             {
 
@@ -903,8 +760,8 @@ namespace Senior_Project
                     {
                         CurrentRoom.DeactivateEnemies();
                     }
-                    m_Level_test.SetCurrentRoom(CurrentRoom.GetRoomRow(), CurrentRoom.GetRoomCol() + 1);
-                    CurrentRoom = m_Level_test.GetCurrentRoom();
+                    m_Level.SetCurrentRoom(CurrentRoom.GetRoomRow(), CurrentRoom.GetRoomCol() + 1);
+                    CurrentRoom = m_Level.GetCurrentRoom();
                     m_Camera.Update(a_GameTime, (int)CurrentRoom.m_RoomPosition.X, (int)CurrentRoom.m_RoomPosition.Y);
                     m_MainPlayer.m_PlayerPosition.Y = (int)CurrentRoom.m_RoomPosition.Y + 416;
                     m_MainPlayer.m_PlayerPosition.X = (int)CurrentRoom.m_RoomPosition.X + 128;
@@ -912,39 +769,6 @@ namespace Senior_Project
                 }
             }
         }
-
-        /// <summary>
-        /// Do not think I am currently using this function
-        ///
-        /// </summary>
-        /// <param name="a_GameTime"></param>
-        /// <returns></returns>
-        public bool TraversLevel(GameTime a_GameTime)
-        {
-            Rooms CurrentRoom = m_Level_test.GetCurrentRoom();
-            if(CurrentRoom.IsBossRoom())
-            {
-                List<Door> BossRoomDoors = CurrentRoom.GetDoorList();
-                if(BossRoomDoors[1].m_HitBox.Intersects(m_MainPlayer.m_HitBox))
-                {
-                    return true;
-                    //int nextLevel = m_Level_test.GetLevelCount() + 1;
-                    //Level newLevel = new Level(nextLevel);
-                    //m_Level_test.CreateLevel1();
-                    
-                    //m_Level_test.CreateLevel1();
-                }
-            }
-            else
-            {
-                TraverseRooms(a_GameTime);
-                return false;
-            }
-            return false;
-
-        }
-
-
 
         /// <name>TopDownGames::TraverseLevel()</name>
         /// <summary>
@@ -958,7 +782,6 @@ namespace Senior_Project
         /// <date></date>
         public void TraveseLevel(GameTime a_GameTime, Rooms a_BossRoom)
         {
-            //List<Door> NextLevelDoor
             Door NextLevelDoor = a_BossRoom.GetDoorList().ElementAt(0);
             if(NextLevelDoor.m_HitBox.Intersects(m_MainPlayer.m_HitBox))
             {

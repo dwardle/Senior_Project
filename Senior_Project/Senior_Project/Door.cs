@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
+    //have done commenting
     public class Door
     {
         enum m_DoorPlacement {Up, Down, Left, Right };
@@ -18,10 +19,16 @@ namespace Senior_Project
         public Texture2D m_Texture;
         public Vector2 m_DoorPosition;
         public Rectangle m_HitBox;
-        public bool m_IsDoorOpen = true;
+        public bool m_IsDoorOpen = false;
         public int m_Placement;
         public int m_nextRoom = 0;
 
+        /// <name>Door::Door()</name>
+        /// <summary>
+        /// Basic contructor for Door object
+        /// </summary>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public Door()
         {
             m_Texture = null;
@@ -30,11 +37,26 @@ namespace Senior_Project
             m_Placement = (int)m_DoorPlacement.Up;
         }
 
+        /// <name>Door::Door()</name>
+        /// <summary>
+        /// Constuctor that accepts an X and Y for the door position
+        /// </summary>
+        /// <param name="a_DoorX">new position X</param>
+        /// <param name="a_DoorY">new position Y</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public Door(int a_DoorX, int a_DoorY)
         {
             m_DoorPosition = new Vector2(a_DoorX, a_DoorY);
         }
 
+        /// <name>Door::SetDoorPlacement()</name>
+        /// <summary>
+        /// Sets the m_Placement value. m_Placement is the location the door is going to be placed in the room
+        /// </summary>
+        /// <param name="a_Placement">new door placement value</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void SetDoorPlacement(int a_Placement)
         {
             if(a_Placement <= 0 || a_Placement >= 4)
@@ -44,6 +66,15 @@ namespace Senior_Project
             m_Placement = a_Placement;
         }
 
+        /// <name>Door::SetDoorPosition()</name>
+        /// <summary>
+        /// Sets the door position in relation to its placement in the room.
+        /// </summary>
+        /// <param name="a_DoorX">Doors X position</param>
+        /// <param name="a_DoorY">Doors Y position</param>
+        /// <param name="a_Placement">Location in the room that the door will be placed</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void SetDoorPosition(int a_DoorX, int a_DoorY, int a_Placement)
         {
             if(a_Placement == (int)m_DoorPlacement.Up)
@@ -73,11 +104,25 @@ namespace Senior_Project
             //m_HitBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 32, 32);
         }
 
+        /// <name>Door::LoadContent()</name>
+        /// <summary>
+        /// Function calls SetTexture to set and load the content for the door
+        /// </summary>
+        /// <param name="a_Content">Content manager contianing all the conetent for the game</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void LoadContent(ContentManager a_Content)
         {
             SetTexture(a_Content);
         }
 
+        /// <name>Door::Draw()</name>
+        /// <summary>
+        /// Function called every time object should be drawn
+        /// </summary>
+        /// <param name="a_SpriteBatch">allows drawing of sprites to the screen</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             a_SpriteBatch.Draw(m_Texture, m_DoorPosition, Color.White);
@@ -85,6 +130,14 @@ namespace Senior_Project
 
         //sets the door textures and hitboxes
         //hitboxes are set to be smaller then the actual door texture to make it look more like the player actually walked through the door
+
+        /// <name>Door::SetTexture()</name>
+        /// <summary>
+        /// Fuction sets the texture of the door based on its placement and if it is open or not
+        /// </summary>
+        /// <param name="a_Content">content manager containing all content for the game</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void SetTexture(ContentManager a_Content)
         {
             if (this.m_Placement == (int)m_DoorPlacement.Up)
@@ -138,6 +191,13 @@ namespace Senior_Project
 
         }
 
+        /// <name>Door::SetIsOpen()</name>
+        /// <summary>
+        /// Function sets the m_IsDoorOpen value
+        /// </summary>
+        /// <param name="a_IsOpen">bool value, Should be true to set the door to open and false to set to closed</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void SetIsOpen(bool a_IsOpen)
         {
             m_IsDoorOpen = a_IsOpen;
@@ -146,9 +206,14 @@ namespace Senior_Project
 
     }
 
-    
 
-
+    /// <name>Door::DoorPlacement : Compare</name>
+    /// <summary>
+    /// Comparison class that will compare 2 doors and sort then in a door list by their placement value.
+    /// it will be sorted from lowest placement value to highest;
+    /// </summary>
+    /// <author>Douglas Wardle</author>
+    /// <date></date>
     public class DoorPlacement : Comparer<Door>
     {
         //sort doors by placement

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+//Have done commenting
 
 namespace Senior_Project
 {
@@ -32,6 +33,13 @@ namespace Senior_Project
         public Keys m_BulletDirection;
         public Rectangle m_HitBox;
 
+        /// <name>Bullet::Bullet()</name>
+        /// <summary>
+        /// Basic constructor for a Bullet object
+        /// </summary>
+        /// <param name="a_Texture">Texture for the bullet object</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public Bullet(Texture2D a_Texture)
         {
             //temporary bullet speed for testing
@@ -41,12 +49,26 @@ namespace Senior_Project
             m_IsVisible = false;
         }
 
+        /// <name>Bullet::Draw()</name>
+        /// <summary>
+        /// Function for drawing bullets. is called whenever bullets need to be drawn on screen
+        /// </summary>
+        /// <param name="a_SpriteBatch">SpriteBatch object to allow drawing of sprites</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             m_BulletOrigin = new Vector2(m_Texture.Width / 2, m_Texture.Height / 2);
             a_SpriteBatch.Draw(m_Texture, m_Position, null, Color.White, m_BulletRotaion, m_BulletOrigin, 1.0f, SpriteEffects.None, 0f);
         }
 
+        /// <name>Bullet::GetSpeed()</name>
+        /// <summary>
+        /// Accesses the speed value for the bullet object. this value is how fast a bullet travels normally
+        /// </summary>
+        /// <returns>floating point value for the bullets speed</returns>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public float GetSpeed()
         {
             return m_Speed;

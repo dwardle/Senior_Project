@@ -11,13 +11,29 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
+    /// <name>HealthUp::</name>
+    /// <author>Douglas Wardle</author>
+    /// <date></date>
     public class HealthUp : Item
     {
+        /// <name>HealthUp::HealthUp()</name>
+        /// <summary>
+        /// Basic constructor for a HealthUp Object
+        /// </summary>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public HealthUp()
         {
             m_Used = false;
         }
 
+        /// <name>HealthUp::LoadContent()</name>
+        /// <summary>
+        /// Loads the tecxture for a HealthUp object and sets its hitbox
+        /// </summary>
+        /// <param name="a_Content">content manager for all game content</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void LoadContent(ContentManager a_Content)
         {
             if(m_Used == false)
@@ -32,6 +48,14 @@ namespace Senior_Project
             
         }
 
+        /// <name>HealthUp::IncreasePlayerHealth()</name>
+        /// <summary>
+        /// Function gets called when a player collects the item. it will increase the players health by 1 and
+        /// set the m_Used value to true
+        /// </summary>
+        /// <param name="a_MainPlayer">The player that has collected the HealthUp item</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void IncreasePlayerHealth(Player a_MainPlayer)
         {
             if(m_Used == false)

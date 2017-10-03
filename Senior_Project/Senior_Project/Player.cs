@@ -9,8 +9,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+//have done commenting
+
 namespace Senior_Project
 {
+    
     public class Player
     {
         //Player Stats
@@ -52,6 +55,13 @@ namespace Senior_Project
         
         public List<Bullet> m_BulletList = new List<Bullet>();
 
+        /// <name>Player::Player()</name>
+        /// <summary>
+        /// Constructor for a Player object. to keep track of which level the player is on the current level is passed to it and stored
+        /// </summary>
+        /// <param name="a_CurrentLevel"></param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public Player(Level a_CurrentLevel)
         {
             m_CurrentLevel = a_CurrentLevel;
@@ -67,6 +77,13 @@ namespace Senior_Project
             Console.Write("Done");
         }
 
+        /// <name>Player::LoadContent()</name>
+        /// <summary>
+        /// Loads all textures that the player needs. this includes the player texture, bullet texture, and Heart texture
+        /// </summary>
+        /// <param name="a_Content">content manager that contains all content for the game</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void LoadContent(ContentManager a_Content)
         {
             m_Texture = a_Content.Load<Texture2D>("Player/batDoug5");
@@ -79,6 +96,13 @@ namespace Senior_Project
             Console.Write("Done");
         }
 
+        /// <name>Player::Draw()</name>
+        /// <summary>
+        /// this function draws all textures for the player character. this includes the player texture, bullet texture, and heart texture
+        /// </summary>
+        /// <param name="a_SpriteBatch">SpriteBatch object to allow for drawing of sprites</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             m_PlayerOrigin.X = m_Texture.Width / 2;
@@ -98,6 +122,15 @@ namespace Senior_Project
 
 
         //new update for when using a Level object. pre summer work
+        /// <name>Player::Update()</name>
+        /// <summary>
+        /// Function is called every time the player needs to update. this function allows for player movement, player rotation, shooting, Updating the players hearts,
+        /// and updating the pplayers hitbox to move with the player. It will also keep the player from walking through walls
+        /// </summary>
+        /// <param name="a_GameTime"></param>
+        /// <param name="a_CurrentLevel">The level that the player is currently on</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void Update(GameTime a_GameTime, Level a_CurrentLevel)
         {
             KeyboardState keyState = Keyboard.GetState();
@@ -267,129 +300,17 @@ namespace Senior_Project
             }
         }
 
-        ////Old Player update logic
-        //List<Rooms> CurrentRoomList = new List<Rooms>();
-        //    CurrentRoomList = a_CurrentLevel.GetRoomList();
-        //    Rooms CurrentRoom = new Rooms();
-        //    CurrentRoom = CurrentRoomList[m_CurrentRoom];
-        //    int cRoom_X = (int)CurrentRoomList[RoomIndex].m_RoomPosition.X;
-        //    int cRoom_Y = (int)CurrentRoomList[RoomIndex].m_RoomPosition.Y;
+        
 
-        //    //Left Wall
-        //    if (m_PlayerPosition.X <= (64 + cRoom_X) + m_Texture.Width / 2)
-        //    {
-        //        if(CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Left))
-        //        {
-        //            int LeftDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Left);
-        //            if(CurrentRoomList[RoomIndex].m_RoomDoors[LeftDoor].m_IsDoorOpen && m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.Y <= cRoom_Y + 448)
-        //            {
-        //                if(m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.X < cRoom_X + 64)
-        //                {
-        //                    m_PlayerPosition.Y = (cRoom_Y + 384) + m_Texture.Height / 2;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Width / 2;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            m_PlayerPosition.X = (64 + cRoom_X) + m_Texture.Width / 2;
-        //        }
-        //    }
-
-        //    //Right Wall
-        //    if (m_PlayerPosition.X >= (832 + cRoom_X) + m_Texture.Width / 2)
-        //    {
-        //        if (CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Right))
-        //        {
-        //            int RightDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Right);
-        //            if (CurrentRoomList[RoomIndex].m_RoomDoors[RightDoor].m_IsDoorOpen && m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.Y <= cRoom_Y + 448)
-        //            {
-        //                if (m_PlayerPosition.Y >= cRoom_Y + 384 && m_PlayerPosition.X > cRoom_X + 864)
-        //                {
-        //                    m_PlayerPosition.Y = (cRoom_Y + 384) + m_Texture.Height / 2;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                m_PlayerPosition.X = (832 + cRoom_X) + m_Texture.Width / 2;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            m_PlayerPosition.X = (832 + cRoom_X) + m_Texture.Width / 2;
-        //        }
-                
-        //    }
-
-        //    //Top Wall
-        //    if (m_PlayerPosition.Y <= (64 + cRoom_Y) + m_Texture.Height / 2)
-        //    {
-        //        if (CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Up))
-        //        {
-        //            int UpDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Up);
-        //            if (CurrentRoomList[RoomIndex].m_RoomDoors[UpDoor].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.X <= cRoom_X + 512)
-        //            {
-        //                if (m_PlayerPosition.X >= cRoom_X + 448 &&  m_PlayerPosition.Y < cRoom_Y + 64)
-        //                {
-        //                    m_PlayerPosition.X = (cRoom_X + 448) + m_Texture.Width / 2;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                m_PlayerPosition.Y = (64 + cRoom_Y) + m_Texture.Height / 2;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            m_PlayerPosition.Y = (64 + cRoom_Y) + m_Texture.Height / 2;
-        //        }
-        //    }
-
-        //    //original before changes
-        //    //if (m_PlayerPosition.Y <= (64 + cRoom_Y) + m_Texture.Height / 2)
-        //    //{
-        //    //    if (CurrentRoom.m_RoomDoors[0].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.X <= cRoom_X + 512)
-        //    //    {
-        //    //        if (m_PlayerPosition.Y >= 64)
-        //    //        {
-        //    //            m_PlayerPosition.X = (cRoom_X + 448) + (m_Texture.Width / 2);
-        //    //        }
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        m_PlayerPosition.X = (64 + cRoom_Y) + m_Texture.Height / 2;
-        //    //    }
-        //    //}
-
-        //    //Down Wall
-        //    if (m_PlayerPosition.Y >= (704 + cRoom_Y) + m_Texture.Height / 2)
-        //    {
-        //        if (CurrentRoomList[RoomIndex].DoorExists((int)Level.m_DoorPlacement.Down))
-        //        {
-        //            int DownDoor = CurrentRoomList[RoomIndex].FindDoor((int)Level.m_DoorPlacement.Down);
-        //            if (CurrentRoomList[RoomIndex].m_RoomDoors[DownDoor].m_IsDoorOpen && m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.X <= cRoom_X + 512)
-        //            {
-        //                if (m_PlayerPosition.X >= cRoom_X + 448 && m_PlayerPosition.Y > cRoom_Y + 736)
-        //                {
-        //                    m_PlayerPosition.X = (cRoom_X + 448) + m_Texture.Width / 2;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                m_PlayerPosition.Y = (704 + cRoom_Y) + m_Texture.Height / 2;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            m_PlayerPosition.Y = (704 + cRoom_Y) + m_Texture.Height / 2;
-        //        }
-        //    }
-        //    m_HitBox = new Rectangle((int)m_PlayerPosition.X, (int)m_PlayerPosition.Y, m_Texture.Width, m_Texture.Height);
-        //}
-
+        /// <name>Player::Shoot()</name>
+        /// <summary>
+        /// Function for when the player tries to shoot the gun. allows player to shoot one bullet every time its shot delay hits zero.
+        /// if the shot delay is zero, a new bullet is created at the and rotated to the direction that the player is shooting. this new bullet
+        /// is then set to visible, added to the players bullet list, and then the shot delay is reset.
+        /// </summary>
+        /// <param name="a_ShotDirection">The direction that the player is shooting</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void Shoot(Keys a_ShotDirection)
         {
             if(m_ShotDelay >= 0)
@@ -436,6 +357,14 @@ namespace Senior_Project
             }
         }
 
+        /// <name>Player::</name>
+        /// <summary>
+        /// Function to update all bullets in the bullet list. this will be called every time Player::Update() is called. This allows the bullet to move
+        /// in the direction that it was shot until it either hits the wall or reaches the players shot range.
+        /// </summary>
+        /// <param name="a_CurrentRoom">the current room that the player is in</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void UpdateBullet(Rooms a_CurrentRoom)
         {
             foreach(Bullet b in m_BulletList)
@@ -499,41 +428,95 @@ namespace Senior_Project
                 }
             }
         }
+
+        /// <name>Player::LowerHealth()</name>
+        /// <summary>
+        /// Lowers the players health by the ammount of damage passed to the function. then updates the players hearts
+        /// to show the damage taken
+        /// </summary>
+        /// <param name="a_Damage">the amount of damage the player is taking</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void LowerHealth(float a_Damage)
         {
             m_PlayerHealth -= a_Damage;
             ChangeHeartTexture();
         }
 
+        /// <name>Player::IncreaseHealth()</name>
+        /// <summary>
+        /// Increases the players Maximum health by the amount passed to the function and fulls the players health
+        /// </summary>
+        /// <param name="a_Health"></param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void IncreaseHealth(float a_Health)
         {
             m_MaxHealth += a_Health;
             m_PlayerHealth = m_MaxHealth;
+            //ChangeHeartTexture();
+            
             //Heart addHeart = new Heart(new Vector2(40 + (m_PlayerHearts.Count * 40), 16));
             //m_PlayerHearts.Add(new Heart(new Vector2(40 + (m_PlayerHearts.Count * 40), 16)));
             
         }
 
+        /// <name>Player::LowerSpeed()</name>
+        /// <summary>
+        /// Function lowers the players movement speed by the amount passed to the function
+        /// </summary>
+        /// <param name="a_SpeedDecrease">amount to decrease the players speed</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void LowerPlayerSpeed(float a_SpeedDecrease)
         {
             m_PlayerSpeed -= a_SpeedDecrease;
         }
 
+        /// <name>Player::IncreasePlayerSpeed()</name>
+        /// <summary>
+        /// Function increases the players movement speed by the amount passed to the function
+        /// </summary>
+        /// <param name="a_SpeedIncrease">amount to increase player speed</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void IncreasePlayerSpeed(float a_SpeedIncrease)
         {
             m_PlayerSpeed += a_SpeedIncrease;
         }
 
+        /// <name>Player::LowerShotDelay</name>
+        /// <summary>
+        /// Function lowers the players shot delay by the amount passed to the function
+        /// </summary>
+        /// <param name="a_DecreaseDelay">amount to decrease shot delay</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void LowerShotDelay(float a_DecreaseDelay)
         {
             m_ShotDelay -= a_DecreaseDelay;
         }
 
+        /// <name>Player::IncreaseShotDelay()</name>
+        /// <summary>
+        /// Function increases the players shot delay by the amount passed to the function
+        /// </summary>
+        /// <param name="a_IncreaseDelay">amount to increase shot delay</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void IncreaseShotDelay(float a_IncreaseDelay)
         {
             m_ShotDelay += a_IncreaseDelay;
         }
 
+        /// <name>Player::TakeDamage()</name>
+        /// <summary>
+        /// First checks if the player can take damage. if the player can take damage lower the player health by the amount of damage passed to the function.
+        /// if the player cannot take damage, decrease the damage delay
+        /// </summary>
+        /// <param name="a_Damage"></param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void TakeDamage(float a_Damage)
         {
             if(this.m_CantTakeDamage == false)
@@ -558,12 +541,25 @@ namespace Senior_Project
             }
         }
 
+        /// <name>Player::IncreaseShotSpeed()</name>
+        /// <summary>
+        /// Increases the shot speed multiplier for the player to increase the speed at which bullets travel
+        /// </summary>
+        /// <param name="a_Multiplier">amount to increase the shot speed multiplier</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void IncreaseShotSpeed(float a_Multiplier)
         {
             m_ShotSpeedMultiplyer = m_ShotSpeedMultiplyer + a_Multiplier;
             
         }
 
+        /// <name>Player::ChangeHeartTexture</name>
+        /// <summary>
+        /// Function changes the players Heart textures to show the amount of health the player currently has
+        /// </summary>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void ChangeHeartTexture()
         {
             for(int i = 0; i < m_MaxHealth; i++)
@@ -580,20 +576,44 @@ namespace Senior_Project
                         m_PlayerHearts[i].SetTextureType(2);
                     }
                 }
-                
+                else if(m_PlayerHealth == m_MaxHealth)
+                {
+                    m_PlayerHearts[i].SetTextureType(0);
+                }
             }
         }
 
+        /// <name>Player::GetHearts()</name>
+        /// <summary>
+        /// Accesses the players Heart list
+        /// </summary>
+        /// <returns>returns a list containing the players hearts</returns>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public List<Heart> GetHearts()
         {
             return m_PlayerHearts;
         }
 
+        /// <name>Player::SetPosition()</name>
+        /// <summary>
+        /// Accepts a Vector2 and assigns it to the players position
+        /// </summary>
+        /// <param name="a_Position">Vector2 containing the new player position</param>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public void SetPosition(Vector2 a_Position)
         {
             m_PlayerPosition = a_Position;
         }
 
+        /// <name>Player::GetHealth()</name>
+        /// <summary>
+        /// Accesses the players current health
+        /// </summary>
+        /// <returns>floating point value for the players health</returns>
+        /// <author>Douglas Wardle</author>
+        /// <date></date>
         public float GetHealth()
         {
             return m_PlayerHealth;
