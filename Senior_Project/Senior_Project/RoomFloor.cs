@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
-    //have done commenting
     public class RoomFloor
     {
         public Texture2D m_Texture;
@@ -23,7 +22,7 @@ namespace Senior_Project
         /// basic constructor for a room floor object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public RoomFloor()
         {
             m_Texture = null;
@@ -36,7 +35,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager that contains the textures for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             m_Texture = a_Content.Load<Texture2D>("Rooms/roomFloor");
@@ -48,7 +47,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object to allow for drawing of sprites</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             a_SpriteBatch.Draw(m_Texture, m_FloorPosition, Color.White);

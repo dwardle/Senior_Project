@@ -10,14 +10,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-//have done commenting
 
 namespace Senior_Project
 {
-    //hitboxes for enemies now work correctly. the rectangle class creates a rectangle from the top left corner to bottom right while the draw for the enemy texture(or any texture)
-    //draws from bottm left to top right. to fix the boxes being drawn incorrectly I needed to subtract the hitboxes x and y cooridnates by (texture width / 2) and (texture height / 2)
-    //respectivly. except for when the enemy is facing left or right. when the enemy is facing left or right I had to swap what the x and y were subracted by and swap the width and height of 
-    //the rectangle as well to account for the rotation of the enemy texture.
     public class Enemy
     {
         //enemy size 64 x 56
@@ -41,7 +36,7 @@ namespace Senior_Project
         /// Basic constructor for Enemy object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Enemy()
         {
             m_Texture = null;
@@ -50,11 +45,6 @@ namespace Senior_Project
             m_IsAlive = true;
         }
 
-        /*public void LoadContent(ContentManager a_Content)
-        {
-            m_Texture = a_Content.Load<Texture2D>()
-        }*/
-
         
         /// <name>Enemy::Draw()</name>
         /// <summary>
@@ -62,7 +52,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">A SpriteBatch object to allow for drawing of sprites</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             m_EnemyOrigin.X = m_Texture.Width / 2;
@@ -77,7 +67,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Texture">A Texture2D object containing the texture to be set</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetTexture(Texture2D a_Texture)
         {
             m_Texture = a_Texture;
@@ -90,7 +80,7 @@ namespace Senior_Project
         /// <param name="a_Xpos">new x coordinate</param>
         /// <param name="a_Ypos">new y coordinate</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(float a_Xpos, float a_Ypos)
         {
             m_Position.X = a_Xpos;
@@ -103,30 +93,29 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Direction">Char value to represent the current rotation of an object</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetRotation(char a_Direction)
         {
             if (a_Direction == 'W')
             {
                 m_Rotation = ((float)Math.PI / 2.0f) * 4;
-                //this.m_HitBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, this.m_Texture.Width, this.m_Texture.Height);
+                
             }
             else if (a_Direction == 'A')
             {
-                // need to swap width and height to compensate for the rotation of the texture
+               
                 m_Rotation = ((float)Math.PI / 2.0f) * 3;
-                //this.m_HitBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, this.m_Texture.Height, this.m_Texture.Width);
             }
             else if (a_Direction == 'S')
             {
                 m_Rotation = ((float)Math.PI / 2.0f) * 2;
-                //this.m_HitBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, this.m_Texture.Width, this.m_Texture.Height);
+                
             }
             else if (a_Direction == 'D')
             {
-                // need to swap width and height to compensate for the rotation of the texture
+                
                 m_Rotation = ((float)Math.PI / 2.0f);
-                //this.m_HitBox = new Rectangle((int)m_Position.X, (int)m_Position.Y, this.m_Texture.Height, this.m_Texture.Width);
+                
             }
         }
 
@@ -136,7 +125,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_IsActive">bool to set the m_IsActive too</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetIsActive(bool a_IsActive)
         {
             m_IsActive = a_IsActive;
@@ -148,7 +137,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_MoveDelay">integer value that m_MoveDelay will be set too</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetMoveDelay(int a_MoveDelay)
         {
             m_MoveDelay = a_MoveDelay;
@@ -160,7 +149,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>integer containing the enemy move delay</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetMoveDelay()
         {
             return m_MoveDelay;
@@ -174,49 +163,44 @@ namespace Senior_Project
         /// <param name="a_MainPlayer">the current player the enemy is trying to move toward</param>
         /// <param name="a_RoomEnemies">list of enemies that are trying to move to the player</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MoveToPlayer(Player a_MainPlayer, List<Enemy> a_RoomEnemies)
         {
-            //move right, toward player
-
-            //testing bounding box *
-            //this.SetRotation('W');// * = line that will be deleted. # = line that will be put back
             if (a_MainPlayer.m_PlayerPosition.X > this.m_Position.X)
             {
-                this.SetRotation('D'); // #
+                this.SetRotation('D'); 
 
-                //when facing left or right, the bounding box height and width need to be swapped to make it correct with the rotation
+                
                 this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Width / 2), this.m_Texture.Height, this.m_Texture.Width);
-                m_Position.X = m_Position.X + m_Speed; // #
+                m_Position.X = m_Position.X + m_Speed; 
             }
 
             //move down, toward player
             if (a_MainPlayer.m_PlayerPosition.Y > this.m_Position.Y)
             {
-                this.SetRotation('S'); // #
-                //this.m_HitBox = new Rectangle((int)this.m_Position.X - 32, (int)this.m_Position.Y - 28, this.m_Texture.Width, this.m_Texture.Height);
+                this.SetRotation('S'); 
                 this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Height / 2), this.m_Texture.Width, this.m_Texture.Height);
-                m_Position.Y = m_Position.Y + m_Speed; // #
+                m_Position.Y = m_Position.Y + m_Speed;
             }
 
             //move left toward player,
             if (a_MainPlayer.m_PlayerPosition.X < this.m_Position.X)
             {
-                this.SetRotation('A');// #
+                this.SetRotation('A');
                 this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Height / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Width / 2), this.m_Texture.Height, this.m_Texture.Width);
-                m_Position.X = m_Position.X - m_Speed;// #
+                m_Position.X = m_Position.X - m_Speed;
             }
 
             //move up, toward player
             if (a_MainPlayer.m_PlayerPosition.Y < this.m_Position.Y)
             {
-                this.SetRotation('W');// #
+                this.SetRotation('W');
                 this.m_HitBox = new Rectangle((int)this.m_Position.X - (this.m_Texture.Width / 2),
                     (int)this.m_Position.Y - (this.m_Texture.Height / 2), this.m_Texture.Width, this.m_Texture.Height);
-                m_Position.Y = m_Position.Y - m_Speed;// #
+                m_Position.Y = m_Position.Y - m_Speed;
             }
         }
 
@@ -228,7 +212,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Damage">The amount that enemy health is to be lowered</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void TakeDamage(float a_Damage)
         {
             m_Health -= a_Damage;
@@ -246,7 +230,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Rotation">Char value to represent the enemy rotation</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetHitbox(char a_Rotation)
         {
             if (a_Rotation == 'D')
@@ -278,7 +262,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_IsAlive">bool value to set m_IsAlive too</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetIsAlive(bool a_IsAlive)
         {
             m_IsAlive = a_IsAlive;
@@ -290,7 +274,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Multiplier">the amount that enemy health will be multiplied by</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MultiplyHealth(float a_Multiplier)
         {
             m_Health = m_Health + (m_Health * a_Multiplier);
@@ -303,7 +287,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Multiplier">the amount the enemy speed will be multiplied by</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MultiplySpeed(float a_Multiplier)
         {
             m_Speed = m_Speed + (m_Speed * a_Multiplier);
@@ -317,7 +301,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Multiplyer">the amount the enemy damage will be multiplied by</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MultiplyDamage(float a_Multiplyer)
         {
             m_Damage = m_Damage + (m_Damage * (a_Multiplyer * .5f));

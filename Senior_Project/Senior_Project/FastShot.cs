@@ -23,12 +23,11 @@ namespace Senior_Project
         /// Basic constructor for a FastShot Item
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public FastShot()
         {
             m_Used = false;
             m_ShotMultiplyer = 0.5f;
-            //m_HitBox = new Rectangle(0, 0, 0, 0);
         }
 
         /// <name>FaseShot::LoadContent()</name>
@@ -37,7 +36,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager for all game content</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             if(m_Used == false)
@@ -59,7 +58,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_MainPlayer">Player that collected the item</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void IncreaseShotSpeed(Player a_MainPlayer)
         {
             if(m_Used == false)

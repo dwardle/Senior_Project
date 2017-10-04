@@ -11,9 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
-  //have done commenting
-    
-
     public class Heart
     {
         public Texture2D m_Texture;
@@ -25,7 +22,7 @@ namespace Senior_Project
         /// Basic Constructor for Heart object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Heart()
         {
             m_Texture_Type = 0;
@@ -38,7 +35,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Position">Position of the object</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Heart(Vector2 a_Position)
         {
             m_Position = a_Position;
@@ -51,7 +48,7 @@ namespace Senior_Project
         /// <param name="a_Position_X">X position of the object</param>
         /// <param name="a_Position_Y">Y position of the object</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Heart(float a_Position_X, float a_Position_Y)
         {
             m_Position.X = a_Position_X;
@@ -64,7 +61,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager containing all conetent for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             SetTexture(a_Content);
@@ -76,7 +73,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object to allow sprites to be drawn</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             a_SpriteBatch.Draw(m_Texture, m_Position, Color.White);
@@ -88,7 +85,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Position">Vector2 containing the new position for the object</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(Vector2 a_Position)
         {
             m_Position = a_Position;
@@ -101,7 +98,7 @@ namespace Senior_Project
         /// <param name="a_Position_X">X position coordinates</param>
         /// <param name="a_Position_Y">Y position coordinates</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(float a_Position_X, float a_Position_Y)
         {
             m_Position.X = a_Position_X;
@@ -114,7 +111,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager that contains all content for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetTexture(ContentManager a_Content)
         {
             switch(m_Texture_Type)
@@ -138,7 +135,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Texture_Type">integer represting the desired texture type</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetTextureType(int a_Texture_Type)
         {
             m_Texture_Type = a_Texture_Type;

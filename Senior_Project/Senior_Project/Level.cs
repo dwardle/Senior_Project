@@ -22,8 +22,6 @@ namespace Senior_Project
         List<Rooms> m_LevelRooms = new List<Rooms>();
         int m_LevelCount;
         int m_RoomCount = 5;
-        //int m_NextRoom; no longer need these two variables
-        //int m_CenterRoom;
         int m_RemainingRooms;
         int m_CurrentRoomIndex_X;
         int m_CurrentRoomIndex_Y;
@@ -32,22 +30,12 @@ namespace Senior_Project
         float m_StatMultiplier = 1f;
 
 
-        //Testing item//////////////////////////////////////////////////////////////
         public FastShot m_FastShot;
         public HealthUp m_HealthUp;
-        ////////////////////////////////////////////////////////////////////////////
         int m_LevelItem_Type = 0;
-        
-
-
-        //new deadends variable
         int m_DeadEnds = 0;
 
         /// <summary>
-        /// 
-        /// 
-        /// 
-        /// 
         /// 
         /// </summary>
         /// <param name="a_LevelCount"></param>
@@ -65,8 +53,6 @@ namespace Senior_Project
         }
 
 
-        ////new load content using room array
-
         /// <name>Level::LoadContent()</name>
         /// <summary>
         /// This function is called too load all the content for the level.
@@ -74,7 +60,7 @@ namespace Senior_Project
         /// <param name="a_Content">Content manager passed from TopDownGame. Used to set all textures for all objects that need to be drawn</param>
         /// <param name="temp"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content, int temp)
         {
             foreach(Rooms room in levelRooms)
@@ -104,8 +90,6 @@ namespace Senior_Project
 
         }
 
-        //new Draw using room array
-        //
 
         /// <name>Level::Draw()</name>
         /// <summary>
@@ -114,7 +98,7 @@ namespace Senior_Project
         /// <param name="a_SpriteBatch">SpriteBatch object passed from TopDownGame. Contains all sprites to be drawn</param>
         /// <param name="temp"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch, int temp)
         {
             foreach(Rooms room in levelRooms)
@@ -150,7 +134,7 @@ namespace Senior_Project
         /// <param name="Col">Column index of the room to be checked</param>
         /// <returns>true if the room at the specified location is not null, false otherwise</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool RoomExists(int Row, int Col)
         {
             if(levelRooms[Row,Col] != null)
@@ -163,9 +147,7 @@ namespace Senior_Project
             }
         }
 
-        //new create level
-        //currently creates a level without overlapping rooms, still need to make sure there are 2 dead ends not counting the first room
-        
+
 
         /// <name>Level::CreateLevel1()</name>
         /// <summary>
@@ -175,7 +157,7 @@ namespace Senior_Project
         /// enemies for all rooms except for the item room, boss room, and the first room.
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void CreateLevel1()
         {
             //room size 960 x 832
@@ -198,7 +180,6 @@ namespace Senior_Project
                 CreateDeadEnds();
             }
             PlaceItem(m_LevelCount);
-            //boss never gets drawn because this is called before generate enemies and the boss gets over written
             CreateBossRoom();
             foreach (Rooms room in levelRooms)
             {
@@ -215,10 +196,6 @@ namespace Senior_Project
                     {
                         room.GenerateEnemies();
                     }
-                    //else if(room.IsDeadEnd() == true && room.IsItemRoom() == false)
-                    //{
-                    //    room.CreateBoss();
-                    //}
                 }
             }
 
@@ -230,10 +207,6 @@ namespace Senior_Project
             Console.Write("end");
         }
 
-        //START OF NEW FUNCTIONS USING ROOM ARRAY
-        //set all the isDeadEnd value to true for all dead ends not counting the first room.
-
-        
 
         /// <name>Level::MarkDeadEnds()</name>
         /// <summary>
@@ -242,7 +215,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>The number of dead ends in the levelRooms array</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int MarkDeadEnds()
         {
             int numDeadEnds = m_DeadEnds;
@@ -260,16 +233,13 @@ namespace Senior_Project
             return m_DeadEnds;
         }
 
-        //create dead ends from in new levelRooms array
-
-
         /// <name>Level::CreateDeadEnds()</name>
         /// <summary>
         /// This function is called when dead ends need to be created in the level. if a level does not have at least 2 dead ends
         /// this function will create new rooms until the number of dead ends is at least 2
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void CreateDeadEnds()
         {
             int random;
@@ -313,7 +283,7 @@ namespace Senior_Project
         /// <param name="NewRoomPlacement">Placement of the new room in relation to the current room</param>
         /// <returns>Returns a Vector2 with the index of the room connected to the current room</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Vector2 CreateRoom(Vector2 currentRoomindex, int NewRoomPlacement)
         {
             int CR_X = (int)levelRooms[(int)currentRoomindex.X, (int)currentRoomindex.Y].m_RoomPosition.X;
@@ -352,7 +322,6 @@ namespace Senior_Project
 
             else if (NewRoomPlacement == 1)
             {
-                //make sure room index is not outside bounds off array
                 if (CRI_Row + 1 < m_RoomCount)
                 {
                     if (RoomExists(CRI_Row + 1, CRI_Col) == false)
@@ -438,7 +407,7 @@ namespace Senior_Project
         /// <param name="a_Placement">location the new room will be placed in relation to a_Room</param>
         /// <returns>true if a room can be created, false otherwise</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         bool CanCreateRoom(Rooms a_Room, int a_Placement)
         {
             if(a_Room.m_RoomDoors.Count == 4)
@@ -503,7 +472,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Room"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MoveRoom(Rooms a_Room)
         {
             if (a_Room != null)
@@ -528,7 +497,7 @@ namespace Senior_Project
         /// <param name="CR_X">Row index of current room</param>
         /// <param name="CR_Y">Column index of current room</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetCurrentRoom(int CR_X, int CR_Y)
         {
             m_CurrentRoomIndex_X = CR_X;
@@ -550,7 +519,7 @@ namespace Senior_Project
         /// Function places an item in a room and then sets that room as an item room
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void PlaceItem()
         {
             Rooms ItemRoom = FindDeadEnd();
@@ -568,7 +537,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_ItemType">Int to represent a specific item</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void PlaceItem(int a_ItemType)
         {
             Rooms ItemRoom = FindDeadEnd();
@@ -601,19 +570,17 @@ namespace Senior_Project
         /// <param name="a_StartingPoint"></param>
         /// <returns>If the function finds a dead end room it returns that room, if not return null</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Rooms FindDeadEnd(Rooms a_StartingPoint)
         {
             foreach (Rooms room in levelRooms)
             {
-                if (room != null && room.IsDeadEnd() == true)// && room.GetRoomRow() != a_StartingPoint.GetRoomRow() && room.GetRoomCol() != a_StartingPoint.GetRoomCol())
+                if (room != null && room.IsDeadEnd() == true)
                 {
                     if (room.GetRoomRow() != a_StartingPoint.GetRoomRow() || room.GetRoomCol() != a_StartingPoint.GetRoomCol())
                     {
                         return room;
                     }
-
-                    //return room;
                 }
             }
             return null;
@@ -626,7 +593,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>Returns the first dead end room in the levelRooms array if one is found. if no dead ends are found, returns null</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Rooms FindDeadEnd()
         {
             foreach (Rooms room in levelRooms)
@@ -645,7 +612,7 @@ namespace Senior_Project
         /// the function will create a Boss object and place it in the room. 
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void CreateBossRoom()
         {
             Rooms deadEnd = FindDeadEnd();
@@ -670,7 +637,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_LevelBoss">A boss object to pass the current level boss too</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void DefeatBoss(Boss a_LevelBoss)
         {
             a_LevelBoss = null;
@@ -682,7 +649,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>returns level objects m_LevelCount variable</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetLevelCount()
         {
             return m_LevelCount;
@@ -694,7 +661,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>Level Objects m_LevelItem_Type integer</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetItemType()
         {
             return m_LevelItem_Type;

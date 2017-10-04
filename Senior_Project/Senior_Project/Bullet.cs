@@ -9,19 +9,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-//Have done commenting
 
 namespace Senior_Project
 {
     public class Bullet
     {
-        //public Rectangle boundingBox;
-        //public Texture2D texture;
-        //public Vector2 origin;
-        //public Vector2 position;
-        //public bool isVisible;
-        //public float speed;
-
 
         //bullet size 6 x 8
         public Texture2D m_Texture;
@@ -39,11 +31,9 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Texture">Texture for the bullet object</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Bullet(Texture2D a_Texture)
         {
-            //temporary bullet speed for testing
-            //m_Speed = 2;
             m_Speed = 10;
             m_Texture = a_Texture;
             m_IsVisible = false;
@@ -55,7 +45,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object to allow drawing of sprites</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             m_BulletOrigin = new Vector2(m_Texture.Width / 2, m_Texture.Height / 2);
@@ -68,7 +58,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>floating point value for the bullets speed</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public float GetSpeed()
         {
             return m_Speed;

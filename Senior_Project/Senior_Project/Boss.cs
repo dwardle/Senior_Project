@@ -26,7 +26,7 @@ namespace Senior_Project
         /// Basic contructor for a boss object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Boss()
         {
             m_CanMove = false;
@@ -36,7 +36,7 @@ namespace Senior_Project
             m_EnemyOrigin.X = 96;
             m_EnemyOrigin.Y = 96;
             m_Speed = 2.5f;
-            m_Health = 80;
+            m_Health = 60;
         }
 
         /// <name>Boss::Boss()</name>
@@ -45,7 +45,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Type">integer representing the enemy type</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Boss(int a_Type)
         {
             m_CanMove = false;
@@ -66,7 +66,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">Content manager containing the texture that boss needs to be set to</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
 
@@ -81,7 +81,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object that allows for drawing of sprites</param
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw2(SpriteBatch a_SpriteBatch)
         {
             a_SpriteBatch.Draw(m_Texture, m_Position, Color.White);
@@ -94,7 +94,7 @@ namespace Senior_Project
         /// the player constantly
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MoveToPlayer1()
         {
             if (m_Position.X < m_MoveTo.X)
@@ -117,42 +117,6 @@ namespace Senior_Project
             }
         }
 
-
-        ///Not currently using this function
-        /// <name>Boss::</name>
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="a_MainPlayer"></param>
-        /// <author>Douglas Wardle</author>
-        /// <date></date>
-        //public void MoveToPlayer(Player a_MainPlayer)
-        //{
-        //    //follow the player
-        //    float moveToX = a_MainPlayer.m_PlayerPosition.X; //+ (a_MainPlayer.m_Texture.Width/2);  //(a_MainPlayer.m_Texture.Width);
-        //    float moveToY = a_MainPlayer.m_PlayerPosition.Y; //+ (a_MainPlayer.m_Texture.Height / 2);  //(a_MainPlayer.m_Texture.Height);
-
-        //    if (m_Position.X < moveToX)
-        //    {
-        //        m_Position.X = m_Position.X + m_Speed;
-
-        //    }
-        //    if(m_Position.Y < moveToY)
-        //    {
-        //        m_Position.Y = m_Position.Y + m_Speed;
-        //    }
-        //    if (m_Position.X > moveToX)
-        //    {
-        //        m_Position.X = m_Position.X - m_Speed;
-
-        //    }
-        //    if (m_Position.Y > moveToY)
-        //    {
-        //        m_Position.Y = m_Position.Y - m_Speed;
-        //    }
-
-        //}
-
         /// <name>Boss::MoveToPlayer</name>
         /// <summary>
         /// Function will move the enemy toward whatever the Vector2 m_MoveTo is currently set to. when it reaches that location it will call
@@ -160,21 +124,21 @@ namespace Senior_Project
         /// to move to the location then stop and wait for the next time it can move
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MoveToPlayer()
         {
-            //boss movement if i want the boss to move toward the players last position then stop and wait
+
             if (m_Position.X < m_MoveTo.X)
             {
                 m_Position.X = m_Position.X + m_Speed;
                 if (m_Position.Y < m_MoveTo.Y)
                 {
-                    //m_Position.X = m_Position.X + m_Speed;
+                    
                     m_Position.Y = m_Position.Y + m_Speed;
                 }
                 if (m_Position.Y > m_MoveTo.Y)
                 {
-                    //m_Position.X = m_Position.X + m_Speed;
+                 
                     m_Position.Y = m_Position.Y - m_Speed;
                 }
                 if (m_Position.X >= m_MoveTo.X)
@@ -188,12 +152,12 @@ namespace Senior_Project
                 m_Position.X = m_Position.X - m_Speed;
                 if (m_Position.Y < m_MoveTo.Y)
                 {
-                    //m_Position.X = m_Position.X - m_Speed;
+                    
                     m_Position.Y = m_Position.Y + m_Speed;
                 }
                 if (m_Position.Y > m_MoveTo.Y)
                 {
-                   // m_Position.X = m_Position.X - m_Speed;
+                   
                     m_Position.Y = m_Position.Y - m_Speed;
                 }
                 
@@ -213,7 +177,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>The object that called the function</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Boss GetBoss()
         {
             return this;
@@ -224,7 +188,7 @@ namespace Senior_Project
         /// Function sets the m_CanMove value to the opposite of whatever it is
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetCanMove()
         {
             m_CanMove = !m_CanMove;
@@ -236,13 +200,12 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_CanMove">bool value that should be true if the enemy is allowed to move and false otherwise</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetCanMove(bool a_CanMove)
         {
             m_CanMove = a_CanMove;
         }
 
-        //need to fix the movement on this function so when player enters the room there is a delay before the boss moves
 
         /// <name>Boss::CanMove()</name>
         /// <summary>
@@ -252,7 +215,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>true if the enemy can move, false otherwise</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool CanMove()
         {
             if(m_CanMove == false && m_IsMoving == false && m_MoveDelay <= 0)
@@ -273,7 +236,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_MoveTo">Vector2 object containing the new location to move to</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetMoveLocation(Vector2 a_MoveTo)
         {
             m_MoveTo = a_MoveTo;
@@ -285,7 +248,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>returns a floating point number for the enemy origin at X</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public float GetTextureOriginX()
         {
             return m_EnemyOrigin.X;
@@ -297,7 +260,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>a floating point number with the enemy origin at Y</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public float GetTextureOriginY()
         {
             return m_EnemyOrigin.Y;
@@ -309,7 +272,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_IsMoving">bool Value, pass true if the enemy is currently moving and false if not</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetIsMoving(bool a_IsMoving)
         {
             m_IsMoving = a_IsMoving;
@@ -321,7 +284,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>true if the enemy is currently moving, false otherwise</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool IsMoving()
         {
             return m_IsMoving;
@@ -332,7 +295,7 @@ namespace Senior_Project
         /// Function sets the objects 2 hitboxes to correspond to the current position of the object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetHitBox()
         {
             //wide hitbox
@@ -349,7 +312,7 @@ namespace Senior_Project
         /// Function sets the objects hitboxes to empty rectangles. called when the enemy is dead or its hitboxes are not needed
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void DeleteHitbox()
         {
             m_HitBox = new Rectangle();
@@ -362,7 +325,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_MainPlayer">The current player object for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Update1(Player a_MainPlayer)
         {
             if (m_IsAlive)
@@ -392,7 +355,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>true if m_IsAlive is false and false if m_IsAlive is true</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool BossDefeated()
         {
             return !m_IsAlive;

@@ -11,13 +11,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
-    //Have done commenting
-
-
     public class Rooms
     {
-        //Work on 9/27 start to add boss to game
-
         enum m_DoorPlacement { Up, Down, Left, Right };
 
         public Texture2D m_Texture;
@@ -40,37 +35,13 @@ namespace Senior_Project
         public bool m_IsItemRoom;
         public bool m_IsBossRoom;
 
-        //new random number generator for 
-
-        //public Rectangle m_HitBox;
-
-
-        //public Rooms()
-        //{
-        //    m_Texture = null;
-        //    m_IsItemRoom = false;
-        //    m_IsBossRoom = false;
-        //    m_RoomPosition = new Vector2(0, 0);
-        //    m_Floor.m_FloorPosition = new Vector2(64, 64);
-        //    m_SpawnPoints = new Vector2[4]
-        //    {
-        //        new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 128),
-        //        new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 640),
-        //        new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
-        //        new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
-        //    };
-        //    //m_HitBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
-        //}
-
-        //new constructor for first room. can replace regular constructor after all calls to original have been removed
-
         /// <name>Rooms::Rooms()</name>
         /// <summary>
         /// Constructor for Rooms object, Sets the room index so that the room will be placed in the middle of the levelRooms array.
         /// </summary>
         /// <param name="a_NumRooms">Total number of rooms for the game level</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Rooms(int a_NumRooms)
         {
             m_Texture = null;
@@ -87,7 +58,6 @@ namespace Senior_Project
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
                 new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
             };
-            //m_HitBox = new Rectangle((int)m_RoomPosition.X, (int)m_RoomPosition.Y, 64, 64);
         }
 
         /// <name>Rooms::Rooms()</name>
@@ -98,7 +68,7 @@ namespace Senior_Project
         /// <param name="a_RoomX">Room position X coordinate</param>
         /// <param name="a_RoomY">Room position Y coordinate</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Rooms(int a_RoomX, int a_RoomY)
         {
             m_RoomPosition = new Vector2(a_RoomX, a_RoomY);
@@ -114,7 +84,6 @@ namespace Senior_Project
             };
         }
 
-        //new room constructor to create a room with its index in the array stored
         /// <name>Rooms::Rooms()</name>
         /// <summary>
         /// constructor for a new room with the rooms position specified by first and second parameter and stores the index
@@ -125,7 +94,7 @@ namespace Senior_Project
         /// <param name="index_x">room Row index</param>
         /// <param name="index_y">room column index</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Rooms(int a_RoomX, int a_RoomY, int index_x, int index_y)
         {
             m_RoomIndex.X = index_x;
@@ -143,27 +112,25 @@ namespace Senior_Project
             };
         }
 
-        //new function to get room index
         /// <name>Rooms::GetRoomIndex()</name>
         /// <summary>
         /// Accesses the index at which the room is in an array. The m_RoomIndex is a Vector2
         /// </summary>
         /// <returns>Vector2 with the rooms row as the Vector2 X and the column as Y</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Vector2 GetRoomIndex()
         {
             return m_RoomIndex;
         }
 
-        // these loadcontent and draw functions should still work regardless of room array///////////////////////////////////////////////////////
         /// <name>Rooms::LoadContent()</name>
         /// <summary>
         /// Called whenever a room needs to load its textures. This function will load the textures for the Room Walls, room floor, room doors, and Room enemies
         /// </summary>
         /// <param name="a_Content">content manager containing all content for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             m_Texture = a_Content.Load<Texture2D>("Rooms/RoomWall");
@@ -198,7 +165,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object to allow sprites to be drawn</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             a_SpriteBatch.Draw(m_Texture, m_RoomPosition, Color.White);
@@ -226,32 +193,7 @@ namespace Senior_Project
             
 
         }
-        /////////////////////////////////////////////////////////////////////////////////////
-        //Am not using this right now. possibly will be deleted
-        /// <name>Rooms::GenerateDoors()</name>
-        /// <summary>
-        /// Function will randomly generate doors and place them in the room. a room may contain up to 4 doors but no less then 1
-        /// </summary>
-        /// <author>Douglas Wardle</author>
-        /// <date></date>
-        //public void GenerateDoors()
-        //{
-        //    int numDoors = doorGen.Next(1, 5);
-        //    int Placement;
-        //    while(numDoors > 0)
-        //    {
-        //        Placement = doorGen.Next(0, 4);
-        //        if (DoorExists(Placement) ==  false)
-        //        {
-        //            CreateDoor(Placement);
-        //            numDoors--;
-        //        }
-        //    }
-        //    this.m_RoomDoors.Sort(doorComp);
-        //}
-
-
-        //a_LastDoorLocation may not be used 
+        
         /// <name>Rooms::GenerateDoors()</name>
         /// <summary>
         /// Function will randomly generate doors in the room. it will first get a random number between 0-3 to
@@ -262,7 +204,7 @@ namespace Senior_Project
         /// <param name="a_RoomsRemaining">The amount of rooms that still need to be created</param>
         /// <param name="a_LastDoorLocation"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void GenerateDoors(int a_RoomsRemaining, int a_LastDoorLocation)
         {
             int numDoors = doorGen.Next(0, 4);
@@ -293,7 +235,7 @@ namespace Senior_Project
         /// <param name="a_Placement">placement that is being checked for an existing door</param>
         /// <returns>Returns true if a door already exists and false if it does not</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool DoorExists(int a_Placement)
         {
             bool exists = false;
@@ -314,7 +256,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Placement">integer representing the placement of the door within the room</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void CreateDoor(int a_Placement)
         {
             Door nDoor = new Door();
@@ -322,30 +264,13 @@ namespace Senior_Project
             this.m_RoomDoors.Add(nDoor);
         }
 
-        //not currently using this version of CreateDoor possibly remove
-        ///// <name>Rooms::</name>
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="a_Placement"></param>
-        ///// <param name="a_NextRoomIndex"></param>
-        ///// <author>Douglas Wardle</author>
-        ///// <date></date>
-        //public void CreateDoor(int a_Placement, int a_NextRoomIndex)
-        //{
-        //    Door nDoor = new Door();
-        //    nDoor.SetDoorPosition((int)m_RoomPosition.X, (int)m_RoomPosition.Y, a_Placement);
-        //    nDoor.m_nextRoom = a_NextRoomIndex;
-        //    this.m_RoomDoors.Add(nDoor);
-        //}
-
         /// <name>Rooms::GetDoorList()</name>
         /// <summary>
         /// Access the rooms door list
         /// </summary>
         /// <returns>returns a list containing all the doors for the room</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public List<Door> GetDoorList()
         {
             return this.m_RoomDoors;
@@ -359,7 +284,7 @@ namespace Senior_Project
         /// <param name="a_Placement">placement of door that is being searched for</param>
         /// <returns>Returns index of door within the door list if a door is found at the placement specified. if not return -1</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int FindDoor(int a_Placement)
         {
             for (int i = 0; i < m_RoomDoors.Count; i++)
@@ -380,7 +305,7 @@ namespace Senior_Project
         /// <param name="a_RoomX">X position coordinate</param>
         /// <param name="a_RoomY">Y position coordinate</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void MoveRoom(int a_RoomX, int a_RoomY)
         {
             this.m_RoomPosition.X = a_RoomX;
@@ -390,17 +315,6 @@ namespace Senior_Project
             this.SetSpawnPoints();
         }
 
-        //new move room
-        //m_roomWidth = 960;
-        //m_RoomHeight = 832;
-        /*public void MoveRoom()
-        {
-            this.m_RoomPosition.X = a_RoomX;
-            this.m_RoomPosition.Y = a_RoomY;
-            this.m_Floor.m_FloorPosition.X += a_RoomX;
-            this.m_Floor.m_FloorPosition.Y += a_RoomY;
-            this.SetSpawnPoints();
-        }*/
 
         /// <name>Rooms::IsDeadEnd()</name>
         /// <summary>
@@ -408,7 +322,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>true if the room is a dead end, false if it is not</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool IsDeadEnd()
         {
             return m_IsDeadEnd;
@@ -421,7 +335,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_IsDeadEnd">boolean value, true to represent the room is a dead end and false if it is not</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetDeadEnd(bool a_IsDeadEnd)
         {
             this.m_IsDeadEnd = a_IsDeadEnd;
@@ -433,18 +347,9 @@ namespace Senior_Project
         /// so all enemies are either facing down or up
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void GenerateEnemies()
         {
-            //enemy type 1 = enemy no gun
-            //enemy type 2 = Boss
-            //Vector2[] m_SpawnPoints = new Vector2[4]
-            //{
-            //    new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 128),
-            //    new Vector2(m_RoomPosition.X + 128, m_RoomPosition.Y + 640),
-            //    new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 128),
-            //    new Vector2(m_RoomPosition.X + 768, m_RoomPosition.Y + 640)
-            //};
             Random enemyRand = new Random();
             int enemyType = 1;//enemyRand.Next(0, 4);
             int numEnemies = enemyRand.Next(0, 5);
@@ -473,7 +378,7 @@ namespace Senior_Project
         /// Sets all enemies to active. enemies will not move or do anything unless first activated
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void ActivateEnemies()
         {
             foreach(Enemy en in m_RoomEnemies)
@@ -489,7 +394,7 @@ namespace Senior_Project
         /// Function is used to set all enemies to not active
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void DeactivateEnemies()
         {
             foreach(Enemy en in m_RoomEnemies)
@@ -505,7 +410,7 @@ namespace Senior_Project
         /// Function will reset the room enemies to their original positions before the player entered the room
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void ResetEnemies()
         {
             for (int i = 0; i < m_RoomEnemies.Count; i++)
@@ -530,7 +435,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>List containing all the enemies in the room</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public List<Enemy> GetEnemyList()
         {
             return m_RoomEnemies;
@@ -542,7 +447,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>returns an integer value that represents the enemy type for the room</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetEnemyType()
         {
             return enemyType;
@@ -554,7 +459,7 @@ namespace Senior_Project
         /// Sets the Spawn points to the correct positions in the room
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetSpawnPoints()
         {
             m_SpawnPoints = new Vector2[4]
@@ -573,7 +478,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>If room enemy list is empty then return true, if not return false</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool RoomClear()
         {
             if(m_RoomEnemies.Any() == false)
@@ -596,7 +501,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>integer containing the X coordinate of the room position</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetRoomCoord_X()
         {
             return (int)m_RoomPosition.X;
@@ -608,7 +513,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>integer containing the Y coordinate of the room position</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetRoomCoord_Y()
         {
             return (int)m_RoomPosition.Y;
@@ -621,7 +526,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>returns an integer for the row index of the room in the games room array</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetRoomRow()
         {
             return (int)m_RoomIndex.X;
@@ -633,7 +538,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>returns an integer for the column index of the room in the games room array</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public int GetRoomCol()
         {
             return (int)m_RoomIndex.Y;
@@ -645,7 +550,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>a Vector2 containing the room position</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Vector2 GetRoomPosition()
         {
             return m_RoomPosition;
@@ -656,7 +561,7 @@ namespace Senior_Project
         /// Sets the room as an item room by changing its m_IsItemRoom value to true
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetAsItemRoom()
         {
             m_IsItemRoom = true;
@@ -667,7 +572,7 @@ namespace Senior_Project
         /// Sets the room as a boss room by changing its m_IsBossRoom value to true
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetAsBossRoom()
         {
             m_IsBossRoom = true;
@@ -679,7 +584,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>true if the room is a boss room, false if it is not</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool IsBossRoom()
         {
             return m_IsBossRoom;
@@ -691,7 +596,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>true if the room is an item room and false if it is not</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool IsItemRoom()
         {
             return m_IsItemRoom;
@@ -702,7 +607,7 @@ namespace Senior_Project
         /// Function first checks that the room is a boss room. then it creates a boss and places it in the room
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void CreateBoss()
         {
             if(m_IsBossRoom != true)
@@ -722,7 +627,7 @@ namespace Senior_Project
         /// and sets its position to the center of the room
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void CreateBoss1()
         {
             if (m_IsBossRoom != true)
@@ -733,9 +638,7 @@ namespace Senior_Project
             m_RoomBoss = new Boss();
             m_RoomBoss.SetMoveDelay(50);
             //set the boss location to middle of the room so that no mater what door they come in the player is not getting hit when they enter
-            m_RoomBoss.SetPosition(m_RoomPosition.X + (480 - (m_RoomBoss.GetTextureOriginX() / 32)), m_RoomPosition.Y + (416 - (m_RoomBoss.GetTextureOriginY()/32))); //- m_RoomBoss.GetTextureOriginX())// //
-
-            //m_RoomEnemies.Add(levelBoss);
+            m_RoomBoss.SetPosition(m_RoomPosition.X + (480 - (m_RoomBoss.GetTextureOriginX() / 32)), m_RoomPosition.Y + (416 - (m_RoomBoss.GetTextureOriginY()/32)));
         }
 
         /// <name>Rooms::CreateBoss1()</name>
@@ -746,7 +649,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_LevelNumber"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void CreateBoss1(int a_LevelNumber)
         {
             if (m_IsBossRoom != true)
@@ -774,12 +677,8 @@ namespace Senior_Project
             }
             m_RoomBoss.SetMoveDelay(50);
             //set the boss location to middle of the room so that no mater what door they come in the player is not getting hit when they enter
-            m_RoomBoss.SetPosition(m_RoomPosition.X + (480 - (m_RoomBoss.GetTextureOriginX() / 32)), m_RoomPosition.Y + (416 - (m_RoomBoss.GetTextureOriginY() / 32))); //- m_RoomBoss.GetTextureOriginX())// //
-
-            //m_RoomEnemies.Add(levelBoss);
+            m_RoomBoss.SetPosition(m_RoomPosition.X + (480 - (m_RoomBoss.GetTextureOriginX() / 32)), m_RoomPosition.Y + (416 - (m_RoomBoss.GetTextureOriginY() / 32)));
         }
-
-
 
         /// <name>Rooms::GetBoss()</name>
         /// <summary>
@@ -787,7 +686,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns></returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Boss GetBoss()
         {
             return m_RoomBoss;

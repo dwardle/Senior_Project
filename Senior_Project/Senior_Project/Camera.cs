@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
-    //have done commenting
     class Camera
     {
         public Matrix m_Transform;
@@ -24,7 +23,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_View">Viewport object containing the default viewport for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Camera(Viewport a_View)
         {
             m_View = a_View;
@@ -40,7 +39,7 @@ namespace Senior_Project
         /// <param name="a_NewX">new camera coordinate X</param>
         /// <param name="a_NewY">new camera coordinate Y</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Update(GameTime a_GameTime, int a_NewX, int a_NewY)
         {
             m_Center = new Vector2(a_NewX, a_NewY);

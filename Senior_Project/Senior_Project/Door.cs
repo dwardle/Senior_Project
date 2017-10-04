@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
-    //have done commenting
     public class Door
     {
         enum m_DoorPlacement {Up, Down, Left, Right };
@@ -28,7 +27,7 @@ namespace Senior_Project
         /// Basic contructor for Door object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Door()
         {
             m_Texture = null;
@@ -44,7 +43,7 @@ namespace Senior_Project
         /// <param name="a_DoorX">new position X</param>
         /// <param name="a_DoorY">new position Y</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Door(int a_DoorX, int a_DoorY)
         {
             m_DoorPosition = new Vector2(a_DoorX, a_DoorY);
@@ -56,7 +55,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Placement">new door placement value</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetDoorPlacement(int a_Placement)
         {
             if(a_Placement <= 0 || a_Placement >= 4)
@@ -74,34 +73,34 @@ namespace Senior_Project
         /// <param name="a_DoorY">Doors Y position</param>
         /// <param name="a_Placement">Location in the room that the door will be placed</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetDoorPosition(int a_DoorX, int a_DoorY, int a_Placement)
         {
             if(a_Placement == (int)m_DoorPlacement.Up)
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX + 448, a_DoorY);
-                //m_HitBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 64, 64);
+
             }
             else if (a_Placement == (int)m_DoorPlacement.Down)
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX + 448, a_DoorY + 768);
-                //m_HitBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y + (m_Texture.Width/2), 64, 32);
+
             }
             else if (a_Placement == (int)m_DoorPlacement.Left)
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX, a_DoorY + 384);
-                //m_HitBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 64, 64);
+
             }
             else if (a_Placement == (int)m_DoorPlacement.Right)
             {
                 m_Placement = a_Placement;
                 m_DoorPosition = new Vector2(a_DoorX + 896, a_DoorY + 384);
-                //m_HitBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 32, 64);
+
             }
-            //m_HitBox = new Rectangle((int)m_DoorPosition.X, (int)m_DoorPosition.Y, 32, 32);
+
         }
 
         /// <name>Door::LoadContent()</name>
@@ -110,7 +109,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">Content manager contianing all the conetent for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             SetTexture(a_Content);
@@ -122,14 +121,11 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">allows drawing of sprites to the screen</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             a_SpriteBatch.Draw(m_Texture, m_DoorPosition, Color.White);
         }
-
-        //sets the door textures and hitboxes
-        //hitboxes are set to be smaller then the actual door texture to make it look more like the player actually walked through the door
 
         /// <name>Door::SetTexture()</name>
         /// <summary>
@@ -137,7 +133,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager containing all content for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetTexture(ContentManager a_Content)
         {
             if (this.m_Placement == (int)m_DoorPlacement.Up)
@@ -197,7 +193,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_IsOpen">bool value, Should be true to set the door to open and false to set to closed</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetIsOpen(bool a_IsOpen)
         {
             m_IsDoorOpen = a_IsOpen;
@@ -206,14 +202,13 @@ namespace Senior_Project
 
     }
 
-
     /// <name>Door::DoorPlacement : Compare</name>
     /// <summary>
     /// Comparison class that will compare 2 doors and sort then in a door list by their placement value.
     /// it will be sorted from lowest placement value to highest;
     /// </summary>
     /// <author>Douglas Wardle</author>
-    /// <date></date>
+    /// <date>10/4/2017</date>
     public class DoorPlacement : Comparer<Door>
     {
         //sort doors by placement

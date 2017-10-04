@@ -11,9 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
-    /// <name>HealthUp::</name>
-    /// <author>Douglas Wardle</author>
-    /// <date></date>
     public class HealthUp : Item
     {
         /// <name>HealthUp::HealthUp()</name>
@@ -21,7 +18,7 @@ namespace Senior_Project
         /// Basic constructor for a HealthUp Object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public HealthUp()
         {
             m_Used = false;
@@ -33,7 +30,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager for all game content</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             if(m_Used == false)
@@ -55,7 +52,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_MainPlayer">The player that has collected the HealthUp item</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void IncreasePlayerHealth(Player a_MainPlayer)
         {
             if(m_Used == false)

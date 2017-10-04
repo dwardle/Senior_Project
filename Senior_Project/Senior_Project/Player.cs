@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-//have done commenting
 
 namespace Senior_Project
 {
@@ -44,13 +43,9 @@ namespace Senior_Project
         
         public float m_PlayerRotation;
         public Vector2 m_PlayerOrigin;
-        //public float bulletDelay;
         public Rectangle m_HitBox;
-        //TopDownGame m_CurrentGame;
         Level m_CurrentLevel;
         public int m_CurrentRoom = 0;
-        //const int m_RoomWidth = 960;
-        //const int m_RoomHeight = 832;
         public int RoomIndex = 0;
         
         public List<Bullet> m_BulletList = new List<Bullet>();
@@ -61,7 +56,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_CurrentLevel"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Player(Level a_CurrentLevel)
         {
             m_CurrentLevel = a_CurrentLevel;
@@ -73,7 +68,6 @@ namespace Senior_Project
             {
                 m_PlayerHearts.Add(new Heart(new Vector2(40 + (i * 40), 16)));
             }
-            //ChangeHeartTexture();
             Console.Write("Done");
         }
 
@@ -83,7 +77,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager that contains all content for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             m_Texture = a_Content.Load<Texture2D>("Player/batDoug5");
@@ -102,7 +96,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object to allow for drawing of sprites</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             m_PlayerOrigin.X = m_Texture.Width / 2;
@@ -116,12 +110,8 @@ namespace Senior_Project
             {
                 h.Draw(a_SpriteBatch);
             }
-            //m_PlayerHeart.Draw(a_SpriteBatch);
-            //a_SpriteBatch.Draw(m_Texture, m_PlayerPosition, Color.White);
         }
 
-
-        //new update for when using a Level object. pre summer work
         /// <name>Player::Update()</name>
         /// <summary>
         /// Function is called every time the player needs to update. this function allows for player movement, player rotation, shooting, Updating the players hearts,
@@ -130,7 +120,7 @@ namespace Senior_Project
         /// <param name="a_GameTime"></param>
         /// <param name="a_CurrentLevel">The level that the player is currently on</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Update(GameTime a_GameTime, Level a_CurrentLevel)
         {
             KeyboardState keyState = Keyboard.GetState();
@@ -160,8 +150,6 @@ namespace Senior_Project
                 m_PlayerRotation = ((float)Math.PI / 2.0f) * 4;
                 Shoot(Keys.Up);
 
-                //line below is for testing the switch from closed door to open door
-                //m_CurrentGame.m_Door.m_IsDoorOpen = true;
             }
             else if (keyState.IsKeyDown(Keys.Right))
             {
@@ -178,18 +166,8 @@ namespace Senior_Project
                 m_PlayerRotation = ((float)Math.PI / 2.0f) * 2;
                 Shoot(Keys.Down);
             }
-            //old update logic////////////////////////////////////////
-            //List<Rooms> currentLevelRooms = m_CurrentLevel.GetRoomList();
-            //UpdateBullet(currentLevelRooms[RoomIndex]);
-            //////////////////////////////////////////////
-
-            //448 is (the width of room wall - 64) / 2 or (960 - 64)/2
-            //768 is (the length of room wall - 64) or (832 - 64)
-            //896 is (the width of room wall - 64) or (960 - 64)
-            //384 is (the length of room wall - 64) / 2 or (832 - 64) / 2
 
 
-            //new player update logic
             Rooms currentRoom = a_CurrentLevel.GetCurrentRoom();
             UpdateBullet(currentRoom);
             int crp_X = currentRoom.GetRoomCoord_X();
@@ -310,7 +288,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_ShotDirection">The direction that the player is shooting</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Shoot(Keys a_ShotDirection)
         {
             if(m_ShotDelay >= 0)
@@ -364,7 +342,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_CurrentRoom">the current room that the player is in</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void UpdateBullet(Rooms a_CurrentRoom)
         {
             foreach(Bullet b in m_BulletList)
@@ -436,7 +414,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Damage">the amount of damage the player is taking</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LowerHealth(float a_Damage)
         {
             m_PlayerHealth -= a_Damage;
@@ -449,16 +427,11 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Health"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void IncreaseHealth(float a_Health)
         {
             m_MaxHealth += a_Health;
             m_PlayerHealth = m_MaxHealth;
-            //ChangeHeartTexture();
-            
-            //Heart addHeart = new Heart(new Vector2(40 + (m_PlayerHearts.Count * 40), 16));
-            //m_PlayerHearts.Add(new Heart(new Vector2(40 + (m_PlayerHearts.Count * 40), 16)));
-            
         }
 
         /// <name>Player::LowerSpeed()</name>
@@ -467,7 +440,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpeedDecrease">amount to decrease the players speed</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LowerPlayerSpeed(float a_SpeedDecrease)
         {
             m_PlayerSpeed -= a_SpeedDecrease;
@@ -479,7 +452,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpeedIncrease">amount to increase player speed</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void IncreasePlayerSpeed(float a_SpeedIncrease)
         {
             m_PlayerSpeed += a_SpeedIncrease;
@@ -491,7 +464,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_DecreaseDelay">amount to decrease shot delay</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LowerShotDelay(float a_DecreaseDelay)
         {
             m_ShotDelay -= a_DecreaseDelay;
@@ -503,7 +476,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_IncreaseDelay">amount to increase shot delay</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void IncreaseShotDelay(float a_IncreaseDelay)
         {
             m_ShotDelay += a_IncreaseDelay;
@@ -516,23 +489,19 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Damage"></param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void TakeDamage(float a_Damage)
         {
             if(this.m_CantTakeDamage == false)
             {
                 LowerHealth(a_Damage);
-                //m_PlayerHealth -= a_Damage;
                 m_CantTakeDamage = true;
             }
             else
             {
                 m_DamageDelay--;
             }
-            //if(m_PlayerHealth <= 0)
-            //{
-            //    System.Environment.Exit(0);
-            //}
+            
 
             if(m_DamageDelay <= 0)
             {
@@ -547,7 +516,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Multiplier">amount to increase the shot speed multiplier</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void IncreaseShotSpeed(float a_Multiplier)
         {
             m_ShotSpeedMultiplyer = m_ShotSpeedMultiplyer + a_Multiplier;
@@ -559,7 +528,7 @@ namespace Senior_Project
         /// Function changes the players Heart textures to show the amount of health the player currently has
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void ChangeHeartTexture()
         {
             for(int i = 0; i < m_MaxHealth; i++)
@@ -589,7 +558,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>returns a list containing the players hearts</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public List<Heart> GetHearts()
         {
             return m_PlayerHearts;
@@ -601,7 +570,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Position">Vector2 containing the new player position</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(Vector2 a_Position)
         {
             m_PlayerPosition = a_Position;
@@ -613,7 +582,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>floating point value for the players health</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public float GetHealth()
         {
             return m_PlayerHealth;

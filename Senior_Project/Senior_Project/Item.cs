@@ -11,8 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Senior_Project
 {
-    //have done commenting
-    
     public class Item
     {
         public Texture2D m_Texture;
@@ -26,7 +24,7 @@ namespace Senior_Project
         /// Basic contructor for an Item object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Item()
         {
             m_Texture = null;
@@ -41,7 +39,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object to allow for drawing to the screen</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
             if(m_Texture != null)
@@ -56,7 +54,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Used">bool value, Should be true if the item has been used and false otherwise</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetUsed(bool a_Used)
         {
             m_Used = a_Used;
@@ -68,7 +66,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Position">Vector2 containing the new position for the item</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(Vector2 a_Position)
         {
             m_Position = a_Position;
@@ -81,7 +79,7 @@ namespace Senior_Project
         /// <param name="a_Position_X">new position X</param>
         /// <param name="a_Position_Y">new position Y</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(float a_Position_X, float a_Position_Y)
         {
             m_Position = new Vector2(a_Position_X, a_Position_Y);
@@ -93,7 +91,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>True if the item has been used, false otherwise</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public bool GetUsed()
         {
             return m_Used;
@@ -105,7 +103,7 @@ namespace Senior_Project
         /// </summary>
         /// <returns>Vector2 containing the items position</returns>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public Vector2 GetPosition()
         {
             return m_Position;

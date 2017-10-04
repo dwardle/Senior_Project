@@ -11,11 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 
 namespace Senior_Project
-{
-    /// <name>MenuItem::</name>
-    /// <author>Douglas Wardle</author>
-    /// <date></date>
-    
+{    
     public class MenuItem
     {
         public Texture2D m_Texture;
@@ -28,7 +24,7 @@ namespace Senior_Project
         /// Basic contructor for a MenuItem Object
         /// </summary>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public MenuItem()
         {
             m_Position.X = 350;
@@ -43,7 +39,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Option">type of menu item</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public MenuItem(int a_Option)
         {
             m_Position.X = 350;
@@ -59,11 +55,10 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">Content manager with all the content for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void LoadContent(ContentManager a_Content)
         {
             SetTexture(a_Content);
-            //m_Texture = a_Content.Load<Texture2D>("Start");
             m_Hitbox = new Rectangle((int)m_Position.X, (int)m_Position.Y, m_Texture.Width, m_Texture.Height);
         }
 
@@ -73,12 +68,12 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_SpriteBatch">SpriteBatch object to allow drawing of sprites</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void Draw(SpriteBatch a_SpriteBatch)
         {
-            //a_SpriteBatch.Begin();
+
             a_SpriteBatch.Draw(m_Texture, m_Position, Color.White);
-            //a_SpriteBatch.End();
+
         }
 
         /// <name>MenuItem::SetTexture()</name>
@@ -87,7 +82,7 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Content">content manager that contains all content for the game</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetTexture(ContentManager a_Content)
         {
             if(m_Option == 0)
@@ -122,11 +117,10 @@ namespace Senior_Project
         /// </summary>
         /// <param name="a_Position">The new position of the item</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(Vector2 a_Position)
         {
             m_Position = a_Position;
-            //m_Hitbox = new Rectangle((int)m_Position.X, (int)m_Position.Y, m_Texture.Width, m_Texture.Height);
         }
 
         /// <name>MenuItem::SetPosition()</name>
@@ -137,12 +131,11 @@ namespace Senior_Project
         /// <param name="a_Position_X">The new X position of the item</param>
         /// <param name="a_Position_Y">The new Y position of the item</param>
         /// <author>Douglas Wardle</author>
-        /// <date></date>
+        /// <date>10/4/2017</date>
         public void SetPosition(int a_Position_X, int a_Position_Y)
         {
             m_Position.X = a_Position_X;
             m_Position.Y = a_Position_Y;
-            //m_Hitbox = new Rectangle((int)m_Position.X, (int)m_Position.Y, m_Texture.Width, m_Texture.Height);
         }
     }
 
